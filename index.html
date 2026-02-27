@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,105 +7,133 @@
 
 <style>
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #222;
-}
-
-header {
-    background-color: #111;
-    color: #fff;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header h1 {
+    background: #f4f4f4;
     margin: 0;
-    font-size: 20px;
-    letter-spacing: 1px;
-}
-
-.hero {
-    padding: 80px 20px;
+    padding: 0;
     text-align: center;
-    background: #fff;
 }
 
-.hero h2 {
-    font-size: 32px;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 18px;
+.container {
     max-width: 600px;
-    margin: 0 auto 30px auto;
-    line-height: 1.6;
+    margin: 60px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.button {
-    display: inline-block;
-    padding: 15px 30px;
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
+h1 {
+    margin-bottom: 10px;
 }
 
-.section {
-    padding: 60px 20px;
-    text-align: center;
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.section h3 {
-    margin-bottom: 15px;
-    font-size: 24px;
+button {
+    background: black;
+    color: white;
+    padding: 14px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-footer {
-    background-color: #111;
-    color: #aaa;
-    text-align: center;
-    padding: 20px;
-    font-size: 14px;
+button:hover {
+    background: #333;
+}
+
+.result {
+    margin-top: 20px;
+    text-align: left;
+    white-space: pre-line;
+}
+
+.whatsapp {
+    margin-top: 20px;
 }
 </style>
 </head>
-
 <body>
 
-<header>
-    <h1>ARIEL NUTRIÇÃO ANIMAL</h1>
-</header>
+<div class="container">
+<h1>Ariel Nutrição Animal</h1>
+<p>Diagnóstico Estratégico para Gado de Corte e Leite</p>
 
-<section class="hero">
-    <h2>Consultoria e Nutrição Inteligente para o Homem do Campo</h2>
-    <p>
-        Atendimento técnico especializado para gado de corte e leite.
-        Estratégia, desempenho e resultado direto na produção.
-    </p>
-    <a href="https://ari-backend-520990905601.southamerica-east1.run.app/test-produtor" class="button">
-        Falar com Consultor
-    </a>
-</section>
+<input type="text" id="cidade" placeholder="Sua cidade">
+<select id="tipo">
+<option value="">Tipo de gado</option>
+<option value="corte">Corte</option>
+<option value="leite">Leite</option>
+</select>
 
-<section class="section">
-    <h3>Atendimento Regional</h3>
-    <p>Canaã dos Carajás e região — visita técnica presencial.</p>
-</section>
+<input type="number" id="peso" placeholder="Peso médio do animal (kg)">
+<select id="pasto">
+<option value="">Condição do pasto</option>
+<option value="fraco">Fraco</option>
+<option value="médio">Médio</option>
+<option value="bom">Bom</option>
+</select>
 
-<section class="section">
-    <h3>Atendimento Nacional</h3>
-    <p>Consultoria online e conteúdo técnico para todo o Brasil.</p>
-</section>
+<select id="objetivo">
+<option value="">Objetivo</option>
+<option value="engorda">Engorda</option>
+<option value="aumentar leite">Aumentar produção de leite</option>
+<option value="recuperação">Recuperação</option>
+</select>
 
-<footer>
-    © 2026 Ariel Nutrição Animal — Canaã dos Carajás, PA
-</footer>
+<button onclick="analisar()">Gerar Diagnóstico</button>
+
+<div class="result" id="resultado"></div>
+<div class="whatsapp" id="whats"></div>
+</div>
+
+<script>
+async function analisar() {
+
+let cidade = document.getElementById("cidade").value.toLowerCase();
+let tipo = document.getElementById("tipo").value;
+let peso = document.getElementById("peso").value;
+let pasto = document.getElementById("pasto").value;
+let objetivo = document.getElementById("objetivo").value;
+
+if(!cidade || !tipo || !peso || !pasto || !objetivo){
+    alert("Preencha todos os campos.");
+    return;
+}
+
+let prompt = `Produtor da cidade ${cidade}, gado ${tipo}, peso médio ${peso}kg, pasto ${pasto}, objetivo ${objetivo}. Gerar diagnóstico técnico e recomendação estratégica.`
+
+let response = await fetch("https://ari-backend-520990950601.southamerica-east1.run.app/test-produtor", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ prompt: prompt })
+});
+
+let data = await response.json();
+
+document.getElementById("resultado").innerText = data.reply;
+
+if(cidade.includes("canaa")){
+    document.getElementById("whats").innerHTML =
+        `<a href="https://wa.me/559984142737" target="_blank">
+        <button>Solicitar Visita Técnica em Canaã</button></a>`;
+} else {
+    document.getElementById("whats").innerHTML =
+        `<a href="https://wa.me/559984142737" target="_blank">
+        <button>Receber Plano Completo no WhatsApp</button></a>`;
+}
+}
+</script>
 
 </body>
 </html>
