@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,133 +7,98 @@
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
     margin: 0;
-    padding: 0;
+    background-color: #0f0f0f;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+header {
     text-align: center;
+    padding: 50px 20px 20px 20px;
+}
+
+.logo {
+    max-width: 300px;
 }
 
 .container {
-    max-width: 600px;
-    margin: 60px auto;
-    background: white;
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: #1a1a1a;
     padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
 }
 
-h1 {
-    margin-bottom: 10px;
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 input, select {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
+    padding: 14px;
+    margin-bottom: 15px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
+    background-color: #111;
+    color: white;
+    font-size: 15px;
 }
 
 button {
-    background: black;
-    color: white;
-    padding: 14px;
-    border: none;
     width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 15px;
+    background-color: #ffcc00;
+    border: none;
+    font-weight: bold;
     font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 button:hover {
-    background: #333;
-}
-
-.result {
-    margin-top: 20px;
-    text-align: left;
-    white-space: pre-line;
-}
-
-.whatsapp {
-    margin-top: 20px;
+    background-color: #e6b800;
 }
 </style>
 </head>
+
 <body>
 
+<header>
+    <img src="logo-ariel.png" alt="Ariel Nutrição Animal" class="logo">
+</header>
+
 <div class="container">
-<h1>Ariel Nutrição Animal</h1>
-<p>Diagnóstico Estratégico para Gado de Corte e Leite</p>
+    <h2>Diagnóstico Estratégico para Seu Rebanho</h2>
 
-<input type="text" id="cidade" placeholder="Sua cidade">
-<select id="tipo">
-<option value="">Tipo de gado</option>
-<option value="corte">Corte</option>
-<option value="leite">Leite</option>
-</select>
+    <input type="text" placeholder="Sua cidade">
 
-<input type="number" id="peso" placeholder="Peso médio do animal (kg)">
-<select id="pasto">
-<option value="">Condição do pasto</option>
-<option value="fraco">Fraco</option>
-<option value="médio">Médio</option>
-<option value="bom">Bom</option>
-</select>
+    <select>
+        <option>Tipo de gado</option>
+        <option>Corte</option>
+        <option>Leite</option>
+    </select>
 
-<select id="objetivo">
-<option value="">Objetivo</option>
-<option value="engorda">Engorda</option>
-<option value="aumentar leite">Aumentar produção de leite</option>
-<option value="recuperação">Recuperação</option>
-</select>
+    <input type="number" placeholder="Peso médio do animal (kg)">
 
-<button onclick="analisar()">Gerar Diagnóstico</button>
+    <select>
+        <option>Condição do pasto</option>
+        <option>Bom</option>
+        <option>Regular</option>
+        <option>Fraco</option>
+    </select>
 
-<div class="result" id="resultado"></div>
-<div class="whatsapp" id="whats"></div>
+    <select>
+        <option>Objetivo</option>
+        <option>Engorda</option>
+        <option>Aumentar produção de leite</option>
+        <option>Recuperação corporal</option>
+    </select>
+
+    <button>GERAR DIAGNÓSTICO</button>
 </div>
-
-<script>
-async function analisar() {
-
-let cidade = document.getElementById("cidade").value.toLowerCase();
-let tipo = document.getElementById("tipo").value;
-let peso = document.getElementById("peso").value;
-let pasto = document.getElementById("pasto").value;
-let objetivo = document.getElementById("objetivo").value;
-
-if(!cidade || !tipo || !peso || !pasto || !objetivo){
-    alert("Preencha todos os campos.");
-    return;
-}
-
-let prompt = `Produtor da cidade ${cidade}, gado ${tipo}, peso médio ${peso}kg, pasto ${pasto}, objetivo ${objetivo}. Gerar diagnóstico técnico e recomendação estratégica.`
-
-let response = await fetch("https://ari-backend-520990950601.southamerica-east1.run.app/test-produtor", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ prompt: prompt })
-});
-
-let data = await response.json();
-
-document.getElementById("resultado").innerText = data.reply;
-
-if(cidade.includes("canaa")){
-    document.getElementById("whats").innerHTML =
-        `<a href="https://wa.me/559984142737" target="_blank">
-        <button>Solicitar Visita Técnica em Canaã</button></a>`;
-} else {
-    document.getElementById("whats").innerHTML =
-        `<a href="https://wa.me/559984142737" target="_blank">
-        <button>Receber Plano Completo no WhatsApp</button></a>`;
-}
-}
-</script>
 
 </body>
 </html>
