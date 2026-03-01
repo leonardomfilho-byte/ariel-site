@@ -107,6 +107,25 @@ button:hover {
   GERAR DIAGNÓSTICO
 </button>
 </div>
+<script>
+async function gerarDiagnostico() {
 
+  const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      cidade: document.querySelectorAll("select")[0].value,
+      objetivo: document.querySelectorAll("select")[1].value
+    })
+  });
+
+  const dados = await resposta.json();
+
+  alert("Diagnóstico gerado com sucesso!");
+  console.log(dados);
+}
+</script>
 </body>
 </html>
