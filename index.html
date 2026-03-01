@@ -79,44 +79,35 @@ button:hover {
 <div class="container">
     <h2>Diagnóstico Estratégico para Seu Rebanho</h2>
 
-    <input type="text" placeholder="Sua cidade">
+<input type="text" id="nome" placeholder="Seu nome">
 
-    <select>
-        <option>Tipo de gado</option>
-        <option>Corte</option>
-        <option>Leite</option>
-    </select>
+<input type="text" id="cidade" placeholder="Sua cidade">
 
-    <input type="number" placeholder="Peso médio do animal (kg)">
+<select id="tipo">
+  <option value="">Tipo de gado</option>
+  <option value="Corte">Corte</option>
+  <option value="Leite">Leite</option>
+</select>
 
-    <select>
-        <option>Condição do pasto</option>
-        <option>Bom</option>
-        <option>Regular</option>
-        <option>Fraco</option>
-    </select>
+<input type="number" id="peso" placeholder="Peso médio do animal (kg)">
 
-    <select>
-        <option>Objetivo</option>
-        <option>Engorda</option>
-        <option>Aumentar produção de leite</option>
-        <option>Recuperação corporal</option>
-    </select>
+<select id="pasto">
+  <option value="">Condição do pasto</option>
+  <option value="Bom">Bom</option>
+  <option value="Regular">Regular</option>
+  <option value="Fraco">Fraco</option>
+</select>
 
-    <button onclick="gerarDiagnostico()">
-  GERAR DIAGNÓSTICO
-</button>
-<div id="resultado" style="
-  margin-top: 25px;
-  padding: 20px;
-  background-color: #1c1c1c;
-  border-radius: 10px;
-  color: #ffffff;
-  font-size: 16px;
-  line-height: 1.6;
-  display: none;
-"></div>
-</div>
+<select id="objetivo">
+  <option value="">Objetivo</option>
+  <option value="Engorda">Engorda</option>
+  <option value="Aumentar produção de leite">Aumentar produção de leite</option>
+  <option value="Recria">Recria</option>
+</select>
+
+<button onclick="gerarDiagnostico()">GERAR DIAGNÓSTICO</button>
+
+<div id="resultado" style="display:none; margin-top:20px;"></div>
 <script>
 async function gerarDiagnostico() {
 
@@ -126,9 +117,13 @@ async function gerarDiagnostico() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            cidade: document.querySelectorAll("select")[0].value,
-            objetivo: document.querySelectorAll("select")[1].value
-        })
+  nome: document.getElementById("nome").value,
+  cidade: document.getElementById("cidade").value,
+  tipo: document.getElementById("tipo").value,
+  peso: document.getElementById("peso").value,
+  pasto: document.getElementById("pasto").value,
+  objetivo: document.getElementById("objetivo").value
+})
     });
 
     const dados = await resposta.json();
