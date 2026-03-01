@@ -129,12 +129,16 @@ async function gerarDiagnostico() {
       cidade: document.querySelectorAll("select")[0].value,
       objetivo: document.querySelectorAll("select")[1].value
     })
-  });
 
   const dados = await resposta.json();
 
-  alert("Diagnóstico gerado com sucesso!");
-  console.log(dados);
+const resultadoDiv = document.getElementById("resultado");
+resultadoDiv.style.display = "block";
+resultadoDiv.innerText = dados.reply;
+  
+  });
+
+  
 }
 </script>
 </body>
