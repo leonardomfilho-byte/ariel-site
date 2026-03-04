@@ -108,6 +108,17 @@ button:hover {
 <button onclick="gerarDiagnostico()">GERAR DIAGNÓSTICO</button>
 
 <div id="resultado" style="display:none; margin-top:20px;"></div>
+    <div id="chatBox" style="display:none; margin-top:20px;">
+
+<textarea id="pergunta"
+placeholder="Continue a conversa com o Ari..."
+style="width:100%; height:80px;"></textarea>
+
+<button onclick="continuarConversa()" style="margin-top:10px;">
+Continuar conversa
+</button>
+
+</div>
 <script>
 async function gerarDiagnostico() {
 
@@ -131,13 +142,8 @@ async function gerarDiagnostico() {
     const resultadoDiv = document.getElementById("resultado");
     resultadoDiv.style.display = "block";
     resultadoDiv.innerText = dados.reply;
-    <div id="chatBox" style="display:none; margin-top:20px;">
-<textarea id="pergunta" placeholder="Pergunte algo ao Ari..." style="width:100%; height:80px;"></textarea>
 
-<button onclick="continuarConversa()" style="margin-top:10px;">
-Continuar conversa
-</button>
-</div>
+    document.getElementById("chatBox").style.display = "block";
 }
 </script>
 </body>
