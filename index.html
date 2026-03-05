@@ -1,166 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Ariel Nutrição Animal</title>
 
 <style>
-body {
-    margin: 0;
-    background-color: #0f0f0f;
-    font-family: Arial, sans-serif;
-    color: white;
+
+body{
+margin:0;
+background:#0f0f0f;
+font-family:Arial,sans-serif;
+color:white;
 }
 
-header {
-    text-align: center;
-    padding: 50px 20px 20px 20px;
+header{
+text-align:center;
+padding:40px 20px;
+background:black;
 }
 
-.logo {
-    max-width: 300px;
+.logo{
+width:160px;
+display:block;
+margin:auto;
 }
 
-.container {
-    max-width: 500px;
-    margin: 40px auto;
-    background-color: #1a1a1a;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
+.container{
+max-width:520px;
+margin:40px auto;
+background:#1a1a1a;
+padding:40px;
+border-radius:10px;
+box-shadow:0 0 30px rgba(255,204,0,0.15);
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
+h2{
+text-align:center;
+margin-bottom:30px;
 }
 
-input, select {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #333;
-    background-color: #111;
-    color: white;
-    font-size: 15px;
+input,select{
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border-radius:5px;
+border:1px solid #333;
+background:#111;
+color:white;
+font-size:15px;
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #ffcc00;
-    border: none;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
+button{
+width:100%;
+padding:15px;
+background:#ffcc00;
+border:none;
+font-weight:bold;
+font-size:16px;
+cursor:pointer;
+border-radius:5px;
 }
 
-button:hover {
-    background-color: #e6b800;
+button:hover{
+background:#e6b800;
 }
-.logo {
-    width: 80px;
-    height: auto;
-    display: block;
-    margin: 0 auto 25px auto;
+
+.whatsapp{
+background:#25D366;
+margin-top:20px;
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-    <img src="logo-ariel.png.jpeg" alt="Ariel Nutrição Animal" class="logo">
+
+<img src="logo-ariel.png" class="logo">
+
 </header>
 
 <div class="container">
-    <h2>Diagnóstico Estratégico para Seu Rebanho</h2>
+
+<h2>Diagnóstico Estratégico para Seu Rebanho</h2>
 
 <input type="text" id="nome" placeholder="Seu nome">
 
 <input type="text" id="cidade" placeholder="Sua cidade">
 
 <select id="tipo">
-  <option value="">Tipo de gado</option>
-  <option value="Corte">Corte</option>
-  <option value="Leite">Leite</option>
+<option value="">Tipo de gado</option>
+<option value="Corte">Corte</option>
+<option value="Leite">Leite</option>
 </select>
 
 <input type="number" id="peso" placeholder="Peso médio do animal (kg)">
 
 <select id="pasto">
-  <option value="">Condição do pasto</option>
-  <option value="Bom">Bom</option>
-  <option value="Regular">Regular</option>
-  <option value="Fraco">Fraco</option>
+<option value="">Condição do pasto</option>
+<option value="Bom">Bom</option>
+<option value="Regular">Regular</option>
+<option value="Fraco">Fraco</option>
 </select>
 
 <select id="objetivo">
-  <option value="">Objetivo</option>
-  <option value="Engorda">Engorda</option>
-  <option value="Aumentar produção de leite">Aumentar produção de leite</option>
-  <option value="Recria">Recria</option>
+<option value="">Objetivo</option>
+<option value="Engorda">Engorda</option>
+<option value="Aumentar produção de leite">Aumentar produção de leite</option>
+<option value="Recria">Recria</option>
 </select>
 
-<button onclick="gerarDiagnostico()">GERAR DIAGNÓSTICO</button>
+<button onclick="gerarDiagnostico()">
+GERAR DIAGNÓSTICO
+</button>
 
-<div id="resultado" style="display:none; margin-top:20px;"></div>
-    <div id="chatBox" style="display:none; margin-top:20px;">
+<div id="resultado" style="display:none;margin-top:25px;"></div>
 
-<textarea id="pergunta"
-placeholder="Continue a conversa com o Ari..."
-style="width:100%; height:80px;"></textarea>
+<button id="btnWhatsapp"
+class="whatsapp"
+style="display:none"
+onclick="continuarConversa()">
 
-<button onclick="continuarConversa()">Continuar conversando</button>
+Para maiores detalhes fale comigo no WhatsApp
+
+</button>
 
 </div>
+
 <script>
-async function gerarDiagnostico() {
 
-    const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-  nome: document.getElementById("nome").value,
-  cidade: document.getElementById("cidade").value,
-  tipo: document.getElementById("tipo").value,
-  peso: document.getElementById("peso").value,
-  pasto: document.getElementById("pasto").value,
-  objetivo: document.getElementById("objetivo").value
+async function gerarDiagnostico(){
+
+const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+nome:document.getElementById("nome").value,
+cidade:document.getElementById("cidade").value,
+tipo:document.getElementById("tipo").value,
+peso:document.getElementById("peso").value,
+pasto:document.getElementById("pasto").value,
+objetivo:document.getElementById("objetivo").value
+
 })
-    });
 
-    const dados = await resposta.json();
+});
 
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.style.display = "block";
-    const nomeCliente = document.getElementById("nome").value;
-    let respostaLimpa = dados.reply.replace(/^.*?,\s*/i, "");
-    resultadoDiv.innerText = "Sr. " + nomeCliente + ", " + respostaLimpa;
+const dados = await resposta.json();
 
-    document.getElementById("chatBox").style.display = "block";
+const resultadoDiv=document.getElementById("resultado");
+
+resultadoDiv.style.display="block";
+
+const nomeCliente=document.getElementById("nome").value;
+
+let respostaLimpa=dados.reply.replace(/^.*?,\s*/i,"");
+
+resultadoDiv.innerText="Sr. "+nomeCliente+", "+respostaLimpa;
+
+document.getElementById("btnWhatsapp").style.display="block";
+
 }
 
-function continuarConversa() {
+function continuarConversa(){
 
-const nomeCliente = document.getElementById("nome").value;
-const cidadeCliente = document.getElementById("cidade").value;
+const nomeCliente=document.getElementById("nome").value;
 
-const mensagem = encodeURIComponent(
-"Olá, aqui é " + nomeCliente + " de " + cidadeCliente +
-". Acabei de fazer o diagnóstico no site da Ariel e gostaria de continuar a conversa."
+const cidadeCliente=document.getElementById("cidade").value;
+
+const mensagem=encodeURIComponent(
+
+"Olá, aqui é "+nomeCliente+" de "+cidadeCliente+
+". Acabei de fazer o diagnóstico no site da Ariel e gostaria de conversar sobre nutrição para meu rebanho."
+
 );
 
-const url = "https://wa.me/559984142737?text=" + mensagem;
+const url="https://wa.me/559984142737?text="+mensagem;
 
-window.open(url, "_blank");
+window.open(url,"_blank");
 
 }
+
 </script>
+
 </body>
 </html>
