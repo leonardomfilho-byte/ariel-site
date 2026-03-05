@@ -143,7 +143,7 @@ async function gerarDiagnostico() {
     resultadoDiv.style.display = "block";
     const nomeCliente = document.getElementById("nome").value;
     let respostaLimpa = dados.reply.replace(/^.*?,\s*/i, "");
-    resultadoDiv.innerText = "Sr. " + nomeCliente + ",\n\n" + respostaLimpa;
+    resultadoDiv.innerText = "Sr. " + nomeCliente + ", " + respostaLimpa;
 
     document.getElementById("chatBox").style.display = "block";
 }
