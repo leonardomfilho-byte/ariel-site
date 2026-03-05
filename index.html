@@ -141,7 +141,8 @@ async function gerarDiagnostico() {
 
     const resultadoDiv = document.getElementById("resultado");
     resultadoDiv.style.display = "block";
-    resultadoDiv.innerText = dados.reply;
+    const nomeCliente = document.getElementById("nome").value;
+    resultadoDiv.innerText = "Sr. " + nomeCliente + ",\n\n" + dados.reply;
 
     document.getElementById("chatBox").style.display = "block";
 }
