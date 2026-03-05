@@ -167,7 +167,13 @@ const nomeCliente=document.getElementById("nome").value;
 
 let respostaLimpa=dados.reply.replace(/^.*?,\s*/i,"");
 
-resultadoDiv.innerText="Sr. "+nomeCliente+", "+respostaLimpa;
+resultadoDiv.innerText =
+"Sr. " + nomeCliente + ",\n\n" +
+respostaLimpa +
+"\n\nAgora me diga uma coisa:\n" +
+"O senhor quer acelerar o ganho de peso\n" +
+"ou reduzir o custo por arroba?\n\n" +
+"Para responder, clique no WhatsApp abaixo.";
 
 document.getElementById("btnWhatsapp").style.display="block";
 
