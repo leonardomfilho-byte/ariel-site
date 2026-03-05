@@ -142,7 +142,7 @@ async function gerarDiagnostico() {
     const resultadoDiv = document.getElementById("resultado");
     resultadoDiv.style.display = "block";
     const nomeCliente = document.getElementById("nome").value;
-    let respostaLimpa = dados.reply.replace(/Sr\.\s+\\w+,?/gi,"");
+    let respostaLimpa = dados.reply.replace(/Sr\.\s+\w+,?/gi,"");
     resultadoDiv.innerText = "Sr. " + nomeCliente + ",\n\n" + respostaLimpa;
 
     document.getElementById("chatBox").style.display = "block";
