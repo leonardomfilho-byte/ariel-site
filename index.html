@@ -116,7 +116,8 @@ margin-top:20px;
 </select>
 
 <button onclick="gerarDiagnostico()">
-GERAR DIAGNÓSTICO
+
+  GERAR DIAGNÓSTICO
 </button>
 
 <div id="resultado" style="display:none;margin-top:25px;"></div>
@@ -180,24 +181,97 @@ document.getElementById("btnWhatsapp").style.display="block";
 }
 
 function continuarConversa(){
+<script>
 
-const nomeCliente=document.getElementById("nome").value;
+// 🔧 FORMATA TELEFONE (garante 55 + DDD 99 se faltar)
+function formatarTelefone(numero){
+let tel = numero.replace(/\D/g,"");
 
-const cidadeCliente=document.getElementById("cidade").value;
+if(tel.length === 9){
+tel = "99" + tel;
+}
 
-const mensagem=encodeURIComponent(
+if(tel.length === 10 || tel.length === 11){
+tel = "55" + tel;
+}
 
-"Olá, aqui é "+nomeCliente+" de "+cidadeCliente+
-". Acabei de fazer o diagnóstico no site da Ariel e gostaria de conversar sobre nutrição para meu rebanho."
+return tel;
+}
 
+// 🚀 GERAR DIAGNÓSTICO
+async function gerarDiagnostico(){
+
+const nome = document.getElementById("nome").value;
+const cidade = document.getElementById("cidade").value;
+const telefone = document.getElementById("telefone").value;
+const tipo = document.getElementById("tipo").value;
+const peso = document.getElementById("peso").value;
+const pasto = document.getElementById("pasto").value;
+const objetivo = document.getElementById("objetivo").value;
+
+const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({
+nome,cidade,tipo,peso,pasto,objetivo
+})
+});
+
+const dados = await resposta.json();
+
+const resultadoDiv = document.getElementById("resultado");
+resultadoDiv.style.display = "block";
+
+// 🔥 REMOVE SAUDAÇÃO AUTOMÁTICA DO BACKEND
+let respostaLimpa = dados.reply.replace(/^.*?,\s*/i,"");
+
+// 🔥 TEXTO FINAL NO PADRÃO ARI (SEM PERGUNTA BURRA)
+resultadoDiv.style.textAlign = "justify";
+resultadoDiv.innerText =
+"Sr. " + nome + ",\n\n" +
+respostaLimpa +
+"\n\nSe fizer sentido pra sua operação, me chama no WhatsApp e ajustamos isso direto no seu sistema.";
+
+// 🔓 LIBERA BOTÃO
+document.getElementById("btnWhatsapp").style.display = "block";
+
+// 💾 GUARDA CONTEXTO GLOBAL
+window.dadosCliente = {
+nome, cidade, telefone, tipo, peso, pasto, objetivo,
+diagnostico: respostaLimpa
+};
+
+}
+
+// 📲 WHATSAPP COM CONTEXTO COMPLETO
+function continuarConversa(){
+
+const d = window.dadosCliente;
+
+const telefoneFormatado = formatarTelefone(d.telefone);
+
+const mensagem = encodeURIComponent(
+"Sr. Leo, chegou um diagnóstico do site:\n\n" +
+
+"Cliente: " + d.nome + "\n" +
+"Cidade: " + d.cidade + "\n" +
+"Tipo: " + d.tipo + "\n" +
+"Peso: " + d.peso + " kg\n" +
+"Pasto: " + d.pasto + "\n" +
+"Objetivo: " + d.objetivo + "\n\n" +
+
+"Diagnóstico do Ari:\n" +
+d.diagnostico
 );
 
-const url="https://wa.me/5594984142737?text="+mensagem;
+// 🔴 AQUI É SEU NÚMERO (fixo)
+const url = "https://wa.me/5594984142737?text=" + mensagem;
 
 window.open(url,"_blank");
 
 }
 
+</script>
 </script>
 
 </body>
