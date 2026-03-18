@@ -216,21 +216,55 @@ return tel;
 // 🚀 GERAR DIAGNÓSTICO
 async function gerarDiagnostico(){
 
-const nome = document.getElementById("nome").value;
-const cidade = document.getElementById("cidade").value;
-const telefone = document.getElementById("telefone").value;
-const tipo = document.getElementById("tipo").value;
-const peso = document.getElementById("peso").value;
-const pasto = document.getElementById("pasto").value;
-const objetivo = document.getElementById("objetivo").value;
+const resultadoDiv = document.getElementById("resultado");
+resultadoDiv.style.display = "block";
+resultadoDiv.innerText = "Processando diagnóstico...";
+
+try{
 
 const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico",{
 method:"POST",
 headers:{ "Content-Type":"application/json" },
 body:JSON.stringify({
-nome,cidade,tipo,peso,pasto,objetivo
+nome:document.getElementById("nome").value,
+cidade:document.getElementById("cidade").value,
+tipo:document.getElementById("tipo").value,
+peso:document.getElementById("peso").value,
+pasto:document.getElementById("pasto").value,
+objetivo:document.getElementById("objetivo").value
 })
 });
+
+// 👇 MOSTRA STATUS
+resultadoDiv.innerText = "Status da resposta: " + resposta.status;
+
+let dados;
+
+try{
+dados = await resposta.json();
+}catch(e){
+resultadoDiv.innerText += "\nErro ao ler resposta do servidor";
+return;
+}
+
+// 👇 MOSTRA O QUE VEIO
+resultadoDiv.innerText += "\n\nResposta recebida:\n" + JSON.stringify(dados);
+
+if(dados.reply){
+resultadoDiv.innerText += "\n\nDiagnóstico:\n" + dados.reply;
+}else{
+resultadoDiv.innerText += "\n\nSem diagnóstico retornado.";
+}
+
+document.getElementById("btnWhatsapp").style.display = "block";
+
+}catch(erro){
+
+resultadoDiv.innerText = "Erro na requisição: " + erro;
+
+}
+
+}
 
 const dados = await resposta.json();
 
