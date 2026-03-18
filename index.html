@@ -166,7 +166,13 @@ resultadoDiv.style.display="block";
 
 const nomeCliente=document.getElementById("nome").value;
 
-let respostaLimpa=dados.reply.replace(/^.*?,\s*/i,"");
+let respostaLimpa = "";
+
+if(dados.reply){
+  respostaLimpa = dados.reply;
+}else{
+  respostaLimpa = "Não consegui gerar o diagnóstico agora. Tente novamente.";
+}
 
 resultadoDiv.innerText =
 "Sr. " + nomeCliente + ",\n\n" +
