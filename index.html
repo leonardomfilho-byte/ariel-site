@@ -133,86 +133,6 @@ Para maiores detalhes fale comigo no WhatsApp
 </div>
 
 <script>
-
-async function gerarDiagnostico(){
-
-const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico",{
-console.log("Status:", resposta.status);
-console.log("Resposta:", resposta);
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-nome:document.getElementById("nome").value,
-cidade:document.getElementById("cidade").value,
-tipo:document.getElementById("tipo").value,
-peso:document.getElementById("peso").value,
-pasto:document.getElementById("pasto").value,
-objetivo:document.getElementById("objetivo").value
-
-})
-
-});
-
-let dados;
-
-try {
-  dados = await resposta.json();
-  console.log("Dados:", dados);
-} catch (erro) {
-  console.log("Erro ao ler JSON:", erro);
-  dados = {};
-}
-console.log(dados);
-const resultadoDiv=document.getElementById("resultado");
-
-resultadoDiv.style.display="block";
-
-const nomeCliente=document.getElementById("nome").value;
-
-let respostaLimpa = "";
-
-if(dados.reply){
-  respostaLimpa = dados.reply;
-}else{
-  respostaLimpa = "Não consegui gerar o diagnóstico agora. Tente novamente.";
-}
-
-resultadoDiv.innerText =
-"Sr. " + nomeCliente + ",\n\n" +
-respostaLimpa +
-"\n\nAgora me diga uma coisa:\n" +
-"O senhor quer acelerar o ganho de peso\n" +
-"ou reduzir o custo por arroba?\n\n" +
-"Para responder, clique no WhatsApp abaixo, e continue seu Diagnóstico!";
-
-document.getElementById("btnWhatsapp").style.display="block";
-
-}
-
-function continuarConversa(){
-<script>
-
-// 🔧 FORMATA TELEFONE (garante 55 + DDD 99 se faltar)
-function formatarTelefone(numero){
-let tel = numero.replace(/\D/g,"");
-
-if(tel.length === 9){
-tel = "99" + tel;
-}
-
-if(tel.length === 10 || tel.length === 11){
-tel = "55" + tel;
-}
-
-return tel;
-}
-
-// 🚀 GERAR DIAGNÓSTICO
 async function gerarDiagnostico(){
 
 const resultadoDiv = document.getElementById("resultado");
@@ -253,17 +173,7 @@ if(dados.reply){
 resultadoDiv.innerText += "\n\nDiagnóstico:\n" + dados.reply;
 }else{
 resultadoDiv.innerText += "\n\nSem diagnóstico retornado.";
-}
 
-document.getElementById("btnWhatsapp").style.display = "block";
-
-}catch(erro){
-
-resultadoDiv.innerText = "Erro na requisição: " + erro;
-
-}
-
-}
 
 const dados = await resposta.json();
 
