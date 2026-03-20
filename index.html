@@ -80,9 +80,7 @@ margin-top:20px;
 <body>
 
 <header>
-
 <img src="logo-ariel.png" class="logo">
-
 </header>
 
 <div class="container">
@@ -90,7 +88,6 @@ margin-top:20px;
 <h2>Diagnóstico Estratégico para Seu Rebanho</h2>
 
 <input type="text" id="nome" placeholder="Seu nome">
-
 <input type="text" id="cidade" placeholder="Sua cidade">
 
 <select id="tipo">
@@ -115,127 +112,128 @@ margin-top:20px;
 <option value="Recria">Recria</option>
 </select>
 
-
-  
-
 <button onclick="gerarDiagnostico()">
-  GERAR DIAGNÓSTICO
+GERAR DIAGNÓSTICO
 </button>
-  <div id="resultado" style="display:none;margin-top:25px;"></div>
+
+<div id="resultado" style="display:none;margin-top:25px;"></div>
 
 <button id="btnWhatsapp"
 class="whatsapp"
 style="display:none"
 onclick="continuarConversa()">
 
-Para maiores detalhes fale comigo no WhatsApp
+Falar no WhatsApp
 
 </button>
 
 </div>
 
 <script>
-function gerarDiagnostico(){
-  alert("CLIQUE FUNCIONOU");
-}
 
-const dados = await resposta.json();
+async function gerarDiagnostico(){
 
-alert("Resposta recebida");
+const nome = document.getElementById("nome").value;
+const cidade = document.getElementById("cidade").value;
+const tipo = document.getElementById("tipo").value;
+const peso = document.getElementById("peso").value;
+const pasto = document.getElementById("pasto").value;
+const objetivo = document.getElementById("objetivo").value;
 
-}
-const dados = await resposta.json();
+const resultadoDiv = document.getElementById("resultado");
 
-const resultadoDiv=document.getElementById("resultado");
-resultadoDiv.style.display="block";
-
-const nomeCliente=document.getElementById("nome").value;
-
-let respostaLimpa = dados.reply || "Não consegui gerar o diagnóstico agora.";
-
-resultadoDiv.innerText =
-"Sr. " + nomeCliente + ",\n\n" +
-respostaLimpa;
-
-document.getElementById("btnWhatsapp").style.display="block";
-
-}
-// 👇 MOSTRA STATUS
-resultadoDiv.innerText = "Status da resposta: " + resposta.status;
-
-let dados;
-
-try{
-dados = await resposta.json();
-}catch(e){
-resultadoDiv.innerText += "\nErro ao ler resposta do servidor";
+if(!nome || !tipo || !peso || !pasto || !objetivo){
+resultadoDiv.style.display = "block";
+resultadoDiv.innerText = "Preencha todos os campos.";
 return;
 }
 
-// 👇 MOSTRA O QUE VEIO
-resultadoDiv.innerText += "\n\nResposta recebida:\n" + JSON.stringify(dados);
-
-if(dados.reply){
-resultadoDiv.innerText += "\n\nDiagnóstico:\n" + dados.reply;
-}else{
-resultadoDiv.innerText += "\n\nSem diagnóstico retornado.";
-
-
-const dados = await resposta.json();
-
-const resultadoDiv = document.getElementById("resultado");
 resultadoDiv.style.display = "block";
+resultadoDiv.innerText = "Analisando dados do rebanho...";
 
-// 🔥 REMOVE SAUDAÇÃO AUTOMÁTICA DO BACKEND
-let respostaLimpa = dados.reply.replace(/^.*?,\s*/i,"");
+// 🔥 SIMULAÇÃO INTELIGENTE (SUBSTITUI BACKEND)
+let diagnostico = gerarRespostaIA(tipo, peso, pasto, objetivo);
 
-// 🔥 TEXTO FINAL NO PADRÃO ARI (SEM PERGUNTA BURRA)
 resultadoDiv.style.textAlign = "justify";
 resultadoDiv.innerText =
 "Sr. " + nome + ",\n\n" +
-respostaLimpa +
-"\n\nSe fizer sentido pra sua operação, me chama no WhatsApp e ajustamos isso direto no seu sistema.";
+diagnostico +
+"\n\nSe fizer sentido pra sua operação, me chama no WhatsApp.";
 
-// 🔓 LIBERA BOTÃO
 document.getElementById("btnWhatsapp").style.display = "block";
 
-// 💾 GUARDA CONTEXTO GLOBAL
 window.dadosCliente = {
-nome, cidade, telefone, tipo, peso, pasto, objetivo,
-diagnostico: respostaLimpa
+nome, cidade, tipo, peso, pasto, objetivo,
+diagnostico
 };
 
 }
 
-// 📲 WHATSAPP COM CONTEXTO COMPLETO
+// 🧠 MOTOR SIMULADO (IA LOCAL)
+function gerarRespostaIA(tipo, peso, pasto, objetivo){
+
+let resposta = "";
+
+if(pasto === "Fraco"){
+resposta += "Seu pasto está limitando diretamente o desempenho do rebanho. ";
+}
+
+if(pasto === "Regular"){
+resposta += "Seu sistema está em nível intermediário, com espaço claro para ganho de performance. ";
+}
+
+if(tipo === "Corte"){
+resposta += "No gado de corte, o ganho de peso depende fortemente de ajuste nutricional estratégico. ";
+}
+
+if(tipo === "Leite"){
+resposta += "Na produção de leite, pequenas correções nutricionais geram aumento direto na produtividade. ";
+}
+
+if(objetivo === "Engorda"){
+resposta += "Para engorda, é possível acelerar ganho diário com suplementação correta. ";
+}
+
+if(objetivo === "Aumentar produção de leite"){
+resposta += "Existe potencial de aumento de produção com ajuste fino de dieta. ";
+}
+
+if(peso < 300){
+resposta += "Seu rebanho está abaixo do peso ideal, indicando deficiência nutricional. ";
+}
+
+if(peso > 500){
+resposta += "Seu rebanho já tem bom porte, mas pode melhorar eficiência alimentar. ";
+}
+
+resposta += "O ajuste técnico correto pode destravar resultado imediato na sua operação.";
+
+return resposta;
+}
+
+// 📲 WHATSAPP
+
 function continuarConversa(){
 
 const d = window.dadosCliente;
 
-const telefoneFormatado = formatarTelefone(d.telefone);
-
 const mensagem = encodeURIComponent(
-"Sr. Leo, chegou um diagnóstico do site:\n\n" +
-
+"Chegou um diagnóstico do site:\n\n" +
 "Cliente: " + d.nome + "\n" +
 "Cidade: " + d.cidade + "\n" +
 "Tipo: " + d.tipo + "\n" +
 "Peso: " + d.peso + " kg\n" +
 "Pasto: " + d.pasto + "\n" +
 "Objetivo: " + d.objetivo + "\n\n" +
-
-"Diagnóstico do Ari:\n" +
-d.diagnostico
+"Diagnóstico:\n" + d.diagnostico
 );
 
-// 🔴 AQUI É SEU NÚMERO (fixo)
 const url = "https://wa.me/5594984142737?text=" + mensagem;
 
 window.open(url,"_blank");
 
 }
 
-</script>
 </script>
 
 </body>
