@@ -135,22 +135,9 @@ Para maiores detalhes fale comigo no WhatsApp
 </div>
 
 <script>
-async function gerarDiagnostico(){
-
-const resposta = await fetch("https://ari-backend-520990905601.southamerica-east1.run.app/diagnostico", {
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-nome:document.getElementById("nome").value,
-cidade:document.getElementById("cidade").value,
-tipo:document.getElementById("tipo").value,
-peso:document.getElementById("peso").value,
-pasto:document.getElementById("pasto").value,
-objetivo:document.getElementById("objetivo").value
-})
-});
+function gerarDiagnostico(){
+  alert("CLIQUE FUNCIONOU");
+}
 
 const dados = await resposta.json();
 
