@@ -1,74 +1,89 @@
-# Texto para abrir o chamado na SEFA (Fale Conosco)
+# Texto para abrir o chamado na SEFA
 
-O problema é de cadastro da conta no provedor de identidade deles, não de
-credencial. O texto abaixo é escrito para chegar em quem cuida disso, em vez de
-parar no atendimento de primeiro nível. Preencha os campos entre colchetes e
-anexe a saída de `node diagnostico-sefa.mjs --json`.
+Atualizado em 20/08/2026, depois dos testes contra `apis-auth.sefa.pa.gov.br`.
+
+O erro mudou e ficou mais específico. **Não peça "habilitem service accounts"** —
+essa é uma solução possível, mas pode ser a errada, e chamado que pede a solução
+errada volta com "não é assim que funciona". Pergunte qual é o fluxo correto e
+apresente a contradição. A contradição é forte e eles vão ter que responder.
+
+Preencha o que está entre colchetes e anexe a saída de
+`node diagnostico-sefa.mjs --json`.
 
 ---
 
-**Assunto:** Integração DEC via API — erro `invalid_grant: Account is not fully
-set up` na obtenção de token (CNPJ 30.889.880/0001-60)
+**Assunto:** API do DEC — aplicações do portal não aceitam `client_credentials`
+("Client not enabled to retrieve service account") — CNPJ 30.889.880/0001-60
 
 Prezados,
 
-Sou responsável pela integração de sistema próprio com a API do DEC para o
-contribuinte **LPM Indústria e Comércio de Produtos Alimentícios**, CNPJ
+Integro sistema próprio à **API do Domicílio Eletrônico do Contribuinte (DEC)**
+para o contribuinte **LPM Indústria e Comércio de Produtos Alimentícios**, CNPJ
 **30.889.880/0001-60**, inscrição estadual **156093383**.
 
-O credenciamento foi feito e possuo Client ID e Client Secret emitidos pelo
-Portal de Serviços. A requisição segue o manual de integração e a conexão TLS
-com o certificado digital e-CNPJ A1 da empresa é estabelecida com sucesso.
+**Situação no portal de integrações (`apis.sefa.pa.gov.br`):**
 
-**Comportamento observado:** o endpoint de token responde **HTTP 400** com o
-corpo:
+- Adesão à API do DEC: **Habilitada**, plano Default.
+- Aplicações criadas e **Ativas**: três, todas vinculadas à API do DEC
+  (Client IDs `5d203797`, `de5204df` e `804b5f36`).
+- Acesso ao portal por certificado digital e-CNPJ (Web PKI): funcionando.
 
-```json
-{ "error": "invalid_grant", "error_description": "Account is not fully set up" }
+**Requisição, exatamente como publicada por vocês em "Como começar", passo 4:**
+
+```
+POST https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+client_id=<client id da aplicação>
+client_secret=<client secret da aplicação>
 ```
 
-Esse retorno é específico do Keycloak e indica que as credenciais foram
-aceitas e a identidade foi resolvida, mas a conta associada possui **ações
-obrigatórias pendentes** (required actions) — por exemplo perfil incompleto,
-e-mail não verificado, senha provisória ou termo de uso não aceito. Não se
-trata de `invalid_client`, que é o retorno esperado para credencial incorreta.
+**Resposta obtida, idêntica para as três aplicações:**
 
-**Hipótese:** a conta do Portal de Serviços foi criada através do login
-**gov.br (CPF)**, enquanto a integração autentica com o **e-CNPJ da empresa**.
-São identidades distintas, e a identidade vinculada ao e-CNPJ aparenta ter
-cadastro incompleto.
+```json
+{
+  "error": "unauthorized_client",
+  "error_description": "Client not enabled to retrieve service account"
+}
+```
 
-**O que já tentei:**
+**A contradição:** essa mensagem indica que os clients correspondentes às
+aplicações **não possuem service account habilitado**, condição necessária para
+o `client_credentials`. Ou seja, o fluxo publicado na página "Como começar" não
+funciona com as aplicações que o próprio portal cria — e não há, na área
+autenticada, nenhuma opção visível para habilitar essa configuração.
 
-1. Acessar o Portal de Serviços escolhendo autenticação por certificado digital
-   e-CNPJ, para completar o cadastro pela interface. [descreva o que aconteceu]
-2. Acessar diretamente o endpoint de autorização
-   `/protocol/openid-connect/auth`, que retorna **HTTP 403 no gateway**, com e
-   sem certificado de cliente — portanto a tela que normalmente exibiria e
-   limparia as pendências não fica acessível por esse caminho.
-3. Testar as variações de envio das credenciais (secret no corpo e no header
-   `Authorization: Basic`), com e sem certificado de cliente na conexão. Todas
-   retornam a mesma mensagem.
+**Reforça a dúvida sobre o fluxo:** a documentação do endpoint `GET /vinculos`
+informa que ele "retorna os vínculos vinculados ao CPF/CNPJ do usuário presente
+no token JWT". Um token de service account não carrega CPF/CNPJ de pessoa, o
+que sugere que o fluxo pretendido para o DEC talvez seja de **autorização com
+identificação do usuário** (`authorization_code`), e não `client_credentials`.
 
-**Solicito:**
+**Solicito, por favor:**
 
-1. Verificação, no provedor de identidade, das **ações obrigatórias pendentes**
-   na conta vinculada ao CNPJ 30.889.880/0001-60, e a remoção ou orientação de
-   como concluí-las.
-2. Confirmação de qual **grant type** o client de integração deve utilizar
-   (`client_credentials` ou outro) e se é esperado o uso de **mTLS** com o
-   certificado e-CNPJ na chamada ao endpoint de token.
-3. Confirmação de que a conta de integração deve estar vinculada ao **e-CNPJ**
-   e não ao CPF do responsável — e, em caso positivo, como fazer esse vínculo.
+1. **Qual é o fluxo OAuth correto para a API do DEC** — `client_credentials` ou
+   `authorization_code`? A página "Como começar" indica o primeiro; o
+   comportamento dos clients e a semântica de `/vinculos` sugerem o segundo.
+2. **Se for `client_credentials`:** que seja habilitado o service account nos
+   clients das aplicações acima (ou informado onde, na área autenticada, o
+   próprio contribuinte faz isso).
+3. **Se for `authorization_code`:** qual o endpoint de autorização válido, quais
+   `redirect_uri` devem ser cadastrados e qual escopo utilizar. Registro que
+   tentativas anteriores de acessar o endpoint de autorização retornaram
+   **HTTP 403 no gateway**.
+4. **Como o token deve carregar o vínculo com o CNPJ**, considerando que o
+   acesso é feito por sistema, sem operador presente a cada execução.
 
-Dados para localizar a requisição nos logs:
+Dados para localizar as requisições nos logs:
 
 - CNPJ: 30.889.880/0001-60
-- Client ID: [preencha]
+- Client IDs testados: `5d203797`, `de5204df`, `804b5f36`
 - Data/hora das tentativas: [preencha, com fuso]
 - IP de origem: [preencha]
 
-Anexo a saída completa do diagnóstico, sem segredos.
+Solicito, se possível, o encaminhamento à área técnica responsável pelo portal
+de integrações.
 
 Atenciosamente,
 [nome] — [telefone] — [e-mail]

@@ -6,6 +6,83 @@ Eletrônico do Contribuinte da SEFA-PA), parada em `Account is not fully set up`
 > Este material foi escrito para ser copiado para o `C:\Zeh`. Ele mora aqui
 > porque foi produzido numa sessão que só tinha acesso ao repositório do site.
 
+## Resultado dos testes (21/08) — o erro mudou
+
+Com a URL correta e as três aplicações, a resposta passou a ser:
+
+```json
+{ "error": "unauthorized_client",
+  "error_description": "Client not enabled to retrieve service account" }
+```
+
+Isso encerra a hipótese anterior. **A URL de token já estava certa no
+`dec.service.ts`** — não era isso. E este erro é de natureza diferente do
+`Account is not fully set up`: aquele era pendência de cadastro de usuário;
+este é ausência de `serviceAccountsEnabled` no client. São duas coisas
+distintas, e a segunda é a que vale agora.
+
+### O que isso revela sobre a arquitetura do portal
+
+O portal é **Red Hat 3scale** (visível no título da aba) com Keycloak como
+provedor. No 3scale, o componente **Zync** replica cada "aplicação" do portal
+como um client no Keycloak. O Zync cria esses clients para o fluxo de
+**redirecionamento** — com `redirect_uri` — e **não** habilita
+`serviceAccountsEnabled`.
+
+Isso explica de uma vez três observações soltas:
+
+- **Por que as três aplicações falham igual:** não é uma delas que está
+  quebrada; é o molde. Toda aplicação criada por aquele portal nasce sem
+  service account.
+- **Por que duas aplicações se chamam `https://zeh.web.app`:** o campo é a
+  `redirect_uri`. Nome de aplicação sendo URL é a assinatura do fluxo
+  `authorization_code`.
+- **Por que `/vinculos` fala em "CPF/CNPJ do usuário presente no token":**
+  um token de service account não carrega CPF/CNPJ de pessoa. A API foi
+  desenhada esperando um token de **usuário**, não de máquina.
+
+Somando: há indício razoável de que **o fluxo pretendido para o DEC seja
+`authorization_code`**, e que a página "Como começar" — genérica para todas as
+APIs do portal — esteja simplesmente errada para esta.
+
+### O teste que separa as duas hipóteses
+
+Ainda não testado, e barato. O `/auth` foi testado antes **em outro host**,
+quando `apis-auth.sefa.pa.gov.br` ainda não era conhecido; o 403 registrado no
+`CONTEXTO_ZEH.md` não vale para este host.
+
+```
+https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/auth
+  ?client_id=<CLIENT_ID>
+  &response_type=code
+  &scope=openid
+  &redirect_uri=<a redirect_uri exata cadastrada na aplicação>
+```
+
+Abrir no navegador (que é onde o Web PKI vive):
+
+- **Tela de login/consentimento** → o fluxo é `authorization_code`. Daí em
+  diante: trocar o `code` por token, guardar o `refresh_token` no Secret
+  Manager e renovar. O login humano acontece uma vez, não a cada consulta.
+- **403 do gateway** → o fluxo de redirecionamento também está fechado, e
+  nenhum caminho de integração está aberto hoje. Aí é chamado, com prova.
+- **`invalid_redirect_uri`** → o fluxo existe e o problema é só a URI
+  cadastrada. Ajustável no portal, por você.
+
+### Consequência de projeto, se for `authorization_code`
+
+O Zeh passa a precisar de um consentimento inicial pelo navegador e de guardar
+o `refresh_token`. Duas coisas a considerar quando chegar lá:
+
+- **Rotação:** muitos realms invalidam o refresh token a cada uso, devolvendo
+  um novo. Gravar o novo a cada renovação, ou o acesso morre na segunda vez.
+- **Expiração:** se o refresh também expirar, o sistema precisa avisar que o
+  login precisa ser refeito — em vez de falhar calado. Vale a mesma regra do
+  `enviadoContadorEm` do plano de e-mail: falha silenciosa é a que machuca.
+
+Isso, aliás, não conflita com a regra de nunca manifestar automaticamente —
+pelo contrário, encaixa: já havia decisão de manter o humano no circuito.
+
 ## Fatos confirmados no portal (20/08/2026)
 
 Levantados direto do portal de integrações da SEFA (`apis.sefa.pa.gov.br`),

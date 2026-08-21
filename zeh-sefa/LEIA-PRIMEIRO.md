@@ -3,6 +3,73 @@
 Escrito para você ler, não para programador. O arquivo `README.md` desta mesma
 pasta é a versão técnica — é o que você mostra para o Claude do computador.
 
+## ATUALIZAÇÃO 21/08 — o erro mudou, e agora sabemos o porquê
+
+Testando no endereço certo, com as três aplicações, a resposta passou a ser:
+
+> *"Cliente não habilitado para obter conta de serviço."*
+
+Isso é **outro** problema, mais específico — e é a melhor notícia até agora,
+porque é a primeira mensagem que aponta para um lugar concreto.
+
+### O que aconteceu, na analogia da portaria
+
+Você pediu **três crachás** no portal da SEFA, e recebeu os três. Eles estão
+ativos, a adesão está habilitada, está tudo certo do seu lado.
+
+Só que os três crachás são do **tipo errado**.
+
+São crachás de **visitante acompanhado** — funcionam quando *uma pessoa* passa
+pela catraca com eles. O Zeh precisa de um crachá de **funcionário da limpeza
+noturna**: aquele que entra sozinho, de madrugada, sem ninguém junto.
+
+E o portal da SEFA **só emite o primeiro tipo**. Não existe, em lugar nenhum da
+tela, botão para pedir o segundo.
+
+### E aí vem a parte estranha
+
+A **própria página "Como começar" da SEFA** manda usar o crachá de funcionário
+noturno. Está escrito lá, no passo 4.
+
+Ou seja: **a instrução deles não funciona com o crachá que eles mesmos emitem.**
+
+Isso não é erro seu. Não tem configuração sua para arrumar. É uma inconsistência
+no sistema deles — e agora dá para provar isso em duas linhas.
+
+### Mas talvez o crachá esteja certo e a instrução é que esteja errada
+
+Tem uma pista de que o caminho é outro. O primeiro serviço da API se chama
+"vínculos", e a descrição diz que ele devolve *"os vínculos do CPF/CNPJ do
+usuário presente no token"*.
+
+Repare: **do usuário**. O sistema do DEC quer saber **qual pessoa** está pedindo,
+e a quais empresas ela está ligada. Um crachá de funcionário noturno não tem
+nome de pessoa nenhum — então talvez ele nunca fosse servir mesmo.
+
+Se for isso, o caminho certo é: **você faz login uma vez**, autoriza o Zeh, e
+daí em diante ele se vira sozinho renovando o acesso. Isso, aliás, combina com
+a regra que você já escolheu — o Zeh nunca abre mensagem sozinho de qualquer
+jeito.
+
+### Os dois próximos passos
+
+**1. Um teste de 30 segundos, que pode resolver hoje.** Está descrito na
+conversa: é colar um endereço no navegador e ver o que aparece. Se abrir tela de
+login, achamos o caminho certo e nem precisamos da SEFA.
+
+**2. Se não abrir, o chamado.** O `CHAMADO-SEFA.md` já está reescrito com esse
+erro novo. E ele agora faz a **pergunta certa** em vez de pedir uma solução que
+pode ser a errada — o que é a diferença entre ser respondido e ser ignorado.
+
+### ⚠️ Uma coisa para fazer agora, antes de dormir
+
+Os arquivos de teste que ficaram na pasta `zeh-sefa\_to_delete\` **contêm as
+senhas das aplicações**. Apague a pasta. E confira que ela não foi enviada para
+o GitHub junto com o resto — senha de aplicação em repositório é como deixar a
+chave de casa embaixo do tapete.
+
+---
+
 ## ATUALIZAÇÃO 20/08, 23h — achamos o endereço certo
 
 Depois que você abriu o portal de integrações da SEFA
