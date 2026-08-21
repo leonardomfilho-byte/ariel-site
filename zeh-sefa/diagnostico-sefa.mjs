@@ -67,9 +67,27 @@ if (cfg.pfxPath) {
   try {
     pfx = fs.readFileSync(cfg.pfxPath);
   } catch (e) {
-    console.error(`Não consegui ler o certificado em ${cfg.pfxPath}: ${e.message}`);
-    console.error('Os testes com mTLS vão ser pulados.\n');
+    console.error(`\nNão consegui ler o certificado em ${cfg.pfxPath}: ${e.message}`);
   }
+}
+
+// A documentação da SEFA (apis.sefa.pa.gov.br/docs) diz que a API do DEC
+// exige mTLS com e-CPF ou e-CNPJ, e que o certificado entra também na
+// "requisição de autenticação" — ou seja, na chamada de token. Rodar sem
+// certificado produz um resultado que parece conclusivo e não é.
+if (!pfx) {
+  console.error(`
+${'!'.repeat(72)}
+ATENÇÃO: rodando SEM certificado de cliente.
+
+A documentação da SEFA exige mTLS para a API do DEC, inclusive na chamada
+de token. Sem o certificado, uma recusa aqui NÃO prova nada sobre o lado
+deles — o resultado é inconclusivo por construção.
+
+Preencha SEFA_CERT_PFX e SEFA_CERT_SENHA no .env antes de tirar conclusão
+ou abrir chamado.
+${'!'.repeat(72)}
+`);
 }
 
 // ---------------------------------------------------------------- HTTP
@@ -324,6 +342,34 @@ vale fazer os dois:
      (e-CNPJ, não gov.br/CPF) e completar o que ele pedir.
   2. Abrir chamado no Fale Conosco. Use o texto pronto em CHAMADO-SEFA.md.
 `);
+  } else if (/not enabled to retrieve service account/i.test(descricoes)) {
+    const comCert = resultados.find((r) => r.nome === 'A');
+    const semCert = resultados.find((r) => r.nome === 'C');
+    const mesmoErro =
+      comCert && semCert &&
+      comCert.json?.error_description === semCert.json?.error_description;
+
+    console.log(`
+"Client not enabled to retrieve service account".
+
+O Keycloak aceitou o client e recusou o grant: o client existe e as
+credenciais conferem, mas ele não tem service account habilitado — que é o
+que o client_credentials exige. Não é client_id, não é secret, não é conta
+de usuário.
+`);
+    if (!pfx) {
+      console.log(`ATENÇÃO: este teste rodou SEM certificado. Como o DEC exige mTLS,
+o resultado é inconclusivo. Preencha o certificado no .env e rode de novo
+ANTES de concluir que o problema é da SEFA.`);
+    } else if (mesmoErro) {
+      console.log(`O erro é idêntico com e sem certificado (tentativas A e C), então o
+mTLS não está mudando o resultado. Isso aponta mesmo para configuração do
+client no lado da SEFA: caso de chamado, com o texto de CHAMADO-SEFA.md.`);
+    } else {
+      console.log(`O erro MUDA entre a tentativa com certificado (A) e sem (C) — compare
+as duas acima. O certificado está fazendo diferença, então vale insistir
+na variante que chegou mais longe antes de abrir chamado.`);
+    }
   } else if (/invalid_client|unauthorized_client/i.test(erros)) {
     console.log('\nErro de credencial: client_id ou client_secret não conferem, ou o');
     console.log('client não está habilitado para esse grant. Confira no portal.');
