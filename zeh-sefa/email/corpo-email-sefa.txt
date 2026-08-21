@@ -1,0 +1,125 @@
+Prezados,
+
+Integro sistema proprio a API do Domicilio Eletronico do Contribuinte (DEC)
+para o contribuinte LPM Industria e Comercio de Produtos Alimenticios, CNPJ
+30.889.880/0001-60, inscricao estadual 156093383.
+
+SITUACAO NO PORTAL DE INTEGRACOES (apis.sefa.pa.gov.br)
+
+- Adesao a API do DEC: Habilitada, plano Default.
+- Aplicacoes criadas e Ativas: tres, todas vinculadas a API do DEC
+  (Client IDs 5d203797, de5204df e 804b5f36).
+- Acesso ao portal por certificado digital e-CNPJ (Web PKI): funcionando.
+- Certificado digital A1 e-CNPJ da empresa: valido ate 01/04/2027.
+
+Testei os dois fluxos OAuth possiveis, com as tres aplicacoes. Nenhum esta
+acessivel. Segue o resultado de cada um.
+
+
+1) client_credentials - o fluxo publicado por voces
+
+Requisicao, exatamente como consta em "Como comecar", passo 4:
+
+    POST https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token
+    Content-Type: application/x-www-form-urlencoded
+
+    grant_type=client_credentials
+    client_id=<client id da aplicacao>
+    client_secret=<client secret da aplicacao>
+
+Resposta obtida, identica para as tres aplicacoes (HTTP 401):
+
+    {"error":"unauthorized_client",
+     "error_description":"Client not enabled to retrieve service account"}
+
+Testado tambem com o client_secret no header Authorization: Basic, com o
+mesmo resultado.
+
+Leitura desse retorno: a autenticacao do client foi aceita - credencial
+incorreta produziria invalid_client, e nao unauthorized_client. A recusa e
+posterior e se refere a configuracao do client: ele nao possui service
+account habilitado, condicao necessaria para o client_credentials.
+
+Ou seja, o fluxo publicado na pagina "Como comecar" nao funciona com as
+aplicacoes que o proprio portal cria - e nao ha, na area autenticada,
+nenhuma opcao visivel para habilitar essa configuracao.
+
+
+2) authorization_code - a alternativa
+
+Como a semantica do endpoint GET /vinculos ("retorna os vinculos vinculados
+ao CPF/CNPJ do usuario presente no token JWT") sugere um token de usuario e
+nao de maquina, testei tambem o fluxo de autorizacao, pelo navegador, com o
+certificado e-CNPJ instalado:
+
+    GET https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/auth
+        ?client_id=<client id da aplicacao>
+        &response_type=code
+        &scope=openid
+        &redirect_uri=https://zeh.web.app/sefa/callback
+
+Resposta obtida, identica para as tres aplicacoes:
+
+    HTTP 403 Forbidden
+    Request forbidden by administrative rules.
+
+Leitura desse retorno: o bloqueio e do gateway, anterior ao Keycloak. Uma
+redirect_uri nao cadastrada produziria invalid_redirect_uri, e um client
+inexistente produziria invalid_client - nenhum dos dois ocorreu. O endpoint
+/.well-known/openid-configuration do mesmo host tambem responde 403.
+
+
+RESUMO
+
+- client_credentials, em /protocol/openid-connect/token:
+  HTTP 401 - "Client not enabled to retrieve service account"
+- authorization_code, em /protocol/openid-connect/auth:
+  HTTP 403 - bloqueado no gateway
+
+Com adesao habilitada e tres aplicacoes ativas, nao ha caminho de integracao
+aberto hoje para a API do DEC neste CNPJ.
+
+
+SOLICITO, POR FAVOR:
+
+1. Qual e o fluxo OAuth correto para a API do DEC - client_credentials ou
+   authorization_code? A pagina "Como comecar" indica o primeiro; a semantica
+   de /vinculos sugere o segundo.
+
+2. Se for client_credentials: que seja habilitado o service account nos
+   clients das tres aplicacoes acima, ou informado onde, na area autenticada,
+   o proprio contribuinte faz isso.
+
+3. Se for authorization_code: que seja liberado o acesso ao endpoint de
+   autorizacao (hoje HTTP 403 no gateway), e informado quais redirect_uri
+   devem ser cadastradas e qual escopo utilizar.
+
+4. Sobre o requisito de mTLS: a pagina de Documentacao informa que a API do
+   DEC exige autenticacao mTLS com certificado e-CPF/e-CNPJ, inclusive na
+   requisicao de autenticacao. Solicito confirmacao de qual host e porta
+   devem ser usados para essa chamada - se o proprio
+   apis-auth.sefa.pa.gov.br:443 ou um endpoint mTLS distinto. Registro que o
+   /.well-known/openid-configuration, que normalmente publicaria esses
+   enderecos, responde 403.
+
+5. Como o token deve carregar o vinculo com o CNPJ, considerando que o acesso
+   e feito por sistema, sem operador presente a cada execucao.
+
+
+DADOS PARA LOCALIZAR AS REQUISICOES NOS LOGS
+
+- CNPJ: 30.889.880/0001-60
+- Client IDs testados: 5d203797, de5204df, 804b5f36
+- Data/hora das tentativas: 21/08/2026, entre 00h e 08h20 (horario de
+  Brasilia, UTC-3)
+- Endpoints: apis-auth.sefa.pa.gov.br/protocol/openid-connect/{token,auth}
+
+Solicito, se possivel, o encaminhamento a area tecnica responsavel pelo
+portal de integracoes.
+
+Atenciosamente,
+
+Leonardo Pereira de Moura Filho
+(94) 98414-2737
+leonardomfilho@gmail.com
+LPM Industria e Comercio de Produtos Alimenticios - CNPJ 30.889.880/0001-60
