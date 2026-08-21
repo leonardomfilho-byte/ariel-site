@@ -1,12 +1,21 @@
 # Contexto do Zeh — onde paramos
 
-Atualizado em **21/08/2026 (madrugada)**. Este arquivo é o ponto de partida
-da próxima sessão. O guia de comandos de deploy é o `GUIA-DEPLOY.md`.
+Atualizado em **21/08/2026, 09h30**. Este arquivo é o ponto de partida da
+próxima sessão. O guia de comandos de deploy é o `GUIA-DEPLOY.md`.
+
+> **O DEC está com a SEFA.** Investigação encerrada em 21/08: os dois fluxos
+> OAuth foram testados nas três aplicações e ambos estão bloqueados. O chamado
+> foi aberto — e-mail às 08h41 e atendimento por WhatsApp, **protocolo 212913**.
+> Não há mais teste a fazer nem código a escrever do nosso lado. **Nada mais no
+> Zeh depende disso**; a fila de código segue normal.
 
 **Planos detalhados nesta pasta:**
 - `PLANO-DISTRIBUICAODFE.md` — download automático das notas dos fornecedores
 - `PLANO-EMISSAO-NFE.md` — emissão de NF-e pelo Zeh
-- `zeh-sefa/` — diagnóstico da API da SEFA, texto de chamado e script de teste
+- `zeh-sefa/` — diagnóstico da API da SEFA, script de teste e código de
+  referência. Dentro dela, dois arquivos de acompanhamento:
+  `CHAMADOSEFA.md` (texto do chamado) e `REGISTRO-CHAMADO-SEFA.md`
+  (cronologia dos contatos, para a Ouvidoria se for preciso)
 
 ---
 
@@ -73,12 +82,15 @@ ainda não existem** — é o primeiro passo da emissão.
    produção: qualquer teste seu mexe no dado real da Ariel. Recomendação: criar
    um banco `zeh-dev` na mesma instância Cloud SQL (custo ~zero, não precisa de
    Docker) e apontar o `.env` local para ele.
-7. **Abrir o chamado na SEFA** — texto pronto em `zeh-sefa/CHAMADO-SEFA.md`.
-   Ver a seção do DEC: o que falta agora não está do seu lado.
-8. 🔴 **Apagar `zeh-sefa\_to_delete\` e conferir se não foi para o GitHub.**
-   Os arquivos de teste de 21/08 contêm client secrets das aplicações da SEFA.
-   Se algum commit os pegou, **rotacionar os segredos no portal** — não basta
-   apagar o arquivo, o histórico do git guarda.
+7. ~~Abrir o chamado na SEFA~~ — **FEITO em 21/08.** E-mail às 08h41 e
+   atendimento por WhatsApp, **protocolo 212913**. Ver a seção do DEC. O que
+   resta é **abrir protocolo digital** pelo Portal de Serviços (opcional, e
+   pode ser na segunda) — é o canal que entra como documento, sem depender de
+   atendente traduzir. Citar "complementando o atendimento 212913".
+8. ~~Apagar `_to_delete` e conferir o GitHub~~ — **CONFERIDO em 21/08: nunca
+   entrou em commit nenhum.** `zeh-sefa/` inteira está como não-rastreada, e o
+   `.gitignore` da pasta agora cobre `_to_delete/`. **Não é preciso rotacionar
+   segredo.** Apagar a pasta continua sendo boa higiene.
 
 ---
 
@@ -107,14 +119,10 @@ para o sistema.
 
 ---
 
-## Onde parou o DEC (SEFA) — reescrito em 21/08
+## Onde parou o DEC (SEFA)
 
 O DEC é a caixa postal oficial da Fazenda: mensagem entregue ali vale como
 intimação, com prazo correndo.
-
-**A anotação anterior está superada.** Ela dizia que o travamento era
-`Account is not fully set up` e que a causa provável era conta de portal
-incompleta. Isso caiu. Segue a leitura correta.
 
 ### O portal certo é outro
 
@@ -126,100 +134,127 @@ confundir os dois:
 - **Portal de integrações** — `apis.sefa.pa.gov.br`, um **Red Hat 3scale**.
   É de onde saem Client ID e Secret. Só apareceu no radar em 20/08.
 
-Situação atual no portal de integrações, conferida em tela:
+Situação no portal de integrações, conferida em tela:
 
 - **Adesão ao DEC: Habilitada**, plano Default.
 - **Três aplicações ativas**, todas para o DEC: `5d203797`, `de5204df` e
   `804b5f36`. Duas se chamam `https://zeh.web.app` — o campo é `redirect_uri`.
 - **Endpoint de token** (deles, em "Como começar", passo 4):
-  `https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token`,
-  `grant_type=client_credentials`, **sem certificado**.
+  `https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token`.
   Note que o caminho **não tem `/realms/...`** no meio.
 - **Base da API:** `https://apis-publicas-gw.sefa.pa.gov.br/dec`.
 
 **A URL no `dec.service.ts` já estava correta.** Testado em 21/08.
 
-### ⚠️ Correção de 21/08, 00h26 — o DEC exige mTLS
+### ✅ INVESTIGAÇÃO ENCERRADA — os dois fluxos estão fechados
 
-A página **Documentação** do portal (`apis.sefa.pa.gov.br/docs`) diz:
+Testados os **dois** fluxos OAuth possíveis, com as **três** aplicações. Não há
+caminho de integração aberto hoje.
+
+| Fluxo | Endpoint | Resultado nas três aplicações |
+|---|---|---|
+| `client_credentials` | `/protocol/openid-connect/token` | HTTP 401 — `Client not enabled to retrieve service account` |
+| `authorization_code` | `/protocol/openid-connect/auth` | HTTP 403 — `Request forbidden by administrative rules` |
+
+O `/.well-known/openid-configuration` do mesmo host também responde **403** — é
+por isso que não dá para descobrir sozinho se existe endpoint mTLS separado.
+
+### 📞 Os contatos com a SEFA — 21/08
+
+Cronologia completa em `zeh-sefa/REGISTRO-CHAMADO-SEFA.md`. Resumo:
+
+**08h41 — e-mail** para `atendimento@sefa.pa.gov.br`, com o relatório técnico
+completo. **Respondido por mensagem automática** da Coordenação de Atendimento,
+só listando os canais. Ninguém técnico leu.
+
+**09h08 a 09h25 — WhatsApp 0800 725 5533.** Protocolo **212913**, atendente
+**Eduardo**. O que aconteceu, e vale entender porque explica o impasse:
+
+- O atendimento traduziu o pedido como *"o sistema está fora do ar"* e
+  consultou o setor, que respondeu: **"portal normal, nenhuma instabilidade"**.
+  Resposta correta para a pergunta errada — o portal está no ar **e** as
+  aplicações não obtêm token; as duas coisas convivem.
+- Informado que **a DTI é setor interno** e o call center **não repassa contato
+  ao público**.
+- Às **09h19** foi registrada, dentro do protocolo, a descrição técnica
+  correta (erro exato, três Client IDs, e que é configuração e não
+  instabilidade). Isso importa: evita o caso ser arquivado como falso alarme.
+- Perguntado se encaminhou à DTI, o atendente respondeu **"repassei aos meus
+  superiores"** — sem confirmar a DTI. Guardado para eventual cobrança.
+
+**Conclusão dos contatos:** a SEFA não tem hoje um canal montado para receber
+problema de integração de API. O portal é novo e o atendimento não acompanhou.
+
+### O que ainda pode ser feito, sem pressa
+
+1. **Protocolo digital** pelo Portal de Serviços, com certificado. Entra como
+   documento e é encaminhado por assunto — não depende de intermediário
+   traduzir, que foi onde os dois primeiros contatos travaram.
+2. **Ouvidoria Fazendária** — (91) 3039-8610 / 8546 / 8545. Cabível quando não
+   se obtém resposta satisfatória das unidades regulares. O
+   `REGISTRO-CHAMADO-SEFA.md` já é a instrução do pedido.
+3. **Alternativa comercial:** contratar intermediário que já venda o acesso
+   pronto ao DEC. Mesma lógica do `PLANO-EMISSAO-NFE.md` — não construir o que
+   não é o negócio da empresa. Vale reconsiderar se não houver retorno.
+
+### Por que o certificado não muda o primeiro resultado
+
+Registrado porque custou tempo e a intuição aqui engana. A página de
+Documentação da SEFA de fato exige mTLS para o DEC (citação preservada abaixo),
+e por isso ficou a hipótese de que o teste sem certificado fosse inconclusivo.
+**Não é**, e a razão está na própria mensagem de erro:
+
+No Keycloak, a checagem acontece em duas etapas, nesta ordem:
+
+1. **Autenticar o client** — quem é você? Falha aqui produz `invalid_client`.
+2. **Autorizar o grant** — você pode usar `client_credentials`? Falha aqui
+   produz `unauthorized_client: Client not enabled to retrieve service account`.
+
+O erro recebido é o **da segunda etapa**. Ou seja, a primeira **passou**: o
+Keycloak aceitou `client_id` + `client_secret` e identificou o client. mTLS é
+método de *autenticação* — atua na etapa 1, que já estava passando. Ele não
+liga a flag `serviceAccountsEnabled`, que é configuração do client e é o que
+falta.
+
+O certificado continua provavelmente necessário para as chamadas à API em
+`apis-publicas-gw`, quando o acesso abrir. Só não é o que destrava o token.
+
+**Citação preservada** (`apis.sefa.pa.gov.br/docs`, conferida em tela 21/08):
 
 > "Algumas APIs, como por exemplo a do **DEC**, exigem autenticação com
 > **mTLS**, usando certificado digital **e-CPF ou e-CNPJ**. (...) você deve
 > realizar a **requisição de autenticação também com o certificado digital**,
 > além do Client ID e Client Secret."
 
-"Requisição de autenticação" é a chamada de **token**. A página "Como começar"
-não menciona isso porque é genérica para todo o catálogo.
+### Por que as três aplicações falham igual
 
-**O teste que deu `Client not enabled to retrieve service account` foi feito
-SEM certificado, e portanto não é conclusivo.** Refazer com mTLS antes de
-concluir qualquer coisa e antes de abrir o chamado.
+Consistente com a arquitetura: o portal é **Red Hat 3scale**, e o componente
+**Zync** replica cada aplicação como um client do Keycloak montado para o fluxo
+de **redirecionamento**, sem service account. Não é uma aplicação quebrada — é
+o molde. Por isso criar uma quarta aplicação não adiantaria.
 
-Isso também **derruba a hipótese do `authorization_code`** registrada abaixo:
-se eles documentam mTLS + Client ID + Secret, o fluxo é `client_credentials`
-mesmo, e o certificado é o que identifica a empresa no lugar do CPF/CNPJ de
-uma pessoa — o que explicaria a semântica de `/vinculos`.
+E a contradição que sustenta o chamado: **o fluxo que eles publicam em "Como
+começar" (`client_credentials`) não funciona com as aplicações que o portal
+deles mesmo cria**, e o fluxo alternativo está bloqueado no gateway.
 
-**Falta ler:** o "Passo a passo para integração" da página `/docs` continua
-abaixo da dobra. Pode trazer host ou porta específicos para mTLS — gateways
-costumam expor o endpoint mTLS em endereço separado.
+### Semântica dos erros de `/vinculos`, para quando o acesso abrir
 
-### O travamento real
+| Código | Significado publicado |
+|---|---|
+| 200 | Lista de vínculos retornada com sucesso |
+| 401 | Token inválido, ausente ou **usuário não encontrado no token** |
+| 403 | **Usuário autenticado, porém sem vínculo** ou autorização |
 
-Com a URL certa e as três aplicações, todas retornam o mesmo:
+O 403 separa "o acesso não funciona" de "o acesso funciona mas não está ligado
+à LPM". Vê-lo depois de resolver o token é **progresso, não retrocesso**.
 
-```json
-{ "error": "unauthorized_client",
-  "error_description": "Client not enabled to retrieve service account" }
-```
-
-Ou seja: os clients criados pelo portal **não têm service account habilitado**,
-que é o que o `client_credentials` exige. Não é client_id, não é secret, não é
-certificado, não é conta de usuário — e **não há botão para ligar isso** na área
-autenticada.
-
-Isso é consistente com a arquitetura: no 3scale, o componente **Zync** replica
-cada aplicação como um client do Keycloak montado para o fluxo de
-**redirecionamento**, sem service account. Por isso as três falham igual — é o
-molde, não uma aplicação quebrada.
-
-### A hipótese que vale testar antes do chamado
-
-Há indício razoável de que **o fluxo certo para o DEC seja `authorization_code`**
-e que a página "Como começar" — genérica para todas as APIs do portal — esteja
-errada para esta:
-
-- `GET /vinculos` devolve "os vínculos vinculados ao **CPF/CNPJ do usuário**
-  presente no token JWT". Token de service account não carrega CPF/CNPJ de
-  pessoa.
-- Duas das três aplicações têm **URL como nome** — assinatura de `redirect_uri`.
-
-**Teste que ninguém fez ainda** (o 403 anotado antes foi obtido em **outro
-host**, antes de `apis-auth` ser conhecido — aquele registro não vale aqui):
-
-```
-https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/auth
-  ?client_id=<CLIENT_ID>&response_type=code&scope=openid
-  &redirect_uri=<a redirect_uri exata da aplicação>
-```
-
-Abrir **no navegador**, que é onde o Web PKI vive:
-
-- **Tela de login** → é esse o fluxo. Trocar o `code` por token, guardar o
-  `refresh_token` no Secret Manager, renovar sozinho depois.
-- **403 do gateway** → nenhum caminho está aberto; chamado, com prova.
-- **`invalid_redirect_uri`** → o fluxo existe, só falta acertar a URI no
-  portal. Resolve sozinho.
-
-### Se for `authorization_code`, duas armadilhas
+### Se a resposta for `authorization_code`, duas armadilhas
 
 - **Rotação:** muitos realms invalidam o refresh token a cada uso e devolvem um
   novo. Gravar o novo a cada renovação, ou o acesso morre na segunda vez.
 - **Expiração silenciosa:** quando o refresh expirar, o sistema tem que
   **avisar** que precisa refazer o login, não falhar calado. Mesma lição do
   `enviadoContadorEm` no plano de e-mail.
-
-Isso não conflita com a regra de manter o humano no circuito — encaixa nela.
 
 **Regra que não muda:** o Zeh **nunca abre** mensagem do DEC automaticamente.
 Abrir registra ciência e faz o prazo correr. O sistema avisa que existe
@@ -306,6 +341,15 @@ Em ordem, do mais barato ao mais caro:
 O DEC não entra nesta fila enquanto a SEFA não responder — não há código a
 escrever enquanto o acesso não abre.
 
+**Uma exceção pequena, achada na revisão de 21/08:** o `dec.service.ts` foi
+comparado com `zeh-sefa/sefamtlsreferencia.ts` e passou nas armadilhas que
+importam — usa `https.request` com certificado (não `fetch` com `agent`, que
+mandaria a chamada sem certificado e sem erro), nunca desliga
+`rejectUnauthorized`, e preserva o corpo do erro da SEFA. **Falta só o cache de
+token em memória:** hoje toda consulta pede token novo. Não é urgente enquanto
+o acesso está fechado, mas vale arrumar antes de ligar o serviço — é a mesma
+lição da rejeição 656, tráfego repetido vira bloqueio.
+
 ---
 
 ## Aviso sobre ferramentas (atualizado 21/08)
@@ -314,11 +358,10 @@ escrever enquanto o acesso não abre.
   `zeh-Anthropic.txt` e todos os `.env`). **Histórico auditado em 20/08:
   limpo** — o único arquivo sensível que já passou por algum commit é o
   `.env.example`, que só tem placeholders.
-- 🔴 **Reauditar antes de subir para o GitHub.** Em 21/08 foram criados
-  arquivos de teste com client secrets em `zeh-sefa\_to_delete\`. Conferir se
-  o `.gitignore` cobre esse caminho e se algum commit os pegou. Se pegou,
-  **rotacionar os segredos no portal da SEFA** — apagar o arquivo não limpa o
-  histórico.
+- ✅ **`_to_delete` auditado em 21/08: limpo.** Os arquivos de teste com client
+  secrets criados naquele dia **nunca entraram em commit nenhum** — `zeh-sefa/`
+  inteira está como não-rastreada (`??` no `git status`), e o `.gitignore` da
+  pasta agora cobre `_to_delete/`. **Não é preciso rotacionar segredo.**
 - **Ainda não há remoto configurado.** A tentativa de subir em 20/08 falhou por
   incidente do próprio GitHub (erro 500 no login pelo Google), não por problema
   local. Tentar de novo outro dia.
@@ -329,3 +372,8 @@ escrever enquanto o acesso não abre.
   mexer no código, é o aplicativo do computador. Para pesquisar, diagnosticar e
   escrever documento, a web serve — foi assim que a sessão de 21/08 achou o
   portal de integrações.
+- **URL com `&` não se cola no PowerShell.** O `&` é operador lá e quebra o
+  comando. Endereço de site vai na barra do Chrome, não no terminal.
+- **Para printar comando com segredo:** ponha o segredo numa variável antes
+  (`$s = "..."`), rode `cls` para limpar a tela, e use `$s` no comando. O print
+  mostra `client_secret=$s` em vez do valor — tela cheia, sem vazar credencial.
