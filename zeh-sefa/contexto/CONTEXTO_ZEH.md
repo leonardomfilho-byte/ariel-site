@@ -139,6 +139,31 @@ Situação atual no portal de integrações, conferida em tela:
 
 **A URL no `dec.service.ts` já estava correta.** Testado em 21/08.
 
+### ⚠️ Correção de 21/08, 00h26 — o DEC exige mTLS
+
+A página **Documentação** do portal (`apis.sefa.pa.gov.br/docs`) diz:
+
+> "Algumas APIs, como por exemplo a do **DEC**, exigem autenticação com
+> **mTLS**, usando certificado digital **e-CPF ou e-CNPJ**. (...) você deve
+> realizar a **requisição de autenticação também com o certificado digital**,
+> além do Client ID e Client Secret."
+
+"Requisição de autenticação" é a chamada de **token**. A página "Como começar"
+não menciona isso porque é genérica para todo o catálogo.
+
+**O teste que deu `Client not enabled to retrieve service account` foi feito
+SEM certificado, e portanto não é conclusivo.** Refazer com mTLS antes de
+concluir qualquer coisa e antes de abrir o chamado.
+
+Isso também **derruba a hipótese do `authorization_code`** registrada abaixo:
+se eles documentam mTLS + Client ID + Secret, o fluxo é `client_credentials`
+mesmo, e o certificado é o que identifica a empresa no lugar do CPF/CNPJ de
+uma pessoa — o que explicaria a semântica de `/vinculos`.
+
+**Falta ler:** o "Passo a passo para integração" da página `/docs` continua
+abaixo da dobra. Pode trazer host ou porta específicos para mTLS — gateways
+costumam expor o endpoint mTLS em endereço separado.
+
 ### O travamento real
 
 Com a URL certa e as três aplicações, todas retornam o mesmo:

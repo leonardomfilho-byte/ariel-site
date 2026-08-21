@@ -6,6 +6,47 @@ Eletrônico do Contribuinte da SEFA-PA), parada em `Account is not fully set up`
 > Este material foi escrito para ser copiado para o `C:\Zeh`. Ele mora aqui
 > porque foi produzido numa sessão que só tinha acesso ao repositório do site.
 
+## CORREÇÃO (21/08) — o DEC exige mTLS
+
+A página **Documentação** do portal (`apis.sefa.pa.gov.br/docs`) traz uma
+exigência que a página "Como começar" não menciona:
+
+> "Algumas APIs, como por exemplo a do **DEC (Domicílio Eletrônico do
+> Contribuinte)**, exigem autenticação com **mTLS**, usando certificado digital
+> **e-CPF ou e-CNPJ**. Quando esse requisito existir, ele será informado na
+> documentação específica da API. Para consumir essas APIs, você deve realizar
+> a **requisição de autenticação também com o certificado digital**, além do
+> Client ID e Client Secret."
+
+"Requisição de autenticação" é a chamada de **token**, não só a chamada da API.
+O "Como começar" é genérico para todo o catálogo; a exigência do DEC vive só
+aqui.
+
+**Consequência:** o teste que produziu `Client not enabled to retrieve service
+account` foi feito **sem certificado** e portanto não é conclusivo. Refazer com
+mTLS antes de qualquer conclusão — inclusive antes de abrir o chamado.
+
+**Isto também derruba a hipótese do `authorization_code`** levantada abaixo: se
+a SEFA documenta mTLS + Client ID + Client Secret, o fluxo pretendido é mesmo
+`client_credentials`, e o certificado é o que identifica a empresa no lugar do
+CPF/CNPJ de uma pessoa. O que a seção seguinte diz sobre `/vinculos` continua
+valendo como observação, mas deixa de ser indício de outro fluxo: em mTLS o
+Keycloak pode mapear o certificado para a identidade, o que explicaria o campo.
+
+**Como refazer o teste:** preencher `SEFA_CERT_PFX` e `SEFA_CERT_SENHA` no
+`.env` e rodar `node diagnostico-sefa.mjs`. A bateria já compara com e sem
+certificado — a tentativa **A** é a que vale agora, e o contraste com a **C**
+mostra o que o certificado muda.
+
+**Se o erro persistir idêntico com mTLS**, aí sim o chamado, e mais forte
+ainda: seguindo à risca a documentação deles, com certificado, três aplicações
+ativas e adesão habilitada.
+
+**Ainda não lido:** a página `/docs` tem um "Passo a passo para integração"
+numerado que continua abaixo da dobra. Pode conter host ou porta específicos
+para mTLS — gateways costumam expor o endpoint mTLS em endereço separado.
+Vale ler o restante antes de concluir qualquer coisa.
+
 ## Resultado dos testes (21/08) — o erro mudou
 
 Com a URL correta e as três aplicações, a resposta passou a ser:

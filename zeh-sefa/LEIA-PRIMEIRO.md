@@ -3,6 +3,47 @@
 Escrito para você ler, não para programador. O arquivo `README.md` desta mesma
 pasta é a versão técnica — é o que você mostra para o Claude do computador.
 
+## CORREÇÃO 21/08 — o teste anterior não valia
+
+Apareceu, numa página que a gente ainda não tinha visto, uma frase que muda o
+teste:
+
+> *"Algumas APIs, como por exemplo a do DEC, exigem autenticação com mTLS,
+> usando certificado digital e-CPF ou e-CNPJ."*
+
+Traduzindo: **o DEC exige o certificado digital na hora de pedir a chave de
+entrada.** Não é só para entrar no portal — é para pedir a chave também.
+
+Eu tinha escrito o contrário no arquivo de configuração, mandando deixar o
+certificado de fora. Me baseei na página "Como começar", que não fala de
+certificado nenhum — só que aquela página vale para todas as APIs da SEFA em
+geral, e a exigência do DEC está escondida em **outra** página.
+
+Ou seja: **o teste que deu "cliente não habilitado" foi feito sem o
+certificado**, seguindo instrução minha que estava errada. Ele não vale.
+
+### Voltando à analogia da portaria
+
+Não é que o crachá seja do tipo errado, como eu disse antes. É que **o crachá
+sozinho não abre a porta do DEC** — ali, além do crachá, o porteiro exige
+também a sua identidade na mão. E a gente foi lá só com o crachá.
+
+Talvez o crachá esteja certo esse tempo todo.
+
+### O que fazer agora
+
+Refazer o teste, com o certificado junto. Peça ao Claude do computador:
+
+> *"O DEC exige mTLS — o certificado digital tem que ir junto na chamada de
+> token, não só na API. Preenche SEFA_CERT_PFX e SEFA_CERT_SENHA no .env do
+> zeh-sefa e roda o diagnóstico de novo, testando as três aplicações."*
+
+**Não abra o chamado ainda.** Se o erro sumir com o certificado, você não
+precisa da SEFA para nada. E se persistir, o chamado fica muito mais forte —
+porque aí você terá feito exatamente o que a documentação deles manda.
+
+---
+
 ## ATUALIZAÇÃO 21/08 — o erro mudou, e agora sabemos o porquê
 
 Testando no endereço certo, com as três aplicações, a resposta passou a ser:
