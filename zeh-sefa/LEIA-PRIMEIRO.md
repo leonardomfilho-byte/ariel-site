@@ -3,6 +3,48 @@
 Escrito para você ler, não para programador. O arquivo `README.md` desta mesma
 pasta é a versão técnica — é o que você mostra para o Claude do computador.
 
+## ATUALIZAÇÃO 20/08, 23h — achamos o endereço certo
+
+Depois que você abriu o portal de integrações da SEFA
+(`apis.sefa.pa.gov.br`), apareceu uma informação que muda o diagnóstico.
+
+**A SEFA tem dois prédios diferentes.** Um é o portal do contribuinte, onde
+você entra com o certificado digital pela extensão. O outro é o portal de
+integrações, que é de onde os sistemas pegam a chave de entrada.
+
+Na página "Como começar" deles, passo 4, está escrito o endereço certo:
+
+```
+https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token
+```
+
+E o modo de entrar é **só Client ID e Client Secret — sem certificado
+digital nenhum.**
+
+**Por que isso importa tanto:** a mensagem "conta não está totalmente
+configurada" é o tipo de recusa que aparece quando o sistema acha que é
+**uma pessoa** tentando entrar, não um programa. Se o Zeh estava pedindo a
+chave no prédio errado — o do contribuinte, onde sua conta existe como
+pessoa física e está com cadastro incompleto — a resposta seria exatamente
+essa.
+
+Ou seja: você tentou de tudo, mas possivelmente no lugar errado. E o lugar
+certo só apareceu agora.
+
+**Duas coisas já descartadas:**
+
+- A **adesão** ao DEC está *Habilitada*. Não falta isso.
+- As **aplicações** estão ativas. Mas existem **três** delas, todas para o
+  DEC. Só uma está configurada no Zeh — e se o Client ID for de uma e a
+  senha for de outra, também não funciona.
+
+**O que fazer:** peça ao Claude do computador para comparar o endereço que
+está configurado hoje no Zeh com o de cima, e testar as três aplicações.
+Se o endereço estiver diferente, é uma linha de configuração — resolve sem
+depender de ninguém da SEFA.
+
+---
+
 ## O que está acontecendo, sem termo técnico
 
 O Zeh tenta entrar no sistema da SEFA e leva a seguinte resposta:

@@ -6,6 +6,64 @@ Eletrônico do Contribuinte da SEFA-PA), parada em `Account is not fully set up`
 > Este material foi escrito para ser copiado para o `C:\Zeh`. Ele mora aqui
 > porque foi produzido numa sessão que só tinha acesso ao repositório do site.
 
+## Fatos confirmados no portal (20/08/2026)
+
+Levantados direto do portal de integrações da SEFA (`apis.sefa.pa.gov.br`),
+que é um sistema **separado** do portal do contribuinte. Isso substitui
+qualquer suposição feita antes de ter acesso a ele.
+
+**Endpoint de token** — publicado por eles em "Como começar", passo 4:
+
+```
+POST https://apis-auth.sefa.pa.gov.br/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+client_id=...
+client_secret=...
+```
+
+Dois detalhes que valem atenção:
+
+- O host é **`apis-auth`**, não o host do portal do contribuinte. Se o Zeh
+  estiver pedindo token no realm do portal do contribuinte, o
+  `Account is not fully set up` é explicado inteiro: naquele realm existe
+  uma conta de **pessoa** (criada via gov.br/CPF) com cadastro incompleto.
+  Esta é hoje a hipótese mais forte.
+- O caminho **não tem `/realms/{realm}`**. É `/protocol/openid-connect/token`
+  direto — o host já resolve o realm. Uma URL montada no formato Keycloak
+  padrão bate em outro lugar.
+
+**Sem certificado.** O exemplo oficial é `client_credentials` puro, sem mTLS
+e sem escopo. O certificado A1 segue necessário para o portal (via extensão
+Web PKI), mas não para a API.
+
+**Base da API:** `https://apis-publicas-gw.sefa.pa.gov.br/dec`
+(sem token responde `Authentication parameters missing`).
+
+**Esquema de segurança do Swagger:** `bearer-keycloak` (http, Bearer) — a API
+só recebe o token pronto, não participa da obtenção dele.
+
+**Primeiro serviço:** `GET /vinculos` — "retorna os vínculos vinculados ao
+CPF/CNPJ do usuário presente no token JWT". A modelagem é orientada a
+*usuário com vínculos*, não a *empresa*: o token precisa carregar um
+CPF/CNPJ que tenha vínculo com a LPM.
+
+**Adesão:** o DEC aparece como **Habilitada**, plano Default. Descartado como
+causa.
+
+**Aplicações:** havia **três** aplicações ativas para o DEC (`5d203797`,
+`de5204df`, `804b5f36`). Conferir que o `client_id` e o `client_secret` em
+uso pertencem ao **mesmo** cadastro — pares trocados entre aplicações são
+uma causa comum e silenciosa.
+
+### O que testar primeiro
+
+Comparar a URL de token configurada hoje no Zeh com a de cima. Se forem
+diferentes, é uma linha de configuração — e não depende da SEFA atender.
+Se forem iguais e o erro persistir, aí sim é cadastro do lado deles, e o
+chamado vai com uma prova bem mais forte.
+
 ## Arquivos
 
 | Arquivo | Para que serve |
