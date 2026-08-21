@@ -6,6 +6,29 @@ Eletrônico do Contribuinte da SEFA-PA), parada em `Account is not fully set up`
 > Este material foi escrito para ser copiado para o `C:\Zeh`. Ele mora aqui
 > porque foi produzido numa sessão que só tinha acesso ao repositório do site.
 
+### Semântica dos erros de `/vinculos` (do Swagger, 21/08)
+
+Útil para quando o token funcionar — evita ler o próximo erro como regressão:
+
+| Código | Significado publicado |
+|---|---|
+| 200 | Lista de vínculos retornada com sucesso |
+| 401 | Token JWT inválido, ausente ou **usuário não encontrado no token** |
+| 403 | **Usuário autenticado, porém sem vínculo** ou autorização para o recurso |
+| 500 | Erro interno do servidor |
+
+O 403 é o que interessa: ele separa "seu acesso não funciona" de "seu acesso
+funciona mas não está ligado à LPM". São etapas diferentes do mesmo caminho, e
+ver um 403 depois de resolver o token é progresso, não retrocesso.
+
+O 401 mencionar "usuário não encontrado no token" reforça que a API espera
+identidade no token — o que, com mTLS, o certificado deve suprir.
+
+**Atalho de teste:** a página do Swagger tem "Try it out". Como o Chrome do Leo
+carrega o certificado (Web PKI), o mTLS provavelmente sai de graça por ali —
+mas exige um token colado em "Authorize", que é justamente o que falta. Fica
+como validação rápida assim que o token sair.
+
 ## CORREÇÃO (21/08) — o DEC exige mTLS
 
 A página **Documentação** do portal (`apis.sefa.pa.gov.br/docs`) traz uma
