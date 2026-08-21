@@ -5,3 +5,10 @@
 *.p12
 *.cer
 *.key
+
+# Pastas de teste costumam nascer com segredo dentro e morrer esquecidas.
+# Em 21/08 uma delas (_to_delete) guardou os client secrets da SEFA.
+_to_delete/
+temp/
+tmp/
+*.log
