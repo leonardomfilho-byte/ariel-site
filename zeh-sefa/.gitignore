@@ -1,0 +1,7 @@
+# Nunca versionar credencial ou certificado.
+.env
+.env.local
+*.pfx
+*.p12
+*.cer
+*.key
