@@ -1,6 +1,6 @@
 # Contexto do Zeh — onde paramos
 
-Atualizado em **21/08/2026, 09h30**. Este arquivo é o ponto de partida da
+Atualizado em **21/08/2026, 10h**. Este arquivo é o ponto de partida da
 próxima sessão. O guia de comandos de deploy é o `GUIA-DEPLOY.md`.
 
 > **O DEC está com a SEFA.** Investigação encerrada em 21/08: os dois fluxos
@@ -328,12 +328,34 @@ Em ordem, do mais barato ao mais caro:
 1. **Corrigir o texto "NF-e integrada"** na tela de login. Não é verdade hoje —
    o sistema só lê XML de fornecedor — e **a Oba Sucos já viu essa tela**.
    Cinco minutos.
-2. **Corrigir o corte de informação nas telas.** Relatado em 20/08: "o zoom do
-   painel está cortando as informações". Suspeita: **não é zoom** — a tela do
-   Leo é **1366×768**, e painel desenhado em monitor grande corta nessa
-   largura; diminuir o zoom para caber é a reação, não a causa. Investigar
-   largura mínima, `overflow` e grid do layout. Conferir também no atalho
-   `Zeh.lnk`, que abre em janela própria com área útil menor.
+2. 🔴 **Responsividade — o layout não cabe em tela estreita.** É o item mais
+   incômodo hoje, e os dois relatos abaixo são **o mesmo defeito**, não dois:
+   largura mínima fixa, herdada de um painel desenhado em monitor grande.
+   Corrigir de uma vez só, senão vira conserto em duplicata.
+
+   **Sintomas relatados:**
+   - *20/08, no desktop:* "o zoom do painel está cortando as informações". A
+     tela do Leo é **1366×768** — diminuir o zoom para caber é a reação, não a
+     causa. Conferir também no atalho `Zeh.lnk`, que abre em janela própria,
+     com área útil ainda menor.
+   - *21/08, no celular:* **só dá para entender girando o aparelho.** Em
+     retrato o conteúdo não cabe. Ou seja: o Zeh hoje não é utilizável no
+     celular do jeito que as pessoas seguram o celular.
+
+   **O que precisa mudar:**
+   - **Layout fluido de verdade**, funcionando de ~360px (celular em retrato)
+     até monitor grande. Investigar `min-width` fixo, `overflow` e o grid.
+     Testar em 360, 390, 768 e 1366 — se passar nesses quatro, passa em todos.
+   - **Tamanho de fonte que caiba nos cards.** Hoje o texto estoura. Escala
+     tipográfica por breakpoint, em vez de tamanho único.
+   - **Sidebar recolhida por padrão em tela estreita**, aparecendo só quando
+     acionada (menu deslizante / off-canvas, com botão de fechar e toque fora
+     para fechar). Em tela larga, continua como está.
+
+   **Por que vale priorizar:** o Leo usa o sistema na fábrica, e fábrica se
+   anda com o celular na mão. Um sistema que exige girar o aparelho para ser
+   lido não é usado em pé, no meio do galpão — que é justamente onde a
+   informação é necessária. E a Oba Sucos já viu a tela de login.
 3. **Telas do cadastro fiscal** (Empresa, Produto, Cliente). Pré-requisito de
    toda a emissão, sem risco e sem SEFAZ. É por onde a emissão começa.
 4. **DistribuiçãoDFe, Etapa 0 e 1** — ver o plano. **Não depende da SEFA.**
