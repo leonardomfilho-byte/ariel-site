@@ -1,6 +1,6 @@
 # Contexto do Zeh — onde paramos
 
-Atualizado em **21/08/2026, 10h**. Este arquivo é o ponto de partida da
+Atualizado em **24/08/2026, 16h**. Este arquivo é o ponto de partida da
 próxima sessão. O guia de comandos de deploy é o `GUIA-DEPLOY.md`.
 
 > **O DEC está com a SEFA.** Investigação encerrada em 21/08: os dois fluxos
@@ -74,9 +74,11 @@ ainda não existem** — é o primeiro passo da emissão.
    sistema e para vender o produto. Hoje ele mora num endereço do Firebase.
 3. **Preencher os Dados da empresa.** Enquanto não preencher, todo relatório
    sai com aviso amarelo. Os dados reais estão logo abaixo.
-4. **Conferir se backup automático e PITR estão ligados no `zeh-db`.** No
-   Gabriel estavam desligados, e foi por isso que o incidente de 30/07 não teve
-   volta. Conferir **antes** de qualquer migration.
+4. ~~Conferir backup automático e PITR no `zeh-db`~~ — **CONFERIDO em 24/08:
+   os dois estão ativados.** Ver "Infraestrutura do banco" abaixo. ⚠️ **Mas o
+   Gabriel continua desprotegido** — o painel dele ainda acusa "Proteção de
+   dados" em laranja quase um mês depois do incidente de 30/07. Repetir lá o
+   mesmo procedimento, é o mesmo caminho e leva cinco minutos.
 5. **Alerta de orçamento no Google Cloud** (R$ 30/mês) — rede de segurança.
 6. **Decidir o banco de testes.** O ambiente local ainda aponta para o banco de
    produção: qualquer teste seu mexe no dado real da Ariel. Recomendação: criar
@@ -93,6 +95,73 @@ ainda não existem** — é o primeiro passo da emissão.
    segredo.** Apagar a pasta continua sendo boa higiene.
 
 ---
+
+## Infraestrutura do banco — conferido em 24/08/2026
+
+Retrato da instância, para não precisar levantar tudo de novo na próxima vez.
+
+**Instância:** `zeh-db`, projeto `ariel-nutricao-animal`,
+região `southamerica-east1` (São Paulo), **PostgreSQL 18.4**, edição Enterprise.
+
+**Máquina:** `db-f1-micro` — 1 vCPU, **628 MB de RAM**, 10 GB SSD, zona única.
+
+**Proteção de dados — tudo ligado:**
+
+| Item | Estado |
+|---|---|
+| Backups automatizados | Ativados, janela 01h–05h (GMT-3), 7 dias retidos |
+| Recuperação pontual (PITR) | Ativada, 7 dias de registros |
+| Impedir exclusão da instância | Ligado em 24/08 |
+| Reter backups após exclusão | Ligado em 24/08 |
+| Backup final na exclusão | Ligado em 24/08 |
+
+Os três últimos foram ligados juntos, e o segundo é o menos óbvio: **sem ele,
+apagar a instância apagaria os backups junto** — ter 7 dias de backup e perder
+tudo no mesmo clique.
+
+**Prática boa já em andamento:** backup manual antes de cada migration
+(visível na lista de backups: "antes da migration classe_produto", "antes de
+remover os dados de exemplo do seed"). Manter.
+
+**Local dos backups: multirregião `us`.** DECIDIDO em 24/08: **manter assim.**
+Não é descuido — é o padrão e é a escolha certa. Backup existe para sobreviver
+ao que derrubou o original; guardá-lo na mesma região do banco é deixar a cópia
+da chave dentro de casa. Não existe multirregião na América do Sul (só `us`,
+`eu`, `asia`), e a própria documentação do Google diz para usar local
+personalizado **apenas se alguma regulamentação exigir**. Reavaliar só se um
+cliente do Zeh exigir residência de dados no Brasil por contrato — aí é
+cláusula comercial, não decisão técnica. Mudar o local **não move os backups
+já existentes**, então trocar por impulso deixaria backups espalhados em dois
+lugares.
+
+**Ignorados de propósito** (o painel de integridade insiste neles):
+
+- *"Ative a alta disponibilidade"* — **dobra a conta mensal** e exige
+  reiniciar. Protege contra a zona cair.
+- *"Crie uma réplica entre regiões"* — custo proporcional. Protege contra a
+  região inteira cair.
+
+Ambos são preocupação de banco e hospital, não de indústria que fatura de dia.
+Não ligar, sobretudo com o orçamento apertado.
+
+### 🔔 Gatilho: quando revisar a máquina
+
+O `db-f1-micro` é a **menor máquina que o Cloud SQL oferece**, com núcleo
+compartilhado. É ela que mantém a conta baixa e cabe no alerta de R$ 30/mês —
+e funciona bem para o volume de hoje.
+
+**Se o Zeh ficar lento sem motivo aparente, olhar aqui primeiro**, antes de
+caçar problema no código. Sinais de que a máquina apertou:
+
+- telas demorando a carregar em horários de mais uso, mas rápidas fora deles
+- relatórios pesados (DRE, rastreabilidade de lote) travando ou dando timeout
+- lentidão que piora conforme o banco cresce, sem mudança no código
+- erro de conexão recusada quando mais de uma pessoa usa ao mesmo tempo —
+  628 MB de RAM limita o número de conexões simultâneas
+
+Nesse caso, subir para uma máquina de núcleo dedicado é mudança de uma linha na
+tela de edição — mas **reinicia a instância** e aumenta a conta. Conferir o
+custo antes, e fazer fora do horário da fábrica.
 
 ## Seus dados fiscais reais (extraídos dos XMLs)
 
