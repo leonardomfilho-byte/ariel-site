@@ -75,10 +75,10 @@ ainda não existem** — é o primeiro passo da emissão.
 3. **Preencher os Dados da empresa.** Enquanto não preencher, todo relatório
    sai com aviso amarelo. Os dados reais estão logo abaixo.
 4. ~~Conferir backup automático e PITR no `zeh-db`~~ — **CONFERIDO em 24/08:
-   os dois estão ativados.** Ver "Infraestrutura do banco" abaixo. ⚠️ **Mas o
-   Gabriel continua desprotegido** — o painel dele ainda acusa "Proteção de
-   dados" em laranja quase um mês depois do incidente de 30/07. Repetir lá o
-   mesmo procedimento, é o mesmo caminho e leva cinco minutos.
+   os dois estão ativados.** Ver "Infraestrutura do banco" abaixo. **O Gabriel
+   também foi conferido no mesmo dia e está protegido**: backups automatizados
+   (janela 03h–07h) e recuperação pontual ativados, 7 dias cada, rodando sem
+   falha. A lição do 30/07 foi aplicada — o incidente não se repetiria hoje.
 5. **Alerta de orçamento no Google Cloud** (R$ 30/mês) — rede de segurança.
 6. **Decidir o banco de testes.** O ambiente local ainda aponta para o banco de
    produção: qualquer teste seu mexe no dado real da Ariel. Recomendação: criar
@@ -143,6 +143,17 @@ lugares.
 
 Ambos são preocupação de banco e hospital, não de indústria que fatura de dia.
 Não ligar, sobretudo com o orçamento apertado.
+
+### Correção sobre o painel de integridade
+
+Anotado porque a leitura errada custou tempo e pode se repetir: **"Proteção de
+dados" em laranja não quer dizer backup desligado.** Tanto no `zeh-db` quanto
+no Gabriel, o alerta laranja se referia à **proteção contra exclusão**, não aos
+backups — que estavam ativos nos dois.
+
+O painel de integridade agrupa coisas de gravidade muito diferente sob o mesmo
+rótulo e a mesma cor. Antes de concluir qualquer coisa a partir dele, abrir
+"View issues" e ler a linha específica.
 
 ### 🔔 Gatilho: quando revisar a máquina
 
