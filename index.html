@@ -388,6 +388,17 @@ tbody tr.negativo td{color:var(--texto-3)}
           <option value="racao">Ra&ccedil;&atilde;o</option>
         </select>
       </div>
+      <div class="campo so-leite" hidden>
+        <label for="d-litros">Leite por vaca (litros/dia)</label>
+        <input type="number" id="d-litros" value="15" min="1" max="60" step="1">
+      </div>
+      <div class="campo so-leite" hidden>
+        <label for="d-fase">Fase da lacta&ccedil;&atilde;o</label>
+        <select id="d-fase">
+          <option value="inicial">Ter&ccedil;o inicial (at&eacute; ~100 dias)</option>
+          <option value="medio" selected>Ter&ccedil;o m&eacute;dio ou final</option>
+        </select>
+      </div>
       <div class="campo">
         <label for="d-objetivo">Objetivo</label>
         <select id="d-objetivo"><option>Engorda</option><option>Recria</option><option>Aumentar produ&ccedil;&atilde;o de leite</option></select>
@@ -413,6 +424,14 @@ tbody tr.negativo td{color:var(--texto-3)}
             <option value="verde">Verde, predominando folha</option>
             <option value="mista">Come&ccedil;ando a secar, colmo aparecendo</option>
             <option value="seca">Seca e fibrosa, muito colmo</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="r-solo">E o piquete, de longe</label>
+          <select id="r-solo">
+            <option value="fechado">Capim fechado, sem ver o ch&atilde;o</option>
+            <option value="falhas">Algumas falhas e invasoras aparecendo</option>
+            <option value="aberto">Muita falha, ch&atilde;o &agrave; mostra, invasora dominando</option>
           </select>
         </div>
       </div>
@@ -903,6 +922,22 @@ function lerRegua(){
   else if(abaixo) pos=Math.max(2,22*(h/c.baixo));
   else pos=Math.min(98,78+20*Math.min(1,(h-c.alto)/c.alto));
 
+  /* A altura diz se o MANEJO está certo. Ela não distingue pasto mal manejado
+     de pasto degradado — e a diferença decide se suplemento resolve.
+     Dias-Filho separa pastagem EM degradação (ED1 e ED2), onde manejo ainda
+     resolve, de pastagem DEGRADADA (ED3 agrícola, ED4 biológica), onde não
+     resolve. Aqui a gente só levanta a suspeita, com o sinal que se vê de longe. */
+  var solo=document.getElementById("r-solo").value;
+  var alertaDegradacao="";
+  if(solo==="aberto"){
+    alertaDegradacao='<div class="aviso" style="margin-top:12px"><h3>Antes do suplemento, o pasto</h3>'+
+      '<p>Chão à mostra e invasora dominando não é problema de lotação nem de época — é sinal de <b>pasto degradado</b>. A pesquisa da Embrapa separa a pastagem que só está mal manejada, onde acertar a lotação resolve, daquela que já perdeu a capacidade de responder, onde não resolve.</p>'+
+      '<p><b>Suplemento não recupera pasto.</b> Ele melhora o aproveitamento do que existe — e se o que existe é pouco, o dinheiro rende pouco. Nesse caso a conta que vale é a de recuperação da pastagem, não a de arroba por suplemento.</p>'+
+      '<p>Vale conversar com um agrônomo antes de mexer no cocho. A gente prefere te dizer isso a te vender saco.</p></div>';
+  }else if(solo==="falhas"){
+    alertaDegradacao='<div class="aviso neutro" style="margin-top:12px"><p><b>Falhas e invasoras aparecendo são o começo do problema.</b> Ainda é fase em que ajustar a lotação e dar descanso costuma segurar. Se a falha aumentar de um ano para o outro, aí já não é manejo — é degradação, e suplemento não resolve.</p></div>';
+  }
+
   saida.innerHTML=
     '<div class="faixa-regua"><div class="marca" style="left:'+pos.toFixed(1)+'%"></div>'+
       '<span class="rotulo" style="left:6px">baixo</span>'+
@@ -917,7 +952,8 @@ function lerRegua(){
       '<p>'+porque+'</p>'+
       '<p style="margin-top:10px"><button type="button" class="btn-ouro" id="usar-condicao" data-c="'+condicao+'">Usar &ldquo;'+nomes[condicao]+'&rdquo; no diagn&oacute;stico</button></p>'+
     '</div>'+
-    '<p class="fonte">Alturas de <b>Régua de Manejo de Pastagens</b>, Embrapa Gado de Corte, Comunicado Técnico 135, edição revisada de fevereiro de 2017 (Costa, J. A. A.; Queiroz, H. P. de). A tradução da altura para as três condições do Guia Ariel é leitura nossa, não da Embrapa.</p>';
+    alertaDegradacao+
+    '<p class="fonte">Alturas de <b>Régua de Manejo de Pastagens</b>, Embrapa Gado de Corte, Comunicado Técnico 135, edição revisada de fevereiro de 2017 (Costa, J. A. A.; Queiroz, H. P. de). A distinção entre pasto mal manejado e pasto degradado segue <b>Dias-Filho, Diagnóstico das Pastagens no Brasil</b>, Embrapa Amazônia Oriental, 2014. A tradução da altura para as três condições do Guia Ariel é leitura nossa, não da Embrapa.</p>';
 
   document.getElementById("usar-condicao").addEventListener("click",function(){
     var v=this.getAttribute("data-c");
@@ -978,12 +1014,50 @@ function gerarDiagnostico(){
   var html="";
 
   if(tipo==="Leite"){
-    html='<div class="diag"><h3>'+nome+', para vaca em lactação a conta é outra</h3>'+
-      '<p class="sub">'+cabecalho+'</p>'+
+    /* A conta de leite é da Embrapa Gado de Leite, não nossa. O que a Ariel
+       NÃO tem é resposta em litros ao Bovleite — e isso continua dito. */
+    var litros=parseFloat(document.getElementById("d-litros").value)||0;
+    var fase=document.getElementById("d-fase").value;
+    var chuvoso=(epoca!=="seca");
+
+    var conc, regra;
+    if(fase==="inicial"){
+      conc=litros/2.5;
+      regra="No terço inicial a Embrapa indica 1 kg de concentrado para cada 2,5 kg de leite.";
+    }else{
+      var cobertoPeloPasto=chuvoso?5:3;
+      conc=Math.max(0,(litros-cobertoPeloPasto)/3);
+      regra="No terço médio, 1 kg de concentrado para cada 3 kg de leite acima dos "+cobertoPeloPasto+" kg que o pasto sustenta"+(chuvoso?" na época das chuvas":" no período seco")+".";
+    }
+    var msMin=litros/2;                 /* 1 kg de MS por 2 kg de leite */
+    var msTeto=peso*0.04;               /* pico de consumo, 4% do peso vivo */
+    var mineralMin=litros*7/1000, mineralMax=litros*10/1000;   /* 7 a 10 g/L */
+
+    html='<div class="diag"><h3>'+nome+', a conta da vaca em lactação é outra</h3>'+
+      '<p class="sub">'+cabecalho+' · '+n(litros,0)+' litros por vaca por dia · '+(fase==="inicial"?"terço inicial":"terço médio ou final")+'</p>'+
+      '<div class="placar">'+
+        '<div><span class="rot">Concentrado por vaca</span><div class="v">'+n(conc,1)+' kg/dia</div><small>'+n(conc*cabecas,0)+' kg por dia no rebanho</small></div>'+
+        '<div><span class="rot">No mês, no rebanho</span><div class="v">'+n(conc*cabecas*30,0)+' kg</div><small>'+n(conc*cabecas*30/1000,1)+' toneladas</small></div>'+
+        '<div><span class="rot">Matéria seca mínima</span><div class="v">'+n(msMin,1)+' kg/dia</div><small>teto de consumo no pico: '+n(msTeto,1)+' kg</small></div>'+
+        '<div><span class="rot">Mineral de alto consumo</span><div class="v">'+n(mineralMin*1000,0)+' a '+n(mineralMax*1000,0)+' g</div><small>por vaca por dia, a 7–10 g por litro</small></div>'+
+      '</div>'+
+      '<p>'+regra+' O concentrado deve ter <b>18 a 22% de proteína bruta</b> e <b>NDT acima de 70%</b>. A regra da matéria seca é 1 kg para cada 2 kg de leite, e no pico a vaca chega a consumir 4% do peso vivo.</p>'+
       '<p>'+BOVLEITE[epoca]+'</p>'+
-      '<p>O <b>Ariel Bovleite</b> é mineral de alto consumo, formulado <b>sem ureia</b>, e o resultado dele se mede em <b>litro produzido</b>, não em ganho de peso. Ainda <b>não temos dado próprio de campo</b> de consumo por vaca e resposta em litros — e preferimos não publicar número que não medimos. Para dimensionar o seu caso, fale com a gente: a formulação é ajustada com o zootecnista responsável.</p>'+
-      '<p style="margin-top:16px"><a class="btn-zap" id="zap-diag" href="#" target="_blank" rel="noopener">Mandar esses dados no WhatsApp</a></p></div>';
-    ultimoDiag="Diagnóstico pelo site — LEITE\n\nNome: "+nome+"\nCidade: "+(cidade||"—")+"\nRebanho: "+n(cabecas,0)+" vacas, "+n(peso,0)+" kg\nÉpoca: "+EPOCAS[epoca].nome+"\nPasto: "+PASTOS[pasto]+"\nObjetivo: "+objetivo+"\n\nInteresse em Ariel Bovleite.";
+      '<p><b>O que eu não tenho:</b> o <b>Ariel Bovleite</b> é mineral de alto consumo, formulado <b>sem ureia</b>, e o resultado dele se mede em litro produzido. A Ariel ainda <b>não tem dado próprio de campo</b> de resposta em litros — e não publicamos número que não medimos. Os números acima são exigência da vaca, não promessa do produto.</p>'+
+      '<p style="margin-top:16px"><a class="btn-zap" id="zap-diag" href="#" target="_blank" rel="noopener">Mandar esses números no WhatsApp</a></p>'+
+      '<p class="fonte">Concentrado, matéria seca e teores: Embrapa Gado de Leite, sistema de produção para a Zona da Mata Atlântica. Consumo do mineral de alto consumo: ficha técnica do fabricante do núcleo.</p></div>';
+
+    contar("gerou_diagnostico",{gado:"Leite",epoca:epoca,pasto:String(pasto)});
+    ultimoDiag="Diagnóstico pelo site — LEITE\n\n"+
+      "Nome: "+nome+"\nCidade: "+(cidade||"—")+"\n"+
+      "Rebanho: "+n(cabecas,0)+" vacas de "+n(peso,0)+" kg, "+n(litros,0)+" L/vaca/dia\n"+
+      "Fase: "+(fase==="inicial"?"terço inicial":"terço médio ou final")+"\n"+
+      "Época: "+EPOCAS[epoca].nome+" | Pasto: "+PASTOS[pasto]+"\n\n"+
+      "Pela régua da Embrapa:\n"+
+      "- Concentrado: "+n(conc,1)+" kg/vaca/dia, "+n(conc*cabecas*30,0)+" kg/mês no rebanho\n"+
+      "- Matéria seca mínima: "+n(msMin,1)+" kg/dia\n"+
+      "- Mineral alto consumo: "+n(mineralMin*1000,0)+" a "+n(mineralMax*1000,0)+" g/vaca/dia\n\n"+
+      "Interesse em Ariel Bovleite.";
   }else{
     var precos=estado.precos;
     var idAtual=(atual==="nada")?"mineral":atual;
@@ -1071,6 +1145,21 @@ function gerarDiagnostico(){
   }
 }
 document.getElementById("btn-diag").addEventListener("click",gerarDiagnostico);
+
+/* litros e fase da lactação só fazem sentido para leite */
+(function(){
+  var tipo=document.getElementById("d-tipo");
+  function alternar(){
+    var leite=tipo.value==="Leite";
+    var campos=document.querySelectorAll(".so-leite");
+    for(var i=0;i<campos.length;i++) campos[i].hidden=!leite;
+    /* a condição do pasto continua valendo para leite: o pasto sustenta
+       parte da produção, e é por isso que a regra do terço médio muda
+       entre águas e seca */
+  }
+  tipo.addEventListener("change",alternar);
+  alternar();
+})();
 
 /* ================= contador de uso =================
    O site é estático e não gera log nenhum: sem isto, ninguém sabe se a
