@@ -763,11 +763,11 @@ function render(){
 
 document.getElementById("seg-epoca").addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b)return;
-  estado.epoca=b.getAttribute("data-v"); salvar(); render();
+  estado.epoca=b.getAttribute("data-v"); salvar(); render(); contar("mexeu_calculadora",{epoca:estado.epoca});
 });
 document.getElementById("seg-pasto").addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b)return;
-  estado.pasto=Number(b.getAttribute("data-v")); salvar(); render();
+  estado.pasto=Number(b.getAttribute("data-v")); salvar(); render(); contar("mexeu_calculadora",{pasto:String(estado.pasto)});
 });
 ["peso","cabecas","dias","precoArroba","kgArroba"].forEach(function(campo){
   var el=document.getElementById(campo);
@@ -784,6 +784,11 @@ var ultimoDiag=null;
 function linkZap(texto){
   return "https://wa.me/"+ZAP+(texto?("?text="+encodeURIComponent(texto)):"");
 }
+/* qualquer clique em WhatsApp conta: e o desfecho que interessa */
+document.addEventListener("click",function(e){
+  var a=e.target.closest("a[href*='wa.me']");
+  if(a) contar("clicou_whatsapp");
+});
 document.getElementById("zap-topo").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
 document.getElementById("zap-rodape").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
 document.getElementById("zap-linha").href=linkZap("Olá! Vi no site que os proteinados Ariel estão em lançamento. Quero ser avisado quando saírem, e saber o preço.");
@@ -881,6 +886,7 @@ function gerarDiagnostico(){
       "- Arroba considerada: "+brl(precoArroba,0);
   }
 
+  contar("gerou_diagnostico",{gado:tipo,epoca:epoca,pasto:String(pasto)});
   caixa.innerHTML=html;
   caixa.hidden=false;
   var bz=document.getElementById("zap-diag");
@@ -897,6 +903,31 @@ function gerarDiagnostico(){
   }
 }
 document.getElementById("btn-diag").addEventListener("click",gerarDiagnostico);
+
+/* ================= contador de uso =================
+   O site é estático e não gera log nenhum: sem isto, ninguém sabe se a
+   calculadora foi aberta uma vez ou mil. Manda só o nome do evento e as
+   escolhas da calculadora — sem cookie, sem identificador, sem terceiro.
+   Nome, cidade e telefone NUNCA passam por aqui: são do produtor, e vão
+   para o WhatsApp por decisão dele. */
+var jaContou={};
+function contar(evento,extra){
+  if(!ARI_API) return;
+  if(evento==="visita"||evento==="mexeu_calculadora"){
+    if(jaContou[evento]) return;      /* uma vez por carregamento */
+    jaContou[evento]=true;
+  }
+  var corpo={evento:evento};
+  if(extra){ for(var k in extra) corpo[k]=extra[k]; }
+  try{
+    fetch(ARI_API+"/evento",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify(corpo),
+      keepalive:true            /* sobrevive se a pessoa fechar a aba */
+    }).catch(function(){});
+  }catch(e){}
+}
 
 /* ================= Ari =================
    >>> ENDEREÇO DO SERVIÇO DO ARI <<<
@@ -1019,6 +1050,7 @@ var ARI_API="https://ari-520990905601.southamerica-east1.run.app";
       ]);
     }
     texto.focus();
+    contar("abriu_ari");
   }
   function fecharPainel(){
     painel.hidden=true; abrir.hidden=false;
@@ -1050,6 +1082,7 @@ document.getElementById("d-epoca").value=estado.epoca;
 document.getElementById("d-pasto").value=String(estado.pasto);
 renderPrecos();
 render();
+contar("visita");
 </script>
 </body>
 </html>
