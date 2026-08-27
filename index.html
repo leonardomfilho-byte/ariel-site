@@ -73,7 +73,7 @@ html{scroll-behavior:smooth}
 }
 #ari-abrir:hover{background:var(--ouro-forte)}
 #ari-abrir:focus-visible{outline:2px solid var(--carvao);outline-offset:2px}
-#ari-abrir .cara{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--carvao);background:var(--carvao)}
+#ari-abrir .cara{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--carvao);background:var(--carvao)}
 #ari-painel[hidden]{display:none}
 #ari-painel{
   position:fixed;right:18px;bottom:18px;z-index:61;
@@ -83,7 +83,7 @@ html{scroll-behavior:smooth}
   box-shadow:0 12px 44px -12px rgba(23,21,15,.5);overflow:hidden
 }
 #ari-topo{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--carvao);color:#F5F1E4;flex:none}
-#ari-topo .cara{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--ouro)}
+#ari-topo .cara{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--ouro)}
 #ari-topo .quem{font-family:Archivo,sans-serif;font-weight:700;font-size:14px;line-height:1.15}
 #ari-topo .quem small{display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:11px;color:#9E9884}
 #ari-fechar{margin-left:auto;background:none;border:0;color:#C9C3B0;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
@@ -123,7 +123,7 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
 .topo-int{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;padding-bottom:12px}
 /* a logo é arte preta com fundo claro chapado (o arquivo é JPEG), então
    anda sempre sobre um selo claro — nos dois temas */
-.topo img{height:46px;width:auto;display:block;background:#F5F5F5;border-radius:6px;padding:3px 7px}
+.topo img{height:62px;width:auto;display:block;background:#F5F5F5;border-radius:8px;padding:4px 9px}
 .links{display:flex;align-items:center;gap:18px}
 .links a{color:var(--texto-2);text-decoration:none;font-size:13.5px;font-weight:500}
 .links a:hover{color:var(--ouro-forte)}
@@ -204,7 +204,7 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--ouro);outline-o
 .calc{display:grid;grid-template-columns:312px minmax(0,1fr);gap:26px;align-items:start}
 .calc > *{min-width:0}
 @media (max-width:940px){.calc{grid-template-columns:1fr;gap:20px}}
-.painel{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);padding:18px;position:sticky;top:82px;display:flex;flex-direction:column;gap:18px}
+.painel{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);padding:18px;position:sticky;top:98px;display:flex;flex-direction:column;gap:18px}
 @media (max-width:940px){.painel{position:static}}
 .grupo{display:flex;flex-direction:column;gap:7px}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--linha-forte);border-radius:8px;overflow:hidden}
@@ -538,12 +538,12 @@ tbody tr.negativo td{color:var(--texto-3)}
 </footer>
 
 <button id="ari-abrir" type="button" hidden aria-controls="ari-painel" aria-expanded="false">
-  <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="30" height="30">Falar com o Ari
+  <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="40" height="40">Falar com o Ari
 </button>
 
 <section id="ari-painel" hidden aria-label="Conversa com o Ari">
   <header id="ari-topo">
-    <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="34" height="34">
+    <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="46" height="46">
     <span class="quem">Ari<small>seu parceiro no campo</small></span>
     <button id="ari-fechar" type="button" aria-label="Fechar a conversa">&times;</button>
   </header>
