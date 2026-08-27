@@ -61,6 +61,53 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+
+/* ---------- Ari ---------- */
+#ari-abrir{
+  position:fixed;right:18px;bottom:18px;z-index:60;
+  display:flex;align-items:center;gap:9px;
+  background:var(--ouro);color:#17150F;border:0;cursor:pointer;
+  font:inherit;font-weight:700;font-size:14px;
+  padding:12px 18px 12px 14px;border-radius:999px;
+  box-shadow:0 4px 18px -4px rgba(23,21,15,.45)
+}
+#ari-abrir:hover{background:var(--ouro-forte)}
+#ari-abrir:focus-visible{outline:2px solid var(--carvao);outline-offset:2px}
+#ari-abrir .cara{width:26px;height:26px;border-radius:50%;background:var(--carvao);color:var(--ouro);display:grid;place-items:center;font-family:Archivo,sans-serif;font-size:13px;font-weight:800;flex:none}
+#ari-painel[hidden]{display:none}
+#ari-painel{
+  position:fixed;right:18px;bottom:18px;z-index:61;
+  width:min(380px,calc(100vw - 36px));height:min(560px,calc(100vh - 36px));
+  display:flex;flex-direction:column;
+  background:var(--superficie);border:1px solid var(--linha-forte);border-radius:14px;
+  box-shadow:0 12px 44px -12px rgba(23,21,15,.5);overflow:hidden
+}
+#ari-topo{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--carvao);color:#F5F1E4;flex:none}
+#ari-topo .cara{width:30px;height:30px;border-radius:50%;background:var(--ouro);color:#17150F;display:grid;place-items:center;font-family:Archivo,sans-serif;font-weight:800;font-size:14px;flex:none}
+#ari-topo .quem{font-family:Archivo,sans-serif;font-weight:700;font-size:14px;line-height:1.15}
+#ari-topo .quem small{display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:11px;color:#9E9884}
+#ari-fechar{margin-left:auto;background:none;border:0;color:#C9C3B0;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+#ari-fechar:hover{color:#FFFFFF;background:rgba(255,255,255,.08)}
+#ari-conversa{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--papel)}
+.ari-fala{max-width:86%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.5;white-space:pre-wrap}
+.ari-fala.dele{align-self:flex-start;background:var(--superficie);border:1px solid var(--linha);border-bottom-left-radius:4px}
+.ari-fala.minha{align-self:flex-end;background:var(--ouro-veu);border:1px solid var(--linha);border-bottom-right-radius:4px}
+.ari-fala.erro{align-self:flex-start;background:var(--barro-veu);border:1px solid var(--linha);color:var(--texto)}
+.ari-pensando{align-self:flex-start;display:flex;gap:4px;padding:11px 13px}
+.ari-pensando i{width:6px;height:6px;border-radius:50%;background:var(--texto-3);animation:aripulo 1.1s infinite}
+.ari-pensando i:nth-child(2){animation-delay:.16s}
+.ari-pensando i:nth-child(3){animation-delay:.32s}
+@keyframes aripulo{0%,60%,100%{opacity:.28}30%{opacity:1}}
+.ari-sugestoes{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;background:var(--papel)}
+.ari-sugestoes button{font:inherit;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--linha-forte);background:var(--superficie);color:var(--texto-2);cursor:pointer;text-align:left}
+.ari-sugestoes button:hover{border-color:var(--ouro);color:var(--ouro-forte)}
+#ari-forma{display:flex;gap:8px;padding:10px;border-top:1px solid var(--linha);background:var(--superficie);flex:none}
+#ari-texto{flex:1;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--linha-forte);border-radius:9px;background:var(--superficie);color:var(--texto);resize:none;max-height:96px;min-height:41px;line-height:1.4}
+#ari-texto:focus-visible{outline:2px solid var(--ouro);outline-offset:-1px;border-color:var(--ouro)}
+#ari-enviar{background:var(--ouro);color:#17150F;border:0;border-radius:9px;padding:0 15px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;flex:none}
+#ari-enviar:hover:not(:disabled){background:var(--ouro-forte)}
+#ari-enviar:disabled{opacity:.45;cursor:default}
+#ari-rodape{padding:0 14px 10px;font-size:10.5px;color:var(--texto-3);line-height:1.4;background:var(--superficie)}
 body{
   margin:0;background:var(--papel);color:var(--texto);
   font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
@@ -490,6 +537,25 @@ tbody tr.negativo td{color:var(--texto-3)}
   <div class="larg assinatura">ARIEL Nutri&ccedil;&atilde;o Animal &mdash; uma marca LPM Ind&uacute;stria e Com&eacute;rcio de Produtos Aliment&iacute;cios.</div>
 </footer>
 
+<button id="ari-abrir" type="button" hidden aria-controls="ari-painel" aria-expanded="false">
+  <span class="cara" aria-hidden="true">A</span>Falar com o Ari
+</button>
+
+<section id="ari-painel" hidden aria-label="Conversa com o Ari">
+  <header id="ari-topo">
+    <span class="cara" aria-hidden="true">A</span>
+    <span class="quem">Ari<small>o le&atilde;o da Ariel</small></span>
+    <button id="ari-fechar" type="button" aria-label="Fechar a conversa">&times;</button>
+  </header>
+  <div id="ari-conversa" role="log" aria-live="polite"></div>
+  <div class="ari-sugestoes" id="ari-sugestoes"></div>
+  <form id="ari-forma">
+    <textarea id="ari-texto" rows="1" placeholder="Pergunte sobre ganho, &eacute;poca, pasto&hellip;" aria-label="Sua pergunta para o Ari"></textarea>
+    <button id="ari-enviar" type="submit">Enviar</button>
+  </form>
+  <p id="ari-rodape">O Ari trabalha com as estimativas do Guia Ariel. Pre&ccedil;o, f&oacute;rmula e receita s&atilde;o com o setor comercial e a zootecnista.</p>
+</section>
+
 <script>
 /* ================= dados do Guia Prático Ariel GMD ================= */
 var EPOCAS={
@@ -831,6 +897,124 @@ function gerarDiagnostico(){
   }
 }
 document.getElementById("btn-diag").addEventListener("click",gerarDiagnostico);
+
+/* ================= Ari =================
+   >>> ENDEREÇO DO SERVIÇO DO ARI <<<
+   Enquanto esta constante estiver vazia, o botão do Ari não aparece na página —
+   melhor não existir do que existir quebrado. Depois de subir o serviço no
+   Cloud Run, cole aqui a URL que o deploy imprimir, sem barra no fim.
+   A chave da Anthropic NUNCA vem para cá: ela mora só no Cloud Run. */
+var ARI_API="";
+
+(function(){
+  if(!ARI_API) return;   /* serviço ainda não existe: não desenha nada */
+
+  var abrir=document.getElementById("ari-abrir");
+  var painel=document.getElementById("ari-painel");
+  var conversa=document.getElementById("ari-conversa");
+  var forma=document.getElementById("ari-forma");
+  var texto=document.getElementById("ari-texto");
+  var enviar=document.getElementById("ari-enviar");
+  var sugestoes=document.getElementById("ari-sugestoes");
+  var ocupado=false, apresentado=false;
+
+  abrir.hidden=false;
+
+  function fala(quem,txt){
+    var d=document.createElement("div");
+    d.className="ari-fala "+quem;
+    d.textContent=txt;
+    conversa.appendChild(d);
+    conversa.scrollTop=conversa.scrollHeight;
+    return d;
+  }
+  function pensando(){
+    var d=document.createElement("div");
+    d.className="ari-pensando";
+    d.innerHTML="<i></i><i></i><i></i>";
+    conversa.appendChild(d);
+    conversa.scrollTop=conversa.scrollHeight;
+    return d;
+  }
+
+  /* o cenário da calculadora vai junto, para o Ari falar do lote da pessoa
+     em vez de pedir tudo de novo */
+  function cenarioAtual(){
+    return EPOCAS[estado.epoca].nome+", pasto "+PASTOS[estado.pasto].toLowerCase()+
+           ", "+n(estado.cabecas,0)+" cabeças de "+n(estado.peso,0)+" kg, "+
+           n(estado.dias,0)+" dias, arroba a "+brl(estado.precoArroba,0);
+  }
+
+  function desenharSugestoes(lista){
+    sugestoes.innerHTML="";
+    lista.forEach(function(s){
+      var b=document.createElement("button");
+      b.type="button"; b.textContent=s;
+      b.addEventListener("click",function(){ perguntar(s); });
+      sugestoes.appendChild(b);
+    });
+  }
+
+  async function perguntar(pergunta){
+    if(ocupado||!pergunta.trim()) return;
+    ocupado=true; enviar.disabled=true;
+    sugestoes.innerHTML="";
+    fala("minha",pergunta);
+    texto.value="";
+    var carregando=pensando();
+
+    try{
+      var r=await fetch(ARI_API+"/ari",{
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({pergunta:pergunta,cenario:cenarioAtual()})
+      });
+      var dados=await r.json();
+      carregando.remove();
+      if(dados.resposta) fala("dele",dados.resposta);
+      else fala("erro",dados.erro||"Não consegui responder agora. Me chama no WhatsApp que a gente resolve.");
+    }catch(e){
+      carregando.remove();
+      fala("erro","Não consegui falar com o servidor. Confere a internet, ou me chama no WhatsApp.");
+    }finally{
+      ocupado=false; enviar.disabled=false; texto.focus();
+    }
+  }
+
+  function abrirPainel(){
+    painel.hidden=false; abrir.hidden=true;
+    abrir.setAttribute("aria-expanded","true");
+    if(!apresentado){
+      apresentado=true;
+      fala("dele","Sou o Ari. Eu trabalho com as estimativas de ganho do Guia Ariel — por época do ano e condição de pasto. Me conta seu caso que eu faço a conta.");
+      desenharSugestoes([
+        "Quanto meu boi ganha na seca com pasto fraco?",
+        "Vale a pena sair do mineral?",
+        "Quanto de proteico para um boi de 300 kg?"
+      ]);
+    }
+    texto.focus();
+  }
+  function fecharPainel(){
+    painel.hidden=true; abrir.hidden=false;
+    abrir.setAttribute("aria-expanded","false");
+    abrir.focus();
+  }
+
+  abrir.addEventListener("click",abrirPainel);
+  document.getElementById("ari-fechar").addEventListener("click",fecharPainel);
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&!painel.hidden) fecharPainel();
+  });
+  forma.addEventListener("submit",function(e){ e.preventDefault(); perguntar(texto.value); });
+  texto.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); perguntar(texto.value); }
+  });
+  texto.addEventListener("input",function(){
+    texto.style.height="auto";
+    texto.style.height=Math.min(texto.scrollHeight,96)+"px";
+  });
+})();
 
 /* ================= partida ================= */
 carregar();
