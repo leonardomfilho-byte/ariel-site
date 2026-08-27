@@ -73,7 +73,7 @@ html{scroll-behavior:smooth}
 }
 #ari-abrir:hover{background:var(--ouro-forte)}
 #ari-abrir:focus-visible{outline:2px solid var(--carvao);outline-offset:2px}
-#ari-abrir .cara{width:26px;height:26px;border-radius:50%;background:var(--carvao);color:var(--ouro);display:grid;place-items:center;font-family:Archivo,sans-serif;font-size:13px;font-weight:800;flex:none}
+#ari-abrir .cara{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--carvao);background:var(--carvao)}
 #ari-painel[hidden]{display:none}
 #ari-painel{
   position:fixed;right:18px;bottom:18px;z-index:61;
@@ -83,7 +83,7 @@ html{scroll-behavior:smooth}
   box-shadow:0 12px 44px -12px rgba(23,21,15,.5);overflow:hidden
 }
 #ari-topo{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--carvao);color:#F5F1E4;flex:none}
-#ari-topo .cara{width:30px;height:30px;border-radius:50%;background:var(--ouro);color:#17150F;display:grid;place-items:center;font-family:Archivo,sans-serif;font-weight:800;font-size:14px;flex:none}
+#ari-topo .cara{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--ouro)}
 #ari-topo .quem{font-family:Archivo,sans-serif;font-weight:700;font-size:14px;line-height:1.15}
 #ari-topo .quem small{display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:11px;color:#9E9884}
 #ari-fechar{margin-left:auto;background:none;border:0;color:#C9C3B0;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
@@ -538,12 +538,12 @@ tbody tr.negativo td{color:var(--texto-3)}
 </footer>
 
 <button id="ari-abrir" type="button" hidden aria-controls="ari-painel" aria-expanded="false">
-  <span class="cara" aria-hidden="true">A</span>Falar com o Ari
+  <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="30" height="30">Falar com o Ari
 </button>
 
 <section id="ari-painel" hidden aria-label="Conversa com o Ari">
   <header id="ari-topo">
-    <span class="cara" aria-hidden="true">A</span>
+    <img class="cara" src="ari-campo.jpg" alt="" aria-hidden="true" width="34" height="34">
     <span class="quem">Ari<small>seu parceiro no campo</small></span>
     <button id="ari-fechar" type="button" aria-label="Fechar a conversa">&times;</button>
   </header>
