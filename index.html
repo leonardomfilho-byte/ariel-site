@@ -864,6 +864,11 @@ function gerarDiagnostico(){
       html+='<p>Cada arroba a mais custa <b>'+brl(custoExtra)+'</b> de suplemento e vale <b>'+brl(precoArroba,0)+'</b> na balança &mdash; a troca se paga '+n(precoArroba/custoExtra,1)+' vezes. No lote de '+n(cabecas,0)+' cabeças, são <b>'+brl(dSobra*cabecas,0)+'</b> a mais em '+DIAS_DIAG+' dias, já descontando o suplemento.</p>';
     }else if(custoExtra!==null){
       html+='<p>Nesse cenário a arroba a mais sai por <b>'+brl(custoExtra)+'</b>, acima dos '+brl(precoArroba,0)+' que ela paga. Ou seja: o ganho existe, mas não se sustenta só pelo peso. Vale conversar sobre prazo, escala e o preço que você paga hoje antes de mexer.</p>';
+    }else if(dArrobas>0){
+      /* Tem ganho, mas falta preço de um dos lados — tipicamente o mineral,
+         que está em lançamento. NÃO é a mesma coisa que não ter ganho, e
+         dizer que não tem contradiz os cartões logo acima. */
+      html+='<p>A troca põe <b>'+n(dArrobas,2)+' @ a mais por cabeça</b>, ou '+n(dArrobas*cabecas,1)+' @ no lote &mdash; '+brl(dArrobas*cabecas*precoArroba,0)+' a preço de '+brl(precoArroba,0)+' a arroba. Quanto disso <i>sobra</i> depende do preço do suplemento, e o '+(lAtual.temPreco?indicado.nome:lAtual.nome)+' está em lançamento &mdash; ainda sem preço nesta página. Fale com a gente que o comercial fecha a conta com você.</p>';
     }else{
       html+='<p>Nesse cenário a troca não produz arroba a mais. Vale rever a condição do pasto antes de mexer no suplemento.</p>';
     }
