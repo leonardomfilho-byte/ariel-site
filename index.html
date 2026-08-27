@@ -1,240 +1,846 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Ariel Nutrição Animal</title>
+<title>Ariel Nutrição Animal — quanto custa a arroba que seu boi ganha</title>
+<meta name="description" content="Calculadora de custo por arroba da linha Ariel Corte: quanto custa, em suplemento, cada arroba que o boi ganha, por época do ano e condição de pastagem no Sudeste do Pará.">
+<link rel="icon" href="logo-ariel.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <style>
+/* ---------------------------------------------------------------
+   >>> PREÇOS: os valores reais ficam em PRECOS_PADRAO, no script
+   lá embaixo. Só a Ração vem da tabela oficial; os outros quatro
+   são referências e precisam ser trocados pelo preço de venda.
+   --------------------------------------------------------------- */
+:root{
+  --ouro:#D89A0B;
+  --ouro-forte:#B57E05;
+  --ouro-veu:#FBEFD2;
+  --carvao:#17150F;
+  --papel:#FCFBF8;
+  --superficie:#FFFFFF;
+  --superficie-2:#F4F2EC;
+  --linha:#E2DED3;
+  --linha-forte:#CBC5B5;
+  --texto:#1E1C16;
+  --texto-2:#5E5949;
+  --texto-3:#8A8474;
+  --pasto:#2E6B3E;
+  --pasto-veu:#E6F0E6;
+  --barro:#A33A1E;
+  --barro-veu:#F7E7E1;
+  --zap:#1FA855;
+  --sombra:0 1px 2px rgba(23,21,15,.06), 0 8px 24px -16px rgba(23,21,15,.35);
+  --raio:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
+    --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
+    --linha:#332F26; --linha-forte:#45402F;
+    --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
+    --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
+    --zap:#2ECC71;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
+  --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
+  --linha:#332F26; --linha-forte:#45402F;
+  --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
+  --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
+  --zap:#2ECC71;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+}
 
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 body{
-margin:0;
-background:#0f0f0f;
-font-family:Arial,sans-serif;
-color:white;
+  margin:0;background:var(--papel);color:var(--texto);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balance;margin:0}
+.num{font-variant-numeric:tabular-nums}
+.larg{max-width:1180px;margin:0 auto;padding-left:22px;padding-right:22px}
+.rot{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3)}
+
+/* ---------- topo ---------- */
+.topo{background:var(--superficie);border-bottom:1px solid var(--linha);position:sticky;top:0;z-index:20}
+.topo-int{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;padding-bottom:12px}
+/* a logo é arte preta com fundo claro chapado (o arquivo é JPEG), então
+   anda sempre sobre um selo claro — nos dois temas */
+.topo img{height:46px;width:auto;display:block;background:#F5F5F5;border-radius:6px;padding:3px 7px}
+.links{display:flex;align-items:center;gap:18px}
+.links a{color:var(--texto-2);text-decoration:none;font-size:13.5px;font-weight:500}
+.links a:hover{color:var(--ouro-forte)}
+@media (max-width:640px){.links a.oculta{display:none}}
+.btn-zap{
+  display:inline-flex;align-items:center;gap:7px;background:var(--zap);color:#FFFFFF!important;
+  padding:9px 15px;border-radius:999px;font-weight:600;font-size:13.5px;text-decoration:none;white-space:nowrap
+}
+.btn-zap:hover{filter:brightness(1.08);color:#FFFFFF!important}
+.btn-zap svg{width:15px;height:15px;fill:currentColor;flex:none}
+
+/* ---------- hero ---------- */
+.hero{background:var(--carvao);color:#F5F1E4;border-bottom:3px solid var(--ouro)}
+.hero-int{padding-top:52px;padding-bottom:56px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+@media (max-width:860px){.hero-int{grid-template-columns:1fr;gap:28px;padding-top:38px;padding-bottom:40px}}
+.hero .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro);margin:0 0 10px}
+.hero h1{font-size:clamp(32px,5.4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.02;color:#FFFFFF}
+.hero h1 em{font-style:italic;color:var(--ouro)}
+.hero p{margin:14px 0 0;max-width:54ch;color:#C9C3B0;font-size:15.5px}
+.hero-acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn-ouro{
+  display:inline-block;background:var(--ouro);color:#17150F;padding:13px 22px;border-radius:8px;
+  font-weight:700;font-size:14.5px;text-decoration:none;border:0;cursor:pointer;font-family:inherit
+}
+.btn-ouro:hover{background:var(--ouro-forte)}
+.btn-vazado{
+  display:inline-block;border:1px solid #4A4436;color:#E8E2D0;padding:13px 22px;border-radius:8px;
+  font-weight:600;font-size:14.5px;text-decoration:none
+}
+.btn-vazado:hover{border-color:var(--ouro);color:var(--ouro)}
+.hero-selo{border:1px solid #33301F;border-radius:var(--raio);padding:20px 22px;background:rgba(255,255,255,.03)}
+.hero-selo .rot{color:var(--ouro)}
+.hero-selo ul{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:11px}
+.hero-selo li{display:flex;gap:11px;font-size:13.5px;color:#C9C3B0;line-height:1.45}
+.hero-selo li b{color:#FFFFFF;font-weight:600}
+.hero-selo .marca{
+  font-family:"IBM Plex Mono",monospace;color:var(--ouro);font-size:12px;flex:none;padding-top:1px
 }
 
-header{
-text-align:center;
-padding:40px 20px;
-background:black;
-}
+/* ---------- secoes ---------- */
+section.faixa-clara{padding-top:56px;padding-bottom:56px}
+@media (max-width:860px){section.faixa-clara{padding-top:40px;padding-bottom:40px}}
+.cabeca-sec{max-width:60ch;margin-bottom:26px}
+.cabeca-sec h2{font-size:clamp(22px,3.4vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-top:8px}
+.cabeca-sec p{margin:10px 0 0;color:var(--texto-2);font-size:14.5px}
 
-.logo{
-width:160px;
-display:block;
-margin:auto;
-}
-
-.container{
-max-width:520px;
-margin:40px auto;
-background:#1a1a1a;
-padding:40px;
-border-radius:10px;
-box-shadow:0 0 30px rgba(255,204,0,0.15);
-}
-
-h2{
-text-align:center;
-margin-bottom:30px;
-}
-
+/* ---------- formulario ---------- */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.campo{display:flex;flex-direction:column;gap:5px}
+.campo label{font-size:12.5px;color:var(--texto-2);font-weight:500}
 input,select{
-width:100%;
-padding:14px;
-margin-bottom:15px;
-border-radius:5px;
-border:1px solid #333;
-background:#111;
-color:white;
-font-size:15px;
+  font:inherit;font-size:14.5px;width:100%;padding:11px 12px;
+  border:1px solid var(--linha-forte);border-radius:8px;
+  background:var(--superficie);color:var(--texto);font-variant-numeric:tabular-nums
 }
+input:focus-visible,select:focus-visible{outline:2px solid var(--ouro);outline-offset:-1px;border-color:var(--ouro)}
+.cartao-form{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);padding:24px}
+@media (max-width:520px){.cartao-form{padding:18px}}
+.acoes-form{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;align-items:center}
+.erro{color:var(--barro);font-size:13px;font-weight:500}
 
-button{
-width:100%;
-padding:15px;
-background:#ffcc00;
-border:none;
-font-weight:bold;
-font-size:16px;
-cursor:pointer;
-border-radius:5px;
-}
+/* ---------- resultado do diagnostico ---------- */
+.diag{margin-top:22px;border:1px solid var(--linha);border-left:4px solid var(--ouro);border-radius:var(--raio);background:var(--superficie-2);padding:22px 24px}
+@media (max-width:520px){.diag{padding:18px}}
+.diag h3{font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.diag .sub{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--texto-3);margin:0 0 16px}
+.diag p{margin:0 0 12px;font-size:14.5px;color:var(--texto-2);max-width:66ch}
+.diag p:last-child{margin-bottom:0}
+.diag b{color:var(--texto);font-weight:600}
+.placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.placar div{background:var(--superficie);border:1px solid var(--linha);border-radius:8px;padding:13px 15px}
+.placar .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:21px;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.placar .v.pos{color:var(--pasto)}
+.placar .v.neg{color:var(--barro)}
+.placar small{display:block;margin-top:4px;font-size:11.5px;color:var(--texto-3);line-height:1.4}
 
-button:hover{
-background:#e6b800;
-}
+/* ---------- calculadora ---------- */
+.calc{display:grid;grid-template-columns:312px minmax(0,1fr);gap:26px;align-items:start}
+.calc > *{min-width:0}
+@media (max-width:940px){.calc{grid-template-columns:1fr;gap:20px}}
+.painel{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);padding:18px;position:sticky;top:82px;display:flex;flex-direction:column;gap:18px}
+@media (max-width:940px){.painel{position:static}}
+.grupo{display:flex;flex-direction:column;gap:7px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--linha-forte);border-radius:8px;overflow:hidden}
+.seg button{appearance:none;border:0;background:var(--superficie);color:var(--texto-2);font:inherit;font-size:13px;font-weight:500;padding:9px 4px;cursor:pointer;border-right:1px solid var(--linha);transition:background .12s,color .12s}
+.seg button:last-child{border-right:0}
+.seg button:hover{background:var(--superficie-2)}
+.seg button[aria-pressed="true"]{background:var(--ouro);color:#17150F;font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--ouro-forte);outline-offset:-2px;z-index:1}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.painel input[type="number"]{padding:8px 9px;font-size:14px}
+details.precos{border-top:1px solid var(--linha);padding-top:14px}
+details.precos summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px}
+details.precos summary::-webkit-details-marker{display:none}
+details.precos summary::after{content:"+";font-size:14px;color:var(--ouro-forte)}
+details.precos[open] summary::after{content:"\2013"}
+.lista-preco{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.linha-preco{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:center}
+.linha-preco span{font-size:12.5px;color:var(--texto-2)}
+.nota{font-size:11.5px;line-height:1.45;color:var(--texto-3);margin:12px 0 0}
 
-.whatsapp{
-background:#25D366;
-margin-top:20px;
-}
+.veredito{background:var(--superficie);border:1px solid var(--linha);border-left:4px solid var(--ouro);border-radius:var(--raio);box-shadow:var(--sombra);padding:20px 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+@media (max-width:620px){.veredito{grid-template-columns:1fr}}
+.veredito .chapeu{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3);margin:0 0 6px}
+.veredito h3{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.veredito p.expl{margin:8px 0 0;font-size:13.5px;color:var(--texto-2);max-width:48ch}
+.cifra{text-align:right}
+@media (max-width:620px){.cifra{text-align:left}}
+.cifra .valor{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:clamp(32px,6vw,44px);letter-spacing:-.03em;color:var(--ouro-forte);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cifra .unidade{font-size:12px;color:var(--texto-3);letter-spacing:.06em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace;margin-top:6px}
 
+.bloco{margin-top:26px}
+.bloco > h3{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2);margin-bottom:4px}
+.bloco > p.sub{margin:0 0 12px;font-size:13px;color:var(--texto-3)}
+.rolagem{overflow-x:auto;border:1px solid var(--linha);border-radius:var(--raio);background:var(--superficie);box-shadow:var(--sombra)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-variant-numeric:tabular-nums}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-3);font-weight:500;text-align:right;padding:11px 12px;border-bottom:1px solid var(--linha-forte);background:var(--superficie-2);white-space:nowrap}
+thead th:first-child{text-align:left}
+tbody td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--linha);font-size:13.5px}
+tbody td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.melhor{background:var(--ouro-veu)}
+tbody tr.melhor td{font-weight:600}
+tbody tr.negativo td{color:var(--texto-3)}
+.prod{display:flex;flex-direction:column;gap:1px}
+.prod b{font-weight:600;font-size:13.5px;letter-spacing:-.01em}
+.prod small{color:var(--texto-3);font-size:11.5px;font-family:"IBM Plex Mono",monospace}
+.destaque-col{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-left:7px;vertical-align:1px;background:var(--ouro);color:#17150F;font-weight:600}
+.tag.breve{background:transparent;color:var(--texto-3);border:1px solid var(--linha-forte)}
+.produto.breve{border-style:dashed}
+.produto .selo-breve{align-self:flex-start;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid var(--linha-forte);color:var(--texto-3);font-weight:600;margin-bottom:2px}
+.pos{color:var(--pasto);font-weight:600}
+.neg{color:var(--barro);font-weight:600}
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.cartao{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px;box-shadow:var(--sombra)}
+.cartao .rot{display:block;margin-bottom:6px}
+.cartao .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:23px;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.cartao .v.pos{color:var(--pasto)}
+.cartao .v.neg{color:var(--barro)}
+.cartao small{display:block;margin-top:5px;font-size:11.5px;color:var(--texto-3);line-height:1.4}
+.faixa{margin-top:12px;padding:11px 14px;border-radius:var(--raio);font-size:13px;background:var(--pasto-veu);color:var(--texto);border:1px solid var(--linha)}
+.faixa.alerta{background:var(--barro-veu)}
+.faixa b{font-weight:600}
+
+/* ---------- linha de produtos ---------- */
+.produtos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.produto{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:18px 20px;box-shadow:var(--sombra);display:flex;flex-direction:column;gap:6px}
+.produto h3{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.produto .dose{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ouro-forte)}
+.produto p{margin:2px 0 0;font-size:13.5px;color:var(--texto-2)}
+
+/* ---------- rodape ---------- */
+.rodape{background:var(--carvao);color:#B4AE9C;padding-top:40px;padding-bottom:44px;border-top:3px solid var(--ouro)}
+.rodape-int{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:34px}
+@media (max-width:760px){.rodape-int{grid-template-columns:1fr;gap:24px}}
+.rodape h3{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ouro);margin-bottom:10px}
+.rodape p{margin:0 0 10px;font-size:12.5px;line-height:1.6;max-width:72ch}
+.rodape b{color:#E8E2D0;font-weight:600}
+.rodape a{color:#E8E2D0}
+.assinatura{margin-top:26px;padding-top:16px;border-top:1px solid #2C2921;font-size:11.5px;color:#7A7565}
 </style>
-
 </head>
-
 <body>
 
-<header>
-<img src="logo-ariel.png" class="logo">
+<header class="topo">
+  <div class="larg topo-int">
+    <a href="#topo" aria-label="Ariel Nutrição Animal"><img src="logo-ariel.png" alt="Ariel Nutrição Animal"></a>
+    <nav class="links">
+      <a href="#diagnostico" class="oculta">Diagnóstico</a>
+      <a href="#calculadora" class="oculta">Calculadora</a>
+      <a href="#linha" class="oculta">Produtos</a>
+      <a class="btn-zap" id="zap-topo" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.5-.3zM12 2A10 10 0 0 0 3.5 17.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3a8.2 8.2 0 1 1 7 3.7z"/></svg>
+        WhatsApp
+      </a>
+    </nav>
+  </div>
 </header>
 
-<div class="container">
+<section class="hero" id="topo">
+  <div class="larg hero-int">
+    <div>
+      <p class="eyebrow">Linha Ariel Corte &middot; Sudeste do Par&aacute;</p>
+      <h1>Quanto custa a <em>arroba</em> que seu boi ganha?</h1>
+      <p>Todo suplemento promete ganho. Poucos dizem quanto custa cada arroba desse ganho &mdash; que &eacute; a &uacute;nica conta que decide se vale a pena. Aqui ela est&aacute; aberta, com as estimativas de GMD do Guia Ariel para cada &eacute;poca do ano e condi&ccedil;&atilde;o de pastagem da regi&atilde;o.</p>
+      <div class="hero-acoes">
+        <a class="btn-ouro" href="#diagnostico">Fazer o diagn&oacute;stico do meu rebanho</a>
+        <a class="btn-vazado" href="#calculadora">Abrir a calculadora</a>
+      </div>
+    </div>
+    <div class="hero-selo">
+      <span class="rot">O que muda de suplemento para suplemento</span>
+      <ul>
+        <li><span class="marca">01</span><span>Na <b>seca com pasto regular</b>, s&oacute; mineral o boi <b>perde peso</b> &mdash; a tabela mostra &minus;0,050 kg por dia.</span></li>
+        <li><span class="marca">02</span><span>Trocar por <b>proteico</b> nesse mesmo cen&aacute;rio p&otilde;e <b>0,57 arroba a mais por cabe&ccedil;a</b> em 90 dias.</span></li>
+        <li><span class="marca">03</span><span>A arroba mais barata quase nunca &eacute; a que <b>deixa mais dinheiro</b>. As duas contas est&atilde;o na tabela.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-<h2>Diagnóstico Estratégico para Seu Rebanho</h2>
+<section class="faixa-clara larg" id="diagnostico">
+  <div class="cabeca-sec">
+    <span class="rot">Diagn&oacute;stico</span>
+    <h2>Seu rebanho, em n&uacute;meros</h2>
+    <p>Preencha o que voc&ecirc; tem hoje. O diagn&oacute;stico sai com o ganho estimado do seu suplemento atual, o do suplemento indicado para a &eacute;poca, e a diferen&ccedil;a em arroba e em dinheiro no seu lote.</p>
+  </div>
 
-<input type="text" id="nome" placeholder="Seu nome">
-<input type="text" id="cidade" placeholder="Sua cidade">
+  <div class="cartao-form">
+    <div class="form-grid">
+      <div class="campo"><label for="d-nome">Seu nome</label><input type="text" id="d-nome" autocomplete="name" placeholder="Como devo te chamar"></div>
+      <div class="campo"><label for="d-cidade">Cidade</label><input type="text" id="d-cidade" autocomplete="address-level2" placeholder="Canaã dos Carajás"></div>
+      <div class="campo">
+        <label for="d-tipo">Tipo de gado</label>
+        <select id="d-tipo"><option value="Corte">Corte</option><option value="Leite">Leite</option></select>
+      </div>
+      <div class="campo"><label for="d-peso">Peso m&eacute;dio (kg)</label><input type="number" id="d-peso" value="300" min="80" max="700" step="10"></div>
+      <div class="campo"><label for="d-cabecas">Cabe&ccedil;as</label><input type="number" id="d-cabecas" value="100" min="1" max="20000" step="1"></div>
+      <div class="campo">
+        <label for="d-epoca">&Eacute;poca agora</label>
+        <select id="d-epoca">
+          <option value="aguas">&Aacute;guas (dez&ndash;mai)</option>
+          <option value="transicao">Transi&ccedil;&atilde;o (mai&ndash;jun)</option>
+          <option value="seca">Seca (jul&ndash;nov)</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="d-pasto">Condi&ccedil;&atilde;o do pasto</label>
+        <select id="d-pasto">
+          <option value="0">&Oacute;tima &mdash; capim jovem, bem formado</option>
+          <option value="1" selected>Boa &mdash; ponto de entrada um pouco passado</option>
+          <option value="2">Regular &mdash; fibroso, ralo ou lota&ccedil;&atilde;o alta</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="d-atual">O que d&aacute; hoje</label>
+        <select id="d-atual">
+          <option value="nada">Nada ou s&oacute; sal comum</option>
+          <option value="mineral" selected>Sal mineral</option>
+          <option value="mineralAd">Mineral aditivado</option>
+          <option value="prot02">Proteico</option>
+          <option value="pe05">Proteico energ&eacute;tico</option>
+          <option value="racao">Ra&ccedil;&atilde;o</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="d-objetivo">Objetivo</label>
+        <select id="d-objetivo"><option>Engorda</option><option>Recria</option><option>Aumentar produ&ccedil;&atilde;o de leite</option></select>
+      </div>
+      <div class="campo"><label for="d-arroba">Arroba na sua regi&atilde;o (R$)</label><input type="number" id="d-arroba" value="300" min="50" max="900" step="5"></div>
+    </div>
 
-<select id="tipo">
-<option value="">Tipo de gado</option>
-<option value="Corte">Corte</option>
-<option value="Leite">Leite</option>
-</select>
+    <div class="acoes-form">
+      <button class="btn-ouro" type="button" id="btn-diag">Gerar diagn&oacute;stico</button>
+      <span class="erro" id="d-erro" role="alert"></span>
+    </div>
 
-<input type="number" id="peso" placeholder="Peso médio do animal (kg)">
+    <div id="d-resultado" hidden></div>
+  </div>
+</section>
 
-<select id="pasto">
-<option value="">Condição do pasto</option>
-<option value="Bom">Bom</option>
-<option value="Regular">Regular</option>
-<option value="Fraco">Fraco</option>
-</select>
+<section class="faixa-clara larg" id="calculadora" style="border-top:1px solid var(--linha)">
+  <div class="cabeca-sec">
+    <span class="rot">Calculadora</span>
+    <h2>Custo por arroba, linha inteira</h2>
+    <p>As 24 estimativas de GMD do guia viram dinheiro. Mexa nos campos e a linha toda se recalcula &mdash; inclusive os pre&ccedil;os, que voc&ecirc; ajusta para o que paga.</p>
+  </div>
 
-<select id="objetivo">
-<option value="">Objetivo</option>
-<option value="Engorda">Engorda</option>
-<option value="Aumentar produção de leite">Aumentar produção de leite</option>
-<option value="Recria">Recria</option>
-</select>
+  <div class="calc">
+    <aside class="painel">
+      <div class="grupo">
+        <span class="rot" id="rot-epoca">&Eacute;poca do ano</span>
+        <div class="seg" id="seg-epoca" role="group" aria-labelledby="rot-epoca">
+          <button type="button" data-v="aguas">&Aacute;guas</button>
+          <button type="button" data-v="transicao">Transi&ccedil;&atilde;o</button>
+          <button type="button" data-v="seca">Seca</button>
+        </div>
+        <span class="nota" id="janela-epoca"></span>
+      </div>
+      <div class="grupo">
+        <span class="rot" id="rot-pasto">Condi&ccedil;&atilde;o da pastagem</span>
+        <div class="seg" id="seg-pasto" role="group" aria-labelledby="rot-pasto">
+          <button type="button" data-v="0">&Oacute;tima</button>
+          <button type="button" data-v="1">Boa</button>
+          <button type="button" data-v="2">Regular</button>
+        </div>
+      </div>
+      <div class="grupo">
+        <span class="rot">O lote</span>
+        <div class="campos">
+          <div class="campo"><label for="peso">Peso m&eacute;dio (kg)</label><input type="number" id="peso" value="300" min="80" max="700" step="10"></div>
+          <div class="campo"><label for="cabecas">Cabe&ccedil;as</label><input type="number" id="cabecas" value="100" min="1" max="20000" step="1"></div>
+          <div class="campo"><label for="dias">Per&iacute;odo (dias)</label><input type="number" id="dias" value="90" min="15" max="365" step="15"></div>
+          <div class="campo"><label for="precoArroba">Arroba (R$)</label><input type="number" id="precoArroba" value="300" min="50" max="900" step="5"></div>
+        </div>
+      </div>
+      <details class="precos">
+        <summary>Pre&ccedil;os do suplemento</summary>
+        <div class="lista-preco" id="lista-preco"></div>
+        <div class="campo" style="margin-top:12px">
+          <label for="kgArroba">kg de peso vivo por arroba</label>
+          <input type="number" id="kgArroba" value="30" min="20" max="40" step="1">
+        </div>
+        <p class="nota">Pre&ccedil;os por quilo. <b>Ponha aqui o que voc&ecirc; paga hoje</b> no mineral e no que j&aacute; usa &mdash; &eacute; assim que a compara&ccedil;&atilde;o sai com o seu n&uacute;mero, n&atilde;o com um n&uacute;mero m&eacute;dio. Os proteinados Ariel est&atilde;o em lan&ccedil;amento; o pre&ccedil;o sai com o setor comercial.</p>
+      </details>
+    </aside>
 
-<button onclick="gerarDiagnostico()">
-GERAR DIAGNÓSTICO
-</button>
+    <div>
+      <section class="veredito">
+        <div>
+          <p class="chapeu">Melhor custo por arroba</p>
+          <h3 id="ver-produto">&mdash;</h3>
+          <p class="expl" id="ver-texto"></p>
+        </div>
+        <div class="cifra">
+          <div class="valor" id="ver-valor">&mdash;</div>
+          <div class="unidade">por arroba ganha</div>
+        </div>
+      </section>
 
-<div id="resultado" style="display:none;margin-top:25px;"></div>
+      <section class="bloco">
+        <h3>Toda a linha, no mesmo cen&aacute;rio</h3>
+        <p class="sub" id="sub-tabela"></p>
+        <div class="rolagem">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Suplemento</th>
+                <th scope="col">GMD kg/dia</th>
+                <th scope="col">Consumo g/cab/dia</th>
+                <th scope="col">Custo/cab/dia</th>
+                <th scope="col">@ por cabe&ccedil;a</th>
+                <th scope="col">R$ por @</th>
+                <th scope="col">Sobra por cabe&ccedil;a</th>
+              </tr>
+            </thead>
+            <tbody id="linhas"></tbody>
+          </table>
+        </div>
+        <p class="nota">&ldquo;Sobra por cabe&ccedil;a&rdquo; &eacute; o que as arrobas ganhas valem menos o suplemento &mdash; n&atilde;o desconta pasto, sanidade, m&atilde;o de obra nem a compra do animal.</p>
+      </section>
 
-<button id="btnWhatsapp"
-class="whatsapp"
-style="display:none"
-onclick="continuarConversa()">
+      <section class="bloco">
+        <h3>Vale trocar de suplemento?</h3>
+        <p class="sub" id="sub-troca"></p>
+        <div class="cartoes" id="cartoes"></div>
+        <div class="faixa" id="faixa-troca"></div>
+      </section>
 
-Falar no WhatsApp
+      <section class="bloco">
+        <h3>O pedido que esse cen&aacute;rio gera</h3>
+        <p class="sub" id="sub-pedido"></p>
+        <div class="faixa" id="faixa-pedido"></div>
+      </section>
+    </div>
+  </div>
+</section>
 
-</button>
+<section class="faixa-clara larg" id="linha" style="border-top:1px solid var(--linha)">
+  <div class="cabeca-sec">
+    <span class="rot">Linha Ariel Corte</span>
+    <h2>Cinco n&iacute;veis, do sal &agrave; ra&ccedil;&atilde;o</h2>
+    <p>Ingredientes naturais, sem excesso de aditivos sint&eacute;ticos. O consumo &eacute; por 100 kg de peso vivo &mdash; um boi de 300 kg come tr&ecirc;s vezes a dose da tabela.</p>
+    <p style="margin-top:10px"><b>Os proteinados est&atilde;o em lan&ccedil;amento.</b> Mineral, Mineral Aditivado, Proteico e Proteico Energ&eacute;tico est&atilde;o em fase final de formula&ccedil;&atilde;o, com valida&ccedil;&atilde;o da zootecnista respons&aacute;vel. As estimativas de ganho j&aacute; valem; o pre&ccedil;o sai com o setor comercial. <a href="#" id="zap-linha" target="_blank" rel="noopener" style="color:var(--ouro-forte);font-weight:600">Avise-me quando lan&ccedil;ar</a>.</p>
+  </div>
+  <div class="produtos">
+    <article class="produto breve">
+      <h3>Mineral</h3><span class="selo-breve">Em breve</span><span class="dose">25 g / 100 kg PV</span>
+      <p>Macro e microminerais. Sustenta ganho s&oacute; enquanto a pastagem estiver boa.</p>
+    </article>
+    <article class="produto breve">
+      <h3>Mineral Aditivado</h3><span class="selo-breve">Em breve</span><span class="dose">50 g / 100 kg PV</span>
+      <!-- Ion&oacute;foro conferido contra a Portaria SDA/MAPA 1.617, de 24/04/2026: ela pro&iacute;be
+           avoparcina, bacitracina (e as formas de zinco e metileno disalicilato) e virginiamicina.
+           Ion&oacute;foros n&atilde;o constam da lista e seguem permitidos. -->
+      <p>Minerais mais ion&oacute;foro, que melhora a efici&ecirc;ncia da fermenta&ccedil;&atilde;o no r&uacute;men. Consumo dobrado em rela&ccedil;&atilde;o ao mineral simples: na seca com pasto regular, &eacute; a diferen&ccedil;a entre perder peso e ganhar.</p>
+    </article>
+    <article class="produto breve">
+      <h3>Proteico</h3><span class="selo-breve">Em breve</span><span class="dose">100 a 300 g / 100 kg PV</span>
+      <p>M&iacute;nimo 20% de PB, com ureia e prote&iacute;na verdadeira. Corrige a defici&ecirc;ncia proteica do pasto na seca.</p>
+    </article>
+    <article class="produto breve">
+      <h3>Proteico Energ&eacute;tico</h3><span class="selo-breve">Em breve</span><span class="dose">500 a 800 g / 100 kg PV</span>
+      <p>Proteico mais farelo energ&eacute;tico. Para recria intensiva e prim&iacute;paras.</p>
+    </article>
+    <article class="produto">
+      <h3>Ra&ccedil;&atilde;o Ariel Corte</h3><span class="dose">1.000 g / 100 kg PV</span>
+      <p>Fonte principal da dieta, para semiconfinamento a pasto nos sistemas TIP e RIP.</p>
+    </article>
+    <article class="produto">
+      <h3>Ariel Bovleite</h3><span class="dose">alto consumo &middot; sem ureia</span>
+      <p>Mineral de alto consumo para vaca em lacta&ccedil;&atilde;o. Avaliado por litro produzido, n&atilde;o por ganho de peso.</p>
+    </article>
+  </div>
+</section>
 
-</div>
+<footer class="rodape">
+  <div class="larg rodape-int">
+    <div>
+      <h3>De onde v&ecirc;m os n&uacute;meros</h3>
+      <p>As estimativas de GMD s&atilde;o do <b>Guia Pr&aacute;tico Ariel GMD</b>, que parte da metodologia de refer&ecirc;ncia do setor com as datas de esta&ccedil;&atilde;o e os cen&aacute;rios de seca e transi&ccedil;&atilde;o ajustados ao clima do Sudeste do Par&aacute; &mdash; seca mais curta e menos severa que a do Centro-Oeste. <b>S&atilde;o estimativas de refer&ecirc;ncia, n&atilde;o resultado de ensaio de campo da Ariel.</b> Servem para comparar cen&aacute;rios e dimensionar pedido; o n&uacute;mero da sua fazenda sai da balan&ccedil;a.</p>
+      <p>O consumo acompanha o peso do animal, ent&atilde;o a conta usa o peso m&eacute;dio do per&iacute;odo &mdash; o inicial mais metade do ganho. Uma arroba equivale a 30 kg de peso vivo, ou 50% de rendimento de carca&ccedil;a. Pre&ccedil;o de suplemento e pre&ccedil;o da arroba s&atilde;o os que voc&ecirc; digitar.</p>
+    </div>
+    <div>
+      <h3>Falar com a gente</h3>
+      <p>Canaã dos Carajás e regi&atilde;o. Entrega em rota, dois dias fixos por semana. Pedido m&iacute;nimo de 1.000 kg; acima de 1.200 kg o frete entra por nossa conta.</p>
+      <p style="margin-top:16px"><a class="btn-zap" id="zap-rodape" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.5-.3zM12 2A10 10 0 0 0 3.5 17.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3a8.2 8.2 0 1 1 7 3.7z"/></svg>(94) 98414-2737</a></p>
+    </div>
+  </div>
+  <div class="larg assinatura">ARIEL Nutri&ccedil;&atilde;o Animal &mdash; uma marca LPM Ind&uacute;stria e Com&eacute;rcio de Produtos Aliment&iacute;cios.</div>
+</footer>
 
 <script>
-
-async function gerarDiagnostico(){
-
-const nome = document.getElementById("nome").value;
-const cidade = document.getElementById("cidade").value;
-const tipo = document.getElementById("tipo").value;
-const peso = document.getElementById("peso").value;
-const pasto = document.getElementById("pasto").value;
-const objetivo = document.getElementById("objetivo").value;
-
-const resultadoDiv = document.getElementById("resultado");
-
-if(!nome || !tipo || !peso || !pasto || !objetivo){
-resultadoDiv.style.display = "block";
-resultadoDiv.innerText = "Preencha todos os campos.";
-return;
-}
-
-resultadoDiv.style.display = "block";
-resultadoDiv.innerText = "Analisando dados do rebanho...";
-
-// 🔥 SIMULAÇÃO INTELIGENTE (SUBSTITUI BACKEND)
-let diagnostico = gerarRespostaIA(tipo, peso, pasto, objetivo);
-
-resultadoDiv.style.textAlign = "justify";
-resultadoDiv.innerText =
-"Sr. " + nome + ",\n\n" +
-diagnostico +
-"\n\nSe fizer sentido pra sua operação, me chama no WhatsApp.";
-
-document.getElementById("btnWhatsapp").style.display = "block";
-
-window.dadosCliente = {
-nome, cidade, tipo, peso, pasto, objetivo,
-diagnostico
+/* ================= dados do Guia Prático Ariel GMD ================= */
+var EPOCAS={
+  aguas:{nome:"Águas",janela:"Dezembro a maio — capim jovem, melhor janela de ganho a baixo custo.",meses:[11,0,1,2,3]},
+  transicao:{nome:"Transição",janela:"Maio a junho — capim ainda verde, PB começando a cair. Hora de introduzir o proteico.",meses:[4,5]},
+  seca:{nome:"Seca",janela:"Julho a novembro — PB abaixo de 7%. Sem proteico o boi para.",meses:[6,7,8,9,10]}
 };
+var PASTOS=["Ótima","Boa","Regular"];
+var PRODUTOS=[
+  {id:"mineral",   nome:"Mineral",                     consumo:25,   preco:"mineral",   dose:"25 g / 100 kg PV"},
+  {id:"mineralAd", nome:"Mineral Aditivado",           consumo:50,   preco:"mineralAd", dose:"50 g / 100 kg PV"},
+  {id:"prot01",    nome:"Proteico 0,1% PV",            consumo:100,  preco:"proteico",  dose:"100 g / 100 kg PV"},
+  {id:"prot02",    nome:"Proteico 0,2% PV",            consumo:200,  preco:"proteico",  dose:"200 g / 100 kg PV"},
+  {id:"prot03",    nome:"Proteico 0,3% PV",            consumo:300,  preco:"proteico",  dose:"300 g / 100 kg PV"},
+  {id:"pe05",      nome:"Proteico Energético 0,5% PV", consumo:500,  preco:"protEner",  dose:"500 g / 100 kg PV"},
+  {id:"pe08",      nome:"Proteico Energético 0,8% PV", consumo:800,  preco:"protEner",  dose:"800 g / 100 kg PV"},
+  {id:"racao",     nome:"Ração Ariel Corte 1,0% PV",   consumo:1000, preco:"racao",     dose:"1.000 g / 100 kg PV"}
+];
+var GMD={
+  aguas:    {mineral:[.800,.600,.400], mineralAd:[.880,.680,.460], prot01:[.900,.735,.520], prot02:[.900,.735,.520], prot03:[1.040,.870,.670], pe05:[1.150,1.020,.780], pe08:[1.280,1.180,.950], racao:[1.280,1.180,.950]},
+  transicao:{mineral:[.520,.330,.180], mineralAd:[.590,.405,.290], prot01:[.650,.510,.375], prot02:[.720,.600,.470], prot03:[.720,.600,.470], pe05:[.920,.830,.680], pe08:[1.100,1.010,.870], racao:[1.210,1.130,.950]},
+  seca:     {mineral:[.220,.050,-.050],mineralAd:[.280,.110,.090], prot01:[.360,.240,.190], prot02:[.440,.360,.300], prot03:[.520,.460,.410], pe05:[.660,.620,.560], pe08:[.890,.820,.770], racao:[1.100,.950,.880]}
+};
+var BOVLEITE={
+  aguas:"Nas águas o pasto ótimo ou bom já sustenta parte da exigência da vaca. O Bovleite completa os minerais e estimula o consumo de matéria seca, o que segura ou melhora um pouco a produção.",
+  transicao:"A transição é a fase crítica para a vaca não perder escore. O sal mineral de alto consumo ajuda a sustentar a curva de lactação antes que o pasto caia de vez.",
+  seca:"Na seca a dependência do suplemento é máxima. Junto ao Bovleite, vale associar volumoso conservado — silagem ou feno — para não desabar a produção."
+};
+var PRECOS_ROTULO={mineral:"Mineral",mineralAd:"Mineral Aditivado",proteico:"Proteico",protEner:"Proteico Energético",racao:"Ração Ariel Corte"};
+/* Preços de venda por quilo.
+   - racao: R$ 3,60 é real — tabela Ariel, faixa Performance, entrega acima de 1,2 t.
+   - proteico e protEner: saem do custo calculado sobre a PRÉ-FORMULAÇÃO de 26/08/2026,
+     que ainda não foi validada pela zootecnista. São estimativas de lançamento.
+   - mineral e mineralAd: ZERO de propósito. Não existe formulação, logo não existe
+     custo, logo não existe preço. Zero faz a tela mostrar "em breve" em vez de
+     inventar número. NÃO preencher com chute. */
+var PRECOS_PADRAO={mineral:0,mineralAd:0,proteico:3.36,protEner:3.03,racao:3.60};
+var EM_BREVE={mineral:1,mineralAd:1,proteico:1,protEner:1};
+var ZAP="5594984142737";
+var CHAVE="ariel-custo-arroba-v1";
 
+function epocaDoMes(){
+  var m=new Date().getMonth();
+  for(var id in EPOCAS){ if(EPOCAS[id].meses.indexOf(m)>=0) return id; }
+  return "seca";
+}
+function brl(v,c){ if(c===undefined)c=2; return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:c,maximumFractionDigits:c}); }
+function n(v,c){ if(c===undefined)c=2; return v.toLocaleString("pt-BR",{minimumFractionDigits:c,maximumFractionDigits:c}); }
+
+/* ================= calculadora ================= */
+var estado={epoca:epocaDoMes(),pasto:1,peso:300,cabecas:100,dias:90,precoArroba:300,kgArroba:30,precos:{}};
+for(var k in PRECOS_PADRAO) estado.precos[k]=PRECOS_PADRAO[k];
+
+function carregar(){
+  try{
+    var s=JSON.parse(localStorage.getItem(CHAVE)||"null");
+    if(s&&typeof s==="object"){
+      var precos={};
+      for(var k in PRECOS_PADRAO) precos[k]=(s.precos&&s.precos[k]>0)?s.precos[k]:PRECOS_PADRAO[k];
+      for(var campo in s) if(campo!=="precos") estado[campo]=s[campo];
+      estado.precos=precos;
+    }
+  }catch(e){}
+}
+function salvar(){ try{ localStorage.setItem(CHAVE,JSON.stringify(estado)); }catch(e){} }
+
+function linhaDe(idProduto,epoca,pasto,peso,dias,kgArroba,precoArroba,precos){
+  var p=null;
+  for(var i=0;i<PRODUTOS.length;i++) if(PRODUTOS[i].id===idProduto) p=PRODUTOS[i];
+  var gmd=GMD[epoca][p.id][pasto];
+  var ganhoKg=gmd*dias;
+  var pesoMedio=peso+ganhoKg/2;
+  var consumoDia=(pesoMedio/100)*p.consumo/1000;
+  var custoDia=consumoDia*precos[p.preco];
+  var custoTotal=custoDia*dias;
+  var arrobas=ganhoKg/kgArroba;
+  /* sem preço de venda ainda: mostra o ganho, mas não finge saber o custo */
+  var temPreco=precos[p.preco]>0;
+  return {id:p.id,nome:p.nome,dose:p.dose,preco:p.preco,gmd:gmd,ganhoKg:ganhoKg,
+          temPreco:temPreco,
+          consumoDia:consumoDia,custoDia:custoDia,custoTotal:custoTotal,arrobas:arrobas,
+          custoArroba:(temPreco&&arrobas>0)?custoTotal/arrobas:null,
+          sobra:temPreco?(arrobas*precoArroba-custoTotal):null};
+}
+function calcular(){
+  return PRODUTOS.map(function(p){
+    var l=linhaDe(p.id,estado.epoca,estado.pasto,estado.peso,estado.dias,estado.kgArroba,estado.precoArroba,estado.precos);
+    l.volumeLote=l.consumoDia*estado.dias*estado.cabecas;
+    return l;
+  });
 }
 
-// 🧠 MOTOR SIMULADO (IA LOCAL)
-function gerarRespostaIA(tipo, peso, pasto, objetivo){
-
-let resposta = "";
-
-if(pasto === "Fraco"){
-resposta += "Seu pasto está limitando diretamente o desempenho do rebanho. ";
+function renderPrecos(){
+  var el=document.getElementById("lista-preco");
+  el.innerHTML="";
+  Object.keys(PRECOS_ROTULO).forEach(function(k){
+    var div=document.createElement("div");
+    div.className="linha-preco";
+    var sp=document.createElement("span");
+    sp.textContent=PRECOS_ROTULO[k];
+    div.appendChild(sp);
+    var inp=document.createElement("input");
+    inp.type="number"; inp.step="0.05"; inp.min="0.5"; inp.max="30";
+    inp.value=estado.precos[k]>0?estado.precos[k].toFixed(2):"";
+    inp.placeholder="consultar";
+    inp.setAttribute("aria-label","Preço por quilo — "+PRECOS_ROTULO[k]);
+    inp.addEventListener("input",function(){
+      var v=parseFloat(inp.value);
+      if(!isNaN(v)&&v>0){ estado.precos[k]=v; salvar(); render(); }
+    });
+    div.appendChild(inp);
+    el.appendChild(div);
+  });
 }
 
-if(pasto === "Regular"){
-resposta += "Seu sistema está em nível intermediário, com espaço claro para ganho de performance. ";
+function render(){
+  var bts=document.querySelectorAll("#seg-epoca button");
+  for(var i=0;i<bts.length;i++) bts[i].setAttribute("aria-pressed",String(bts[i].getAttribute("data-v")===estado.epoca));
+  var bps=document.querySelectorAll("#seg-pasto button");
+  for(var j=0;j<bps.length;j++) bps[j].setAttribute("aria-pressed",String(Number(bps[j].getAttribute("data-v"))===estado.pasto));
+  document.getElementById("janela-epoca").textContent=EPOCAS[estado.epoca].janela;
+
+  var linhas=calcular();
+  var comGanho=linhas.filter(function(l){return l.custoArroba!==null;});   /* já exclui os sem preço */
+  var melhor=comGanho.length?comGanho.reduce(function(a,b){return b.custoArroba<a.custoArroba?b:a;}):null;
+  var maisSobra=comGanho.length?comGanho.reduce(function(a,b){return b.sobra>a.sobra?b:a;}):null;
+  var cenario=EPOCAS[estado.epoca].nome+" · pastagem "+PASTOS[estado.pasto].toLowerCase()+" · "+n(estado.peso,0)+" kg · "+n(estado.dias,0)+" dias";
+
+  if(melhor){
+    document.getElementById("ver-produto").textContent=melhor.nome;
+    document.getElementById("ver-valor").textContent=brl(melhor.custoArroba);
+    var extra=(maisSobra&&maisSobra.id!==melhor.id)
+      ? " A arroba mais barata não é a que deixa mais dinheiro: "+maisSobra.nome+" custa "+brl(maisSobra.custoArroba)+" a arroba, mas sobra "+brl(maisSobra.sobra-melhor.sobra)+" a mais por cabeça, porque produz mais arroba."
+      : " É também o que deixa mais dinheiro por cabeça no período: "+brl(melhor.sobra)+".";
+    document.getElementById("ver-texto").textContent="Nesse cenário, põe "+n(melhor.arrobas,2)+" @ por cabeça a "+brl(melhor.custoDia)+" de suplemento por dia."+extra;
+  }else{
+    document.getElementById("ver-produto").textContent="Nenhum suplemento fecha a conta";
+    document.getElementById("ver-valor").textContent="—";
+    document.getElementById("ver-texto").textContent="Nesse cenário nenhum produto da linha produz ganho de peso.";
+  }
+  document.getElementById("sub-tabela").textContent=cenario;
+
+  var tb=document.getElementById("linhas");
+  tb.innerHTML="";
+  linhas.forEach(function(l){
+    var tr=document.createElement("tr");
+    if(melhor&&l.id===melhor.id) tr.className="melhor";
+    else if(l.custoArroba===null) tr.className="negativo";
+    var etiqueta=((melhor&&l.id===melhor.id)?'<span class="tag">melhor @</span>':'')
+                 +(EM_BREVE[l.preco]?'<span class="tag breve">em breve</span>':'');
+    tr.innerHTML=
+      '<td><div class="prod"><b>'+l.nome+etiqueta+'</b><small>'+l.dose+(l.temPreco?' · '+brl(estado.precos[l.preco])+'/kg'+(estado.precos[l.preco]!==PRECOS_PADRAO[l.preco]?' (seu preço)':''):'')+'</small></div></td>'+
+      '<td class="num">'+n(l.gmd,3)+'</td>'+
+      '<td class="num">'+n(l.consumoDia*1000,0)+'</td>'+
+      '<td class="num">'+(l.temPreco?brl(l.custoDia):'—')+'</td>'+
+      '<td class="num">'+(l.arrobas>0?n(l.arrobas,2):'—')+'</td>'+
+      '<td class="num destaque-col">'+(l.custoArroba!==null?brl(l.custoArroba):(l.temPreco?'perde peso':'consultar comercial'))+'</td>'+
+      '<td class="num '+(l.sobra===null?'':(l.sobra>=0?'pos':'neg'))+'">'+(l.sobra===null?'—':brl(l.sobra))+'</td>';
+    tb.appendChild(tr);
+  });
+
+  var base=linhas[0];   /* o mineral é sempre o ponto de partida do pecuarista */
+  var alvo=(maisSobra&&maisSobra.id!==base.id)?maisSobra:linhas[linhas.length-1];
+  var dArrobas=alvo.arrobas-base.arrobas;
+  /* a diferença em arroba sai do guia e vale sempre; a diferença em dinheiro
+     só existe se os dois lados tiverem preço de venda */
+  var comparavel=base.temPreco&&alvo.temPreco;
+  var dCusto=comparavel?(alvo.custoTotal-base.custoTotal):null;
+  var custoArrobaExtra=(comparavel&&dArrobas>0)?dCusto/dArrobas:null;
+  var dSobra=comparavel?(alvo.sobra-base.sobra):null;
+  var valorArrobasExtra=dArrobas*estado.precoArroba;
+
+  document.getElementById("sub-troca").textContent="Sair do mineral e ir para "+alvo.nome+" — o que muda por cabeça, em "+n(estado.dias,0)+" dias.";
+  document.getElementById("cartoes").innerHTML=
+    '<div class="cartao"><span class="rot">Arrobas a mais</span><div class="v '+(dArrobas>0?'pos':'neg')+'">'+(dArrobas>0?'+':'')+n(dArrobas,2)+' @</div><small>'+n(base.arrobas,2)+' @ para '+n(alvo.arrobas,2)+' @ por cabeça</small></div>'+
+    '<div class="cartao"><span class="rot">O que essas arrobas valem</span><div class="v '+(valorArrobasExtra>=0?'pos':'neg')+'">'+(valorArrobasExtra>=0?'+':'')+brl(valorArrobasExtra,0)+'</div><small>por cabeça, a '+brl(estado.precoArroba,0)+' a arroba</small></div>'+
+    '<div class="cartao"><span class="rot">Suplemento a mais</span><div class="v">'+(comparavel?brl(dCusto,0):'consultar')+'</div><small>'+(comparavel?brl(base.custoTotal,0)+' para '+brl(alvo.custoTotal,0)+' por cabeça':'preço com o setor comercial')+'</small></div>'+
+    '<div class="cartao"><span class="rot">Sobra a mais no lote</span><div class="v '+(dSobra===null?'':(dSobra>=0?'pos':'neg'))+'">'+(dSobra===null?'consultar':((dSobra>=0?'+':'')+brl(dSobra*estado.cabecas,0)))+'</div><small>'+(dSobra===null?'depende do preço, que sai com o comercial':'em '+n(estado.cabecas,0)+' cabeças, já descontado o suplemento')+'</small></div>';
+
+  var fx=document.getElementById("faixa-troca");
+  if(!comparavel){
+    fx.className="faixa";
+    fx.innerHTML='Pelas tabelas do guia, a troca põe <b>'+n(dArrobas,2)+' @ a mais por cabeça</b> — '+n(dArrobas*estado.cabecas,1)+' @ no lote, <b>'+brl(valorArrobasExtra*estado.cabecas,0)+'</b> a preço de '+brl(estado.precoArroba,0)+' a arroba. Para ver quanto disso <i>sobra</i>, informe em &ldquo;Preços do suplemento&rdquo;, no painel, o que você paga hoje pelo mineral.';
+  }else if(custoArrobaExtra!==null&&custoArrobaExtra<estado.precoArroba){
+    fx.className="faixa";
+    fx.innerHTML='Cada arroba a mais sai por <b>'+brl(custoArrobaExtra)+'</b> e é vendida a <b>'+brl(estado.precoArroba,0)+'</b>. A troca se paga '+n(estado.precoArroba/custoArrobaExtra,1)+'× e devolve <b>'+brl(dSobra*estado.cabecas,0)+'</b> no lote de '+n(estado.cabecas,0)+' cabeças.';
+  }else if(custoArrobaExtra!==null){
+    fx.className="faixa alerta";
+    fx.innerHTML='Cada arroba a mais sai por <b>'+brl(custoArrobaExtra)+'</b>, acima dos <b>'+brl(estado.precoArroba,0)+'</b> que a arroba paga. Nesse cenário a troca não se sustenta só pelo ganho de peso.';
+  }else{
+    fx.className="faixa alerta";
+    fx.innerHTML='A troca não produz arroba a mais nesse cenário.';
+  }
+
+  var vol=alvo.volumeLote, porMes=vol/(estado.dias/30);
+  document.getElementById("sub-pedido").textContent=alvo.nome+" para "+n(estado.cabecas,0)+" cabeças, "+n(estado.dias,0)+" dias.";
+  var fp=document.getElementById("faixa-pedido"), regra;
+  if(porMes>=1200) regra="Acima de 1,2 t por mês: <b>frete incluso</b> e preço da faixa cheia.";
+  else if(porMes>=1000) regra="Entre 1 e 1,2 t por mês: atende o pedido mínimo, mas ainda não pega a faixa de frete incluso (1,2 t).";
+  else regra="Abaixo de 1 t por mês: <b>fica sob o pedido mínimo</b> — a entrega tem taxa adicional de R$ 120 a R$ 150.";
+  fp.className=porMes>=1000?"faixa":"faixa alerta";
+  fp.innerHTML=n(vol,0)+' kg no período, cerca de <b>'+n(porMes,0)+' kg por mês</b>. '+regra+
+    (alvo.temPreco?' Valor do suplemento no lote: <b>'+brl(alvo.custoTotal*estado.cabecas,0)+'</b>.':' O valor sai quando o preço de lançamento for definido.');
 }
 
-if(tipo === "Corte"){
-resposta += "No gado de corte, o ganho de peso depende fortemente de ajuste nutricional estratégico. ";
+document.getElementById("seg-epoca").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b)return;
+  estado.epoca=b.getAttribute("data-v"); salvar(); render();
+});
+document.getElementById("seg-pasto").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b)return;
+  estado.pasto=Number(b.getAttribute("data-v")); salvar(); render();
+});
+["peso","cabecas","dias","precoArroba","kgArroba"].forEach(function(campo){
+  var el=document.getElementById(campo);
+  el.addEventListener("input",function(){
+    var v=parseFloat(el.value);
+    if(!isNaN(v)&&v>0){ estado[campo]=v; salvar(); render(); }
+  });
+});
+
+/* ================= diagnóstico ================= */
+var DIAS_DIAG=90;
+var ultimoDiag=null;
+
+function linkZap(texto){
+  return "https://wa.me/"+ZAP+(texto?("?text="+encodeURIComponent(texto)):"");
 }
+document.getElementById("zap-topo").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
+document.getElementById("zap-rodape").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
+document.getElementById("zap-linha").href=linkZap("Olá! Vi no site que os proteinados Ariel estão em lançamento. Quero ser avisado quando saírem, e saber o preço.");
 
-if(tipo === "Leite"){
-resposta += "Na produção de leite, pequenas correções nutricionais geram aumento direto na produtividade. ";
+function gerarDiagnostico(){
+  var nome=document.getElementById("d-nome").value.trim();
+  var cidade=document.getElementById("d-cidade").value.trim();
+  var tipo=document.getElementById("d-tipo").value;
+  var peso=parseFloat(document.getElementById("d-peso").value);
+  var cabecas=parseFloat(document.getElementById("d-cabecas").value);
+  var epoca=document.getElementById("d-epoca").value;
+  var pasto=Number(document.getElementById("d-pasto").value);
+  var atual=document.getElementById("d-atual").value;
+  var objetivo=document.getElementById("d-objetivo").value;
+  var precoArroba=parseFloat(document.getElementById("d-arroba").value);
+  var erro=document.getElementById("d-erro");
+  var caixa=document.getElementById("d-resultado");
+
+  if(!nome){ erro.textContent="Falta o seu nome."; document.getElementById("d-nome").focus(); return; }
+  if(!(peso>0)||!(cabecas>0)||!(precoArroba>0)){ erro.textContent="Confira peso, cabeças e preço da arroba."; return; }
+  erro.textContent="";
+
+  var cabecalho=EPOCAS[epoca].nome.toLowerCase()+" · pasto "+PASTOS[pasto].toLowerCase()+" · "+n(cabecas,0)+" cabeças de "+n(peso,0)+" kg"+(cidade?" · "+cidade:"");
+  var html="";
+
+  if(tipo==="Leite"){
+    html='<div class="diag"><h3>'+nome+', para vaca em lactação a conta é outra</h3>'+
+      '<p class="sub">'+cabecalho+'</p>'+
+      '<p>'+BOVLEITE[epoca]+'</p>'+
+      '<p>O <b>Ariel Bovleite</b> é mineral de alto consumo, formulado <b>sem ureia</b>, e o resultado dele se mede em <b>litro produzido</b>, não em ganho de peso. Ainda <b>não temos dado próprio de campo</b> de consumo por vaca e resposta em litros — e preferimos não publicar número que não medimos. Para dimensionar o seu caso, fale com a gente: a formulação é ajustada com o zootecnista responsável.</p>'+
+      '<p style="margin-top:16px"><a class="btn-zap" id="zap-diag" href="#" target="_blank" rel="noopener">Mandar esses dados no WhatsApp</a></p></div>';
+    ultimoDiag="Diagnóstico pelo site — LEITE\n\nNome: "+nome+"\nCidade: "+(cidade||"—")+"\nRebanho: "+n(cabecas,0)+" vacas, "+n(peso,0)+" kg\nÉpoca: "+EPOCAS[epoca].nome+"\nPasto: "+PASTOS[pasto]+"\nObjetivo: "+objetivo+"\n\nInteresse em Ariel Bovleite.";
+  }else{
+    var precos=estado.precos;
+    var idAtual=(atual==="nada")?"mineral":atual;
+    var lAtual=linhaDe(idAtual,epoca,pasto,peso,DIAS_DIAG,estado.kgArroba,precoArroba,precos);
+    var todas=PRODUTOS.map(function(p){ return linhaDe(p.id,epoca,pasto,peso,DIAS_DIAG,estado.kgArroba,precoArroba,precos); });
+    var indicado=todas.reduce(function(a,b){return b.sobra>a.sobra?b:a;});
+
+    var dArrobas=indicado.arrobas-lAtual.arrobas;
+    var comparavel=lAtual.temPreco&&indicado.temPreco;
+    var dCusto=comparavel?(indicado.custoTotal-lAtual.custoTotal):null;
+    var dSobra=comparavel?(indicado.sobra-lAtual.sobra):null;
+    var custoExtra=(comparavel&&dArrobas>0)?dCusto/dArrobas:null;
+    var valorExtra=dArrobas*precoArroba;
+    var mesmo=(indicado.id===idAtual);
+
+    var abertura;
+    if(mesmo){
+      abertura=nome+", pelo que você já usa, está no ponto certo";
+    }else if(lAtual.gmd<=0){
+      abertura=nome+", nesse cenário seu lote está perdendo peso";
+    }else{
+      abertura=nome+", tem "+n(dArrobas,2)+" arroba por cabeça na mesa";
+    }
+
+    html='<div class="diag"><h3>'+abertura+'</h3><p class="sub">'+cabecalho+' · projeção de '+DIAS_DIAG+' dias</p>';
+
+    if(atual==="nada"){
+      html+='<p>Você marcou que hoje não dá suplemento, ou dá só sal comum. Como o guia não tem estimativa para esse caso, usei o <b>sal mineral como piso</b> — o ganho real sem suplementação tende a ser <b>igual ou menor</b> que o mostrado abaixo, então a diferença a favor da troca é ainda maior.</p>';
+    }
+
+    html+='<div class="placar">'+
+      '<div><span class="rot">Hoje, com '+lAtual.nome.toLowerCase()+'</span><div class="v">'+n(lAtual.gmd,3)+' kg/dia</div><small>'+(lAtual.arrobas>0?n(lAtual.arrobas,2)+" @ por cabeça em "+DIAS_DIAG+" dias":"perde peso no período")+'</small></div>'+
+      '<div><span class="rot">Com '+indicado.nome.toLowerCase()+'</span><div class="v">'+n(indicado.gmd,3)+' kg/dia</div><small>'+n(indicado.arrobas,2)+' @ por cabeça em '+DIAS_DIAG+' dias</small></div>'+
+      '<div><span class="rot">Diferença por cabeça</span><div class="v '+(dArrobas>0?'pos':'neg')+'">'+(dArrobas>0?'+':'')+n(dArrobas,2)+' @</div><small>'+(dArrobas>0?'+':'')+n(dArrobas*cabecas,1)+' @ no lote inteiro</small></div>'+
+      '<div><span class="rot">'+(comparavel?'Sobra a mais no lote':'O que essas arrobas valem')+'</span><div class="v '+((comparavel?dSobra:valorExtra)>=0?'pos':'neg')+'">'+((comparavel?dSobra:valorExtra)>=0?'+':'')+brl((comparavel?dSobra:valorExtra)*cabecas,0)+'</div><small>'+(comparavel?'já descontado o suplemento a mais':'a '+brl(precoArroba,0)+' a arroba, antes do custo do suplemento')+'</small></div>'+
+      '</div>';
+
+    if(mesmo){
+      html+='<p>Pela tabela do guia, <b>'+indicado.nome+'</b> é justamente o que deixa mais dinheiro nesse cenário: '+brl(indicado.sobra)+' por cabeça em '+DIAS_DIAG+' dias, com '+brl(indicado.custoArroba)+' de suplemento por arroba ganha. Se o pasto mudar de condição ou virar a época, a resposta muda — a calculadora abaixo mostra como.</p>';
+    }else if(custoExtra!==null&&custoExtra<precoArroba){
+      html+='<p>Cada arroba a mais custa <b>'+brl(custoExtra)+'</b> de suplemento e vale <b>'+brl(precoArroba,0)+'</b> na balança &mdash; a troca se paga '+n(precoArroba/custoExtra,1)+' vezes. No lote de '+n(cabecas,0)+' cabeças, são <b>'+brl(dSobra*cabecas,0)+'</b> a mais em '+DIAS_DIAG+' dias, já descontando o suplemento.</p>';
+    }else if(custoExtra!==null){
+      html+='<p>Nesse cenário a arroba a mais sai por <b>'+brl(custoExtra)+'</b>, acima dos '+brl(precoArroba,0)+' que ela paga. Ou seja: o ganho existe, mas não se sustenta só pelo peso. Vale conversar sobre prazo, escala e o preço que você paga hoje antes de mexer.</p>';
+    }else{
+      html+='<p>Nesse cenário a troca não produz arroba a mais. Vale rever a condição do pasto antes de mexer no suplemento.</p>';
+    }
+
+    html+='<p>O consumo estimado é de <b>'+n(indicado.consumoDia*1000,0)+' g por cabeça por dia</b>, ou <b>'+n(indicado.consumoDia*DIAS_DIAG*cabecas,0)+' kg</b> no lote em '+DIAS_DIAG+' dias.</p>';
+    html+='<p style="margin-top:16px"><a class="btn-zap" id="zap-diag" href="#" target="_blank" rel="noopener">Mandar esses números no WhatsApp</a></p></div>';
+
+    ultimoDiag="Diagnóstico pelo site — CORTE\n\n"+
+      "Nome: "+nome+"\nCidade: "+(cidade||"—")+"\n"+
+      "Lote: "+n(cabecas,0)+" cabeças de "+n(peso,0)+" kg\n"+
+      "Época: "+EPOCAS[epoca].nome+" | Pasto: "+PASTOS[pasto]+"\n"+
+      "Objetivo: "+objetivo+"\n"+
+      "Usa hoje: "+(atual==="nada"?"nada ou só sal comum":lAtual.nome)+"\n\n"+
+      "Projeção "+DIAS_DIAG+" dias:\n"+
+      "- Hoje: GMD "+n(lAtual.gmd,3)+" kg/dia ("+n(lAtual.arrobas,2)+" @/cab)\n"+
+      "- Indicado: "+indicado.nome+", GMD "+n(indicado.gmd,3)+" kg/dia ("+n(indicado.arrobas,2)+" @/cab)\n"+
+      "- Diferença: "+(dArrobas>0?"+":"")+n(dArrobas,2)+" @/cab | "+(dArrobas>0?"+":"")+n(dArrobas*cabecas,1)+" @ no lote\n"+
+      "- Sobra a mais no lote: "+(dSobra>=0?"+":"")+brl(dSobra*cabecas,0)+"\n"+
+      "- Consumo: "+n(indicado.consumoDia*1000,0)+" g/cab/dia, "+n(indicado.consumoDia*DIAS_DIAG*cabecas,0)+" kg no lote\n"+
+      "- Arroba considerada: "+brl(precoArroba,0);
+  }
+
+  caixa.innerHTML=html;
+  caixa.hidden=false;
+  var bz=document.getElementById("zap-diag");
+  if(bz) bz.href=linkZap(ultimoDiag);
+  caixa.scrollIntoView({block:"nearest",behavior:"smooth"});
+
+  /* leva o cenário do diagnóstico para a calculadora */
+  if(tipo!=="Leite"){
+    estado.epoca=epoca; estado.pasto=pasto; estado.peso=peso; estado.cabecas=cabecas; estado.precoArroba=precoArroba;
+    document.getElementById("peso").value=peso;
+    document.getElementById("cabecas").value=cabecas;
+    document.getElementById("precoArroba").value=precoArroba;
+    salvar(); render();
+  }
 }
+document.getElementById("btn-diag").addEventListener("click",gerarDiagnostico);
 
-if(objetivo === "Engorda"){
-resposta += "Para engorda, é possível acelerar ganho diário com suplementação correta. ";
-}
-
-if(objetivo === "Aumentar produção de leite"){
-resposta += "Existe potencial de aumento de produção com ajuste fino de dieta. ";
-}
-
-if(peso < 300){
-resposta += "Seu rebanho está abaixo do peso ideal, indicando deficiência nutricional. ";
-}
-
-if(peso > 500){
-resposta += "Seu rebanho já tem bom porte, mas pode melhorar eficiência alimentar. ";
-}
-
-resposta += "O ajuste técnico correto pode destravar resultado imediato na sua operação.";
-
-return resposta;
-}
-
-// 📲 WHATSAPP
-
-function continuarConversa(){
-
-const d = window.dadosCliente;
-
-const mensagem = encodeURIComponent(
-"Chegou um diagnóstico do site:\n\n" +
-"Cliente: " + d.nome + "\n" +
-"Cidade: " + d.cidade + "\n" +
-"Tipo: " + d.tipo + "\n" +
-"Peso: " + d.peso + " kg\n" +
-"Pasto: " + d.pasto + "\n" +
-"Objetivo: " + d.objetivo + "\n\n" +
-"Diagnóstico:\n" + d.diagnostico
-);
-
-const url = "https://wa.me/5594984142737?text=" + mensagem;
-
-window.open(url,"_blank");
-
-}
-
+/* ================= partida ================= */
+carregar();
+["peso","cabecas","dias","precoArroba","kgArroba"].forEach(function(campo){
+  document.getElementById(campo).value=estado[campo];
+});
+document.getElementById("d-epoca").value=estado.epoca;
+document.getElementById("d-pasto").value=String(estado.pasto);
+renderPrecos();
+render();
 </script>
-
 </body>
 </html>
