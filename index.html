@@ -950,15 +950,23 @@ var ARI_API="https://ari-520990905601.southamerica-east1.run.app";
     var texto="Cenário: "+EPOCAS[estado.epoca].nome+", pasto "+PASTOS[estado.pasto].toLowerCase()+
       ", "+n(estado.cabecas,0)+" cabeças de "+n(estado.peso,0)+" kg, "+n(estado.dias,0)+
       " dias, arroba a "+brl(estado.precoArroba,0)+".\nPor cabeça no período:\n";
+    /* Vai TUDO multiplicado: por cabeça e no lote inteiro.
+       Ele já errou duas vezes multiplicando sozinho - disse 41.715 kg onde
+       eram 4.171. Se o total já estiver escrito aqui, não sobra conta para
+       ele fazer, e não sobra conta para ele errar. */
     linhas.forEach(function(l){
-      texto+="- "+l.nome+": GMD "+n(l.gmd,3)+" kg/dia, "+
-        (l.arrobas>0?n(l.arrobas,2)+" @":"PERDE peso, sem arroba ganha")+
-        ", consumo "+n(l.consumoDia*1000,0)+" g/cab/dia"+
-        (l.custoArroba!==null?", "+brl(l.custoArroba)+" por @":"")+"\n";
+      texto+="- "+l.nome+": GMD "+n(l.gmd,3)+" kg/dia · "+
+        (l.arrobas>0
+          ? n(l.arrobas,2)+" @/cab e "+n(l.arrobas*estado.cabecas,1)+" @ no lote"
+          : "PERDE "+n(Math.abs(l.ganhoKg),1)+" kg/cab e "+n(Math.abs(l.ganhoKg*estado.cabecas),0)+" kg no lote, sem arroba ganha")+
+        " · consumo "+n(l.consumoDia*1000,0)+" g/cab/dia, "+n(l.volumeLote,0)+" kg no lote no período"+
+        (l.custoArroba!==null?" · "+brl(l.custoArroba)+" por @":"")+"\n";
     });
     var d=alvo.arrobas-base.arrobas;
-    texto+="Sair do "+base.nome+" para "+alvo.nome+": "+(d>0?"+":"")+n(d,2)+
-           " @ por cabeça, "+(d>0?"+":"")+n(d*estado.cabecas,1)+" @ no lote.";
+    texto+="Trocar "+base.nome+" por "+alvo.nome+": "+(d>0?"+":"")+n(d,2)+
+           " @/cab, "+(d>0?"+":"")+n(d*estado.cabecas,1)+" @ no lote, valendo "+
+           brl(d*estado.cabecas*estado.precoArroba,0)+".\n"+
+           "TODOS os totais acima já estão multiplicados pelo lote. Não multiplique de novo.";
     return texto;
   }
 
