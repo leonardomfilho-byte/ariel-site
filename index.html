@@ -544,7 +544,7 @@ tbody tr.negativo td{color:var(--texto-3)}
 <section id="ari-painel" hidden aria-label="Conversa com o Ari">
   <header id="ari-topo">
     <span class="cara" aria-hidden="true">A</span>
-    <span class="quem">Ari<small>o le&atilde;o da Ariel</small></span>
+    <span class="quem">Ari<small>seu parceiro no campo</small></span>
     <button id="ari-fechar" type="button" aria-label="Fechar a conversa">&times;</button>
   </header>
   <div id="ari-conversa" role="log" aria-live="polite"></div>
@@ -553,7 +553,7 @@ tbody tr.negativo td{color:var(--texto-3)}
     <textarea id="ari-texto" rows="1" placeholder="Pergunte sobre ganho, &eacute;poca, pasto&hellip;" aria-label="Sua pergunta para o Ari"></textarea>
     <button id="ari-enviar" type="submit">Enviar</button>
   </form>
-  <p id="ari-rodape">O Ari trabalha com as estimativas do Guia Ariel. Pre&ccedil;o, f&oacute;rmula e receita s&atilde;o com o setor comercial e a zootecnista.</p>
+  <p id="ari-rodape">O Ari trabalha com as estimativas do Guia Ariel. Pre&ccedil;o e f&oacute;rmula s&atilde;o com o setor comercial e a zootecnista respons&aacute;vel.</p>
 </section>
 
 <script>
@@ -904,7 +904,7 @@ document.getElementById("btn-diag").addEventListener("click",gerarDiagnostico);
    melhor não existir do que existir quebrado. Depois de subir o serviço no
    Cloud Run, cole aqui a URL que o deploy imprimir, sem barra no fim.
    A chave da Anthropic NUNCA vem para cá: ela mora só no Cloud Run. */
-var ARI_API="";
+var ARI_API="https://ari-520990905601.southamerica-east1.run.app";
 
 (function(){
   if(!ARI_API) return;   /* serviço ainda não existe: não desenha nada */
@@ -937,12 +937,29 @@ var ARI_API="";
     return d;
   }
 
-  /* o cenário da calculadora vai junto, para o Ari falar do lote da pessoa
-     em vez de pedir tudo de novo */
+  /* A conta vai pronta para o Ari.
+     O primeiro teste dele errou a arroba: leu a coluna do pasto errada e
+     converteu kg em arroba pelo número errado. Modelo de linguagem não é
+     calculadora - e a calculadora está bem aqui, certa. Então ele recebe o
+     resultado calculado e só narra. */
   function cenarioAtual(){
-    return EPOCAS[estado.epoca].nome+", pasto "+PASTOS[estado.pasto].toLowerCase()+
-           ", "+n(estado.cabecas,0)+" cabeças de "+n(estado.peso,0)+" kg, "+
-           n(estado.dias,0)+" dias, arroba a "+brl(estado.precoArroba,0);
+    var linhas=calcular();
+    var base=linhas[0];
+    var alvo=linhas.filter(function(l){return l.arrobas>0;})
+                   .reduce(function(a,b){return b.arrobas>a.arrobas?b:a;},linhas[2]);
+    var texto="Cenário: "+EPOCAS[estado.epoca].nome+", pasto "+PASTOS[estado.pasto].toLowerCase()+
+      ", "+n(estado.cabecas,0)+" cabeças de "+n(estado.peso,0)+" kg, "+n(estado.dias,0)+
+      " dias, arroba a "+brl(estado.precoArroba,0)+".\nPor cabeça no período:\n";
+    linhas.forEach(function(l){
+      texto+="- "+l.nome+": GMD "+n(l.gmd,3)+" kg/dia, "+
+        (l.arrobas>0?n(l.arrobas,2)+" @":"PERDE peso, sem arroba ganha")+
+        ", consumo "+n(l.consumoDia*1000,0)+" g/cab/dia"+
+        (l.custoArroba!==null?", "+brl(l.custoArroba)+" por @":"")+"\n";
+    });
+    var d=alvo.arrobas-base.arrobas;
+    texto+="Sair do "+base.nome+" para "+alvo.nome+": "+(d>0?"+":"")+n(d,2)+
+           " @ por cabeça, "+(d>0?"+":"")+n(d*estado.cabecas,1)+" @ no lote.";
+    return texto;
   }
 
   function desenharSugestoes(lista){
@@ -986,7 +1003,7 @@ var ARI_API="";
     abrir.setAttribute("aria-expanded","true");
     if(!apresentado){
       apresentado=true;
-      fala("dele","Sou o Ari. Eu trabalho com as estimativas de ganho do Guia Ariel — por época do ano e condição de pasto. Me conta seu caso que eu faço a conta.");
+      fala("dele","Sou o Ari, da Ariel. Trabalho com as estimativas de ganho do nosso guia — por época do ano e condição de pasto. Me conta seu caso que eu vejo os números com você.");
       desenharSugestoes([
         "Quanto meu boi ganha na seca com pasto fraco?",
         "Vale a pena sair do mineral?",
