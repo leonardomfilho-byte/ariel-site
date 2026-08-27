@@ -185,6 +185,24 @@ input:focus-visible,select:focus-visible{outline:2px solid var(--ouro);outline-o
 .acoes-form{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;align-items:center}
 .erro{color:var(--barro);font-size:13px;font-weight:500}
 
+/* ---------- régua de manejo ---------- */
+.link-regua{background:none;border:0;padding:0;font:inherit;font-size:12px;color:var(--ouro-forte);text-decoration:underline;cursor:pointer}
+.link-regua:hover{color:var(--texto)}
+#regua{border:1px solid var(--linha-forte);border-left:4px solid var(--ouro);border-radius:var(--raio);background:var(--superficie-2);padding:18px 20px;margin-bottom:20px}
+#regua[hidden]{display:none}
+#regua h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+#regua > p{margin:0 0 14px;font-size:13.5px;color:var(--texto-2);max-width:66ch}
+.faixa-regua{position:relative;height:34px;border-radius:8px;margin:14px 0 6px;background:linear-gradient(90deg,var(--barro-veu) 0 22%,var(--pasto-veu) 22% 78%,var(--barro-veu) 78% 100%);border:1px solid var(--linha-forte)}
+.faixa-regua .marca{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--carvao);border-radius:2px}
+.faixa-regua .rotulo{position:absolute;top:9px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--texto-2)}
+.faixa-legenda{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--texto-3);margin-bottom:12px}
+.veredito-regua{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px;margin-top:12px}
+.veredito-regua h4{margin:0 0 6px;font-family:Archivo,sans-serif;font-size:15px;font-weight:700}
+.veredito-regua p{margin:0 0 8px;font-size:13.5px;color:var(--texto-2)}
+.veredito-regua p:last-child{margin-bottom:0}
+.fonte{font-size:11.5px;color:var(--texto-3);line-height:1.5;margin-top:12px}
+.fonte a{color:var(--ouro-forte)}
+
 /* ---------- resultado do diagnostico ---------- */
 .diag{margin-top:22px;border:1px solid var(--linha);border-left:4px solid var(--ouro);border-radius:var(--raio);background:var(--superficie-2);padding:22px 24px}
 @media (max-width:520px){.diag{padding:18px}}
@@ -352,7 +370,7 @@ tbody tr.negativo td{color:var(--texto-3)}
         </select>
       </div>
       <div class="campo">
-        <label for="d-pasto">Condi&ccedil;&atilde;o do pasto</label>
+        <label for="d-pasto">Condi&ccedil;&atilde;o do pasto <button type="button" id="abrir-regua" class="link-regua">n&atilde;o sei qual &eacute; o meu</button></label>
         <select id="d-pasto">
           <option value="0">&Oacute;tima &mdash; capim jovem, bem formado</option>
           <option value="1" selected>Boa &mdash; ponto de entrada um pouco passado</option>
@@ -376,6 +394,34 @@ tbody tr.negativo td{color:var(--texto-3)}
       </div>
       <div class="campo"><label for="d-arroba">Arroba na sua regi&atilde;o (R$)</label><input type="number" id="d-arroba" value="300" min="50" max="900" step="5"></div>
     </div>
+
+    <section id="regua" hidden aria-label="Medir a condi&ccedil;&atilde;o do pasto">
+      <h3>Meça, em vez de chutar</h3>
+      <p>A condi&ccedil;&atilde;o do pasto decide todos os n&uacute;meros desta p&aacute;gina, e olhar e adivinhar &eacute; onde mais se erra. A <b>Embrapa Gado de Corte</b> publicou uma r&eacute;gua com a altura de manejo de cada capim &mdash; d&aacute; para medir com uma vara marcada, ou pela sua pr&oacute;pria bota.</p>
+      <div class="form-grid">
+        <div class="campo">
+          <label for="r-capim">Qual o capim do piquete</label>
+          <select id="r-capim"></select>
+        </div>
+        <div class="campo">
+          <label for="r-altura">Altura hoje (cm)</label>
+          <input type="number" id="r-altura" min="1" max="200" step="1" placeholder="mede em uns 10 pontos">
+        </div>
+        <div class="campo">
+          <label for="r-folha">Como est&aacute; a folha</label>
+          <select id="r-folha">
+            <option value="verde">Verde, predominando folha</option>
+            <option value="mista">Come&ccedil;ando a secar, colmo aparecendo</option>
+            <option value="seca">Seca e fibrosa, muito colmo</option>
+          </select>
+        </div>
+      </div>
+      <div class="acoes-form">
+        <button class="btn-ouro" type="button" id="btn-regua">Ver o que a r&eacute;gua diz</button>
+        <button type="button" class="link-regua" id="fechar-regua">fechar</button>
+      </div>
+      <div id="r-saida"></div>
+    </section>
 
     <div class="acoes-form">
       <button class="btn-ouro" type="button" id="btn-diag">Gerar diagn&oacute;stico</button>
@@ -776,6 +822,123 @@ document.getElementById("seg-pasto").addEventListener("click",function(e){
     if(!isNaN(v)&&v>0){ estado[campo]=v; salvar(); render(); }
   });
 });
+
+/* ================= régua de manejo =================
+   Alturas da Régua de Manejo de Pastagens, Embrapa Gado de Corte,
+   Comunicado Técnico 135, edição revisada, fevereiro de 2017.
+   Costa, J. A. A.; Queiroz, H. P. de. ISSN 1983-9731.
+
+   Braquiárias: máxima e mínima sob pastejo CONTÍNUO.
+   Panicuns (coloniões): entrada e saída sob pastejo ROTACIONADO.
+   São coisas diferentes e a tela diz qual é qual. */
+var CAPINS=[
+  {nome:"Capim-xaraés",                    alto:40, baixo:20, manejo:"continuo"},
+  {nome:"Capim-piatã",                     alto:40, baixo:20, manejo:"continuo"},
+  {nome:"Capim-marandu (braquiarão)",      alto:35, baixo:20, manejo:"continuo"},
+  {nome:"Capim-paiaguás",                  alto:35, baixo:20, manejo:"continuo"},
+  {nome:"Capim-ipyporã",                   alto:35, baixo:20, manejo:"continuo"},
+  {nome:"Braquiária decumbens",            alto:30, baixo:15, manejo:"continuo"},
+  {nome:"Capim-tupi (humidícola)",         alto:20, baixo:10, manejo:"continuo"},
+  {nome:"Capim-mombaça",                   alto:85, baixo:45, manejo:"rotacionado"},
+  {nome:"Capim-zuri",                      alto:80, baixo:40, manejo:"rotacionado"},
+  {nome:"Capim-tanzânia",                  alto:70, baixo:35, manejo:"rotacionado"},
+  {nome:"Capim-quênia",                    alto:65, baixo:35, manejo:"rotacionado"},
+  {nome:"Capim-massai",                    alto:55, baixo:30, manejo:"rotacionado"},
+  {nome:"Capim-tamani",                    alto:50, baixo:25, manejo:"rotacionado"}
+];
+
+(function(){
+  var sel=document.getElementById("r-capim");
+  CAPINS.forEach(function(c,i){
+    var o=document.createElement("option");
+    o.value=String(i);
+    o.textContent=c.nome+" ("+c.baixo+" a "+c.alto+" cm)";
+    sel.appendChild(o);
+  });
+})();
+
+function lerRegua(){
+  var c=CAPINS[Number(document.getElementById("r-capim").value)];
+  var h=parseFloat(document.getElementById("r-altura").value);
+  var folha=document.getElementById("r-folha").value;
+  var saida=document.getElementById("r-saida");
+
+  if(!(h>0)){
+    saida.innerHTML='<p class="erro" style="margin-top:10px">Informe a altura medida, em centímetros.</p>';
+    return;
+  }
+
+  var dentro=h>=c.baixo && h<=c.alto;
+  var acima=h>c.alto, abaixo=h<c.baixo;
+
+  /* A régua da Embrapa diz se o MANEJO está adequado. A tradução disso para
+     as três condições do Guia Ariel é leitura nossa, e a tela diz isso. */
+  var condicao, porque;
+  if(abaixo){
+    condicao=2;
+    porque="Abaixo da altura mínima é superpastejo: sobra pouca folha para a planta rebrotar, e o boi precisa de muito mais bocado para encher o rúmen. Pelo guia isso é pasto regular, independente de estar verde.";
+  }else if(acima){
+    condicao=(folha==="verde")?1:2;
+    porque="Acima da altura máxima o pasto passou do ponto e perde valor nutricional — mais colmo, menos folha."+(folha==="verde"?" Como a folha ainda está verde, dá para tratar como boa, mas o relógio está correndo.":" Com a folha já secando, é pasto regular.");
+  }else{
+    condicao=(folha==="verde")?0:(folha==="mista"?1:2);
+    porque="A altura está dentro da faixa que a Embrapa indica, então o manejo está certo."+(folha==="verde"?" Com folha verde predominando, é o melhor cenário.":folha==="mista"?" Com o colmo já aparecendo, fica como boa.":" Mas folha seca e fibrosa derruba a digestibilidade, então entra como regular.");
+  }
+
+  var nomes=["Ótima","Boa","Regular"];
+  var acao;
+  if(c.manejo==="continuo"){
+    acao=abaixo?"Reduza o número de animais no piquete, ou deixe descansar."
+        :acima?"Aumente o número de animais no piquete — o pasto está sobrando e envelhecendo."
+        :"A lotação está no ponto. Mantenha a altura entre "+c.baixo+" e "+c.alto+" cm.";
+  }else{
+    acao=abaixo?"Já passou da altura de saída: tire os animais do piquete."
+        :acima?"Passou da altura de entrada. Entre com os animais assim que der, ou reduza o descanso."
+        :"Está entre a entrada e a saída. Troque de piquete ao chegar em "+c.baixo+" cm.";
+  }
+
+  /* posição na barra: 22% a 78% é a faixa boa */
+  var pos;
+  if(dentro) pos=22+56*(h-c.baixo)/(c.alto-c.baixo);
+  else if(abaixo) pos=Math.max(2,22*(h/c.baixo));
+  else pos=Math.min(98,78+20*Math.min(1,(h-c.alto)/c.alto));
+
+  saida.innerHTML=
+    '<div class="faixa-regua"><div class="marca" style="left:'+pos.toFixed(1)+'%"></div>'+
+      '<span class="rotulo" style="left:6px">baixo</span>'+
+      '<span class="rotulo" style="left:calc(50% - 16px)">no ponto</span>'+
+      '<span class="rotulo" style="right:6px">passou</span>'+
+    '</div>'+
+    '<div class="faixa-legenda"><span>'+c.baixo+' cm</span><span>'+n(h,0)+' cm medidos</span><span>'+c.alto+' cm</span></div>'+
+    '<div class="veredito-regua">'+
+      '<h4>'+c.nome+': '+(dentro?'dentro da faixa':(abaixo?'abaixo do mínimo':'acima do máximo'))+'</h4>'+
+      '<p><b>'+(c.manejo==="continuo"?"Pastejo contínuo":"Pastejo rotacionado")+'.</b> '+
+        (c.manejo==="continuo"?"A Embrapa indica manter entre "+c.baixo+" e "+c.alto+" cm.":"A Embrapa indica entrar com "+c.alto+" cm e sair com "+c.baixo+" cm.")+' '+acao+'</p>'+
+      '<p>'+porque+'</p>'+
+      '<p style="margin-top:10px"><button type="button" class="btn-ouro" id="usar-condicao" data-c="'+condicao+'">Usar &ldquo;'+nomes[condicao]+'&rdquo; no diagn&oacute;stico</button></p>'+
+    '</div>'+
+    '<p class="fonte">Alturas de <b>Régua de Manejo de Pastagens</b>, Embrapa Gado de Corte, Comunicado Técnico 135, edição revisada de fevereiro de 2017 (Costa, J. A. A.; Queiroz, H. P. de). A tradução da altura para as três condições do Guia Ariel é leitura nossa, não da Embrapa.</p>';
+
+  document.getElementById("usar-condicao").addEventListener("click",function(){
+    var v=this.getAttribute("data-c");
+    document.getElementById("d-pasto").value=v;
+    estado.pasto=Number(v); salvar(); render();
+    document.getElementById("regua").hidden=true;
+    document.getElementById("d-pasto").focus();
+    contar("usou_regua",{pasto:v});
+  });
+}
+
+document.getElementById("abrir-regua").addEventListener("click",function(){
+  var r=document.getElementById("regua");
+  r.hidden=false;
+  document.getElementById("r-altura").focus();
+  contar("abriu_regua");
+});
+document.getElementById("fechar-regua").addEventListener("click",function(){
+  document.getElementById("regua").hidden=true;
+});
+document.getElementById("btn-regua").addEventListener("click",lerRegua);
 
 /* ================= diagnóstico ================= */
 var DIAS_DIAG=90;
