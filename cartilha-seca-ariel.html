@@ -59,6 +59,10 @@
   .capa img {
     width: 100%; height: 62vh; min-height: 340px; max-height: 560px;
     object-fit: cover; display: block;
+    /* A foto original é uma flagra de campo, luz achatada e cores baças —
+       o resto do site (retrato do Ari) tem contraste e saturação de foto
+       tratada. Sem isso a capa parece de outro material, não da Ariel. */
+    filter: saturate(1.35) contrast(1.12) brightness(1.04);
   }
   .capa::after {
     content: ""; position: absolute; inset: 0;
