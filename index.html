@@ -581,7 +581,7 @@ tbody tr.negativo td{color:var(--texto-3)}
       <p>Fonte principal da dieta, para semiconfinamento a pasto nos sistemas TIP e RIP.</p>
     </article>
     <article class="produto">
-      <h3>Ariel Bovleite</h3><span class="dose">alto consumo &middot; sem ureia</span>
+      <h3>Ariel BovLeite</h3><span class="dose">alto consumo &middot; com ureia</span>
       <p>Mineral de alto consumo para vaca em lacta&ccedil;&atilde;o. Avaliado por litro produzido, n&atilde;o por ganho de peso.</p>
     </article>
   </div>
@@ -658,9 +658,9 @@ var GMD={
   seca:     {mineral:[.220,.050,-.050],mineralAd:[.280,.110,.090], prot01:[.360,.240,.190], prot02:[.440,.360,.300], prot03:[.520,.460,.410], pe05:[.660,.620,.560], pe08:[.890,.820,.770], racao:[1.100,.950,.880]}
 };
 var BOVLEITE={
-  aguas:"Nas águas o pasto ótimo ou bom já sustenta parte da exigência da vaca. O Bovleite completa os minerais e estimula o consumo de matéria seca, o que segura ou melhora um pouco a produção.",
+  aguas:"Nas águas o pasto ótimo ou bom já sustenta parte da exigência da vaca. O BovLeite completa os minerais e estimula o consumo de matéria seca, o que segura ou melhora um pouco a produção.",
   transicao:"A transição é a fase crítica para a vaca não perder escore. O sal mineral de alto consumo ajuda a sustentar a curva de lactação antes que o pasto caia de vez.",
-  seca:"Na seca a dependência do suplemento é máxima. Junto ao Bovleite, vale associar volumoso conservado — silagem ou feno — para não desabar a produção."
+  seca:"Na seca a dependência do suplemento é máxima. Junto ao BovLeite, vale associar volumoso conservado — silagem ou feno — para não desabar a produção."
 };
 var PRECOS_ROTULO={mineral:"Mineral",mineralAd:"Mineral Aditivado",proteico:"Proteico",protEner:"Proteico Energético",racao:"Ração Ariel Corte"};
 /* Preços de venda por quilo.
@@ -1028,7 +1028,7 @@ function gerarDiagnostico(){
 
   if(tipo==="Leite"){
     /* A conta de leite é da Embrapa Gado de Leite, não nossa. O que a Ariel
-       NÃO tem é resposta em litros ao Bovleite — e isso continua dito. */
+       NÃO tem é resposta em litros ao BovLeite — e isso continua dito. */
     var litros=parseFloat(document.getElementById("d-litros").value)||0;
     var fase=document.getElementById("d-fase").value;
     var chuvoso=(epoca!=="seca");
@@ -1056,7 +1056,7 @@ function gerarDiagnostico(){
       '</div>'+
       '<p>'+regra+' O concentrado deve ter <b>18 a 22% de proteína bruta</b> e <b>NDT acima de 70%</b>. A regra da matéria seca é 1 kg para cada 2 kg de leite, e no pico a vaca chega a consumir 4% do peso vivo.</p>'+
       '<p>'+BOVLEITE[epoca]+'</p>'+
-      '<p><b>O que eu não tenho:</b> o <b>Ariel Bovleite</b> é mineral de alto consumo, formulado <b>sem ureia</b>, e o resultado dele se mede em litro produzido. A Ariel ainda <b>não tem dado próprio de campo</b> de resposta em litros — e não publicamos número que não medimos. Os números acima são exigência da vaca, não promessa do produto.</p>'+
+      '<p><b>O que eu não tenho:</b> o <b>Ariel BovLeite</b> é mineral de alto consumo, com ureia pecuária — exige 10 dias de adaptação e não serve para bezerro com menos de 2 meses nem para equídeo —, e o resultado dele se mede em litro produzido. A Ariel ainda <b>não tem dado próprio de campo</b> de resposta em litros — e não publicamos número que não medimos. Os números acima são exigência da vaca, não promessa do produto.</p>'+
       '<p style="margin-top:16px"><a class="btn-zap" id="zap-diag" href="#" target="_blank" rel="noopener">Mandar esses números no WhatsApp</a></p>'+
       '<p class="fonte">Concentrado, matéria seca e teores: Embrapa Gado de Leite, sistema de produção para a Zona da Mata Atlântica. Consumo do mineral de alto consumo: ficha técnica do fabricante do núcleo.</p></div>';
 
@@ -1070,7 +1070,7 @@ function gerarDiagnostico(){
       "- Concentrado: "+n(conc,1)+" kg/vaca/dia, "+n(conc*cabecas*30,0)+" kg/mês no rebanho\n"+
       "- Matéria seca mínima: "+n(msMin,1)+" kg/dia\n"+
       "- Mineral alto consumo: "+n(mineralMin*1000,0)+" a "+n(mineralMax*1000,0)+" g/vaca/dia\n\n"+
-      "Interesse em Ariel Bovleite.";
+      "Interesse em Ariel BovLeite.";
   }else{
     var precos=estado.precos;
     var idAtual=(atual==="nada")?"mineral":atual;
