@@ -287,6 +287,17 @@ tbody tr.negativo td{color:var(--texto-3)}
 .faixa.alerta{background:var(--barro-veu)}
 .faixa b{font-weight:600}
 
+/* ---------- valor do lote ---------- */
+#lote-tabela table{min-width:660px}
+#lote-tabela input,#lote-tabela select{width:auto;padding:6px 8px;font-size:13.5px;border-radius:6px}
+#lote-tabela input[type="number"]{min-width:64px;text-align:right}
+#lote-tabela td:first-child input{min-width:56px}
+#lote-tabela select{min-width:120px}
+#lote-tabela td{padding:7px 12px}
+.lote-remover{background:none;border:0;color:var(--texto-3);cursor:pointer;font-size:17px;line-height:1;padding:4px 8px;border-radius:6px}
+.lote-remover:hover{color:var(--barro);background:var(--barro-veu)}
+.lote-barra{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+
 /* ---------- linha de produtos ---------- */
 .produtos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
 .produto{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:18px 20px;box-shadow:var(--sombra);display:flex;flex-direction:column;gap:6px}
@@ -547,6 +558,51 @@ tbody tr.negativo td{color:var(--texto-3)}
       </section>
     </div>
   </div>
+</section>
+
+<section class="faixa-clara larg" id="lote" style="border-top:1px solid var(--linha)">
+  <div class="cabeca-sec">
+    <span class="rot">Calculadora</span>
+    <h2>Quanto vale o lote que voc&ecirc; vai vender</h2>
+    <p>Lance brinco, peso vivo e rendimento de carca&ccedil;a de cada animal. O valor sai na hora, por categoria e no total &mdash; a mesma conta que fecha a negocia&ccedil;&atilde;o com o comprador.</p>
+  </div>
+
+  <details class="precos" style="border-top:0;padding-top:0;margin-bottom:20px">
+    <summary>Pre&ccedil;o da arroba por categoria</summary>
+    <div class="lista-preco" id="lote-lista-preco"></div>
+  </details>
+
+  <div class="rolagem" id="lote-tabela">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Brinco</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Peso vivo (kg)</th>
+          <th scope="col">RC (%)</th>
+          <th scope="col">Carca&ccedil;a (kg)</th>
+          <th scope="col">Arrobas (@)</th>
+          <th scope="col">Valor</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="lote-linhas"></tbody>
+    </table>
+  </div>
+  <div class="lote-barra">
+    <button type="button" class="link-regua" id="lote-add">+ Adicionar animal</button>
+    <span class="nota" id="lote-contagem" style="margin:0"></span>
+  </div>
+
+  <section class="bloco">
+    <h3>Fechamento</h3>
+    <div class="campos" style="max-width:340px;margin-bottom:16px">
+      <div class="campo"><label for="lote-desconto">Desconto (%)</label><input type="number" id="lote-desconto" value="5" min="0" max="100" step="0.5"></div>
+      <div class="campo"><label for="lote-parcelas">Parcelas</label><input type="number" id="lote-parcelas" value="4" min="1" max="24" step="1"></div>
+    </div>
+    <div class="cartoes" id="lote-cartoes"></div>
+    <p class="nota">Peso de carca&ccedil;a = peso vivo &times; RC. Arroba = 15&nbsp;kg de carca&ccedil;a. O desconto se aplica sobre o total do lote, antes de dividir nas parcelas.</p>
+  </section>
 </section>
 
 <section class="faixa-clara larg" id="linha" style="border-top:1px solid var(--linha)">
@@ -1343,6 +1399,144 @@ var ARI_API="https://ari-520990905601.southamerica-east1.run.app";
   });
 })();
 
+/* ================= valor do lote ================= */
+var LOTE_CATEGORIAS=[
+  {id:"boi-gordo",     nome:"Boi gordo",     arroba:137},
+  {id:"boi-magro",     nome:"Boi magro",     arroba:144},
+  {id:"vaca-descarte", nome:"Vaca descarte", arroba:139},
+  {id:"novilha",       nome:"Novilha",       arroba:140},
+  {id:"bezerro",       nome:"Bezerro",       arroba:130}
+];
+var LOTE_CHAVE="ariel-valor-lote-v1";
+var loteAnimais=[
+  {brinco:"1",   categoria:"boi-gordo",     peso:560, rc:50},
+  {brinco:"809", categoria:"boi-gordo",     peso:380, rc:52},
+  {brinco:"1",   categoria:"boi-magro",     peso:300, rc:50},
+  {brinco:"1",   categoria:"vaca-descarte", peso:520, rc:50},
+  {brinco:"3",   categoria:"novilha",       peso:320, rc:52},
+  {brinco:"34",  categoria:"bezerro",       peso:200, rc:50}
+];
+
+function lotePrecoArroba(catId){
+  for(var i=0;i<LOTE_CATEGORIAS.length;i++){ if(LOTE_CATEGORIAS[i].id===catId) return LOTE_CATEGORIAS[i].arroba; }
+  return 0;
+}
+function loteSalvar(){
+  try{
+    localStorage.setItem(LOTE_CHAVE,JSON.stringify({animais:loteAnimais,precos:LOTE_CATEGORIAS.map(function(c){return c.arroba;})}));
+  }catch(e){}
+}
+function loteCarregar(){
+  try{
+    var salvo=JSON.parse(localStorage.getItem(LOTE_CHAVE));
+    if(!salvo) return;
+    if(salvo.animais&&salvo.animais.length) loteAnimais=salvo.animais;
+    if(salvo.precos) salvo.precos.forEach(function(v,i){ if(LOTE_CATEGORIAS[i]&&typeof v==="number") LOTE_CATEGORIAS[i].arroba=v; });
+  }catch(e){}
+}
+function loteMontarPrecos(){
+  var alvo=document.getElementById("lote-lista-preco");
+  alvo.innerHTML=LOTE_CATEGORIAS.map(function(c){
+    return '<div class="linha-preco"><span>'+c.nome+'</span><input type="number" data-cat="'+c.id+'" class="lote-preco-input" value="'+c.arroba+'" min="0" step="1"></div>';
+  }).join("");
+  alvo.querySelectorAll(".lote-preco-input").forEach(function(inp){
+    inp.addEventListener("input",function(){
+      var cat=inp.getAttribute("data-cat");
+      for(var i=0;i<LOTE_CATEGORIAS.length;i++){ if(LOTE_CATEGORIAS[i].id===cat) LOTE_CATEGORIAS[i].arroba=parseFloat(inp.value)||0; }
+      loteRender();
+    });
+  });
+}
+function loteMontarLinha(a,idx){
+  var tr=document.createElement("tr");
+
+  var tdBrinco=document.createElement("td");
+  var inBrinco=document.createElement("input");
+  inBrinco.type="text"; inBrinco.value=a.brinco;
+  inBrinco.addEventListener("input",function(e){ a.brinco=e.target.value; loteSalvar(); });
+  tdBrinco.appendChild(inBrinco);
+  tr.appendChild(tdBrinco);
+
+  var tdCat=document.createElement("td");
+  var sel=document.createElement("select");
+  sel.innerHTML=LOTE_CATEGORIAS.map(function(c){ return '<option value="'+c.id+'"'+(c.id===a.categoria?' selected':'')+'>'+c.nome+'</option>'; }).join("");
+  sel.addEventListener("change",function(e){ a.categoria=e.target.value; loteRender(); });
+  tdCat.appendChild(sel);
+  tr.appendChild(tdCat);
+
+  var tdPeso=document.createElement("td");
+  var inPeso=document.createElement("input");
+  inPeso.type="number"; inPeso.min="0"; inPeso.step="5"; inPeso.value=a.peso; inPeso.className="num";
+  inPeso.addEventListener("input",function(e){ a.peso=parseFloat(e.target.value)||0; loteRender(); });
+  tdPeso.appendChild(inPeso);
+  tr.appendChild(tdPeso);
+
+  var tdRc=document.createElement("td");
+  var inRc=document.createElement("input");
+  inRc.type="number"; inRc.min="30"; inRc.max="70"; inRc.step="0.5"; inRc.value=a.rc; inRc.className="num";
+  inRc.addEventListener("input",function(e){ a.rc=parseFloat(e.target.value)||0; loteRender(); });
+  tdRc.appendChild(inRc);
+  tr.appendChild(tdRc);
+
+  var carcaca=a.peso*(a.rc/100);
+  var arrobas=carcaca/15;
+  var valor=arrobas*lotePrecoArroba(a.categoria);
+
+  var tdCarcaca=document.createElement("td");
+  tdCarcaca.className="num"; tdCarcaca.textContent=n(carcaca,1);
+  tr.appendChild(tdCarcaca);
+
+  var tdArrobas=document.createElement("td");
+  tdArrobas.className="num"; tdArrobas.textContent=n(arrobas,2);
+  tr.appendChild(tdArrobas);
+
+  var tdValor=document.createElement("td");
+  tdValor.className="num destaque-col"; tdValor.textContent=brl(valor);
+  tr.appendChild(tdValor);
+
+  var tdRemover=document.createElement("td");
+  var btnRem=document.createElement("button");
+  btnRem.type="button"; btnRem.className="lote-remover"; btnRem.title="Remover animal"; btnRem.innerHTML="&times;";
+  btnRem.addEventListener("click",function(){ loteAnimais.splice(idx,1); loteRender(); });
+  tdRemover.appendChild(btnRem);
+  tr.appendChild(tdRemover);
+
+  return tr;
+}
+function loteRender(){
+  var corpo=document.getElementById("lote-linhas");
+  corpo.innerHTML="";
+  loteAnimais.forEach(function(a,idx){ corpo.appendChild(loteMontarLinha(a,idx)); });
+  document.getElementById("lote-contagem").textContent=loteAnimais.length+(loteAnimais.length===1?" animal":" animais");
+
+  var totalArrobas=0,totalBruto=0;
+  loteAnimais.forEach(function(a){
+    var carcaca=a.peso*(a.rc/100);
+    var arrobas=carcaca/15;
+    totalArrobas+=arrobas;
+    totalBruto+=arrobas*lotePrecoArroba(a.categoria);
+  });
+
+  var desconto=parseFloat(document.getElementById("lote-desconto").value)||0;
+  var parcelas=parseFloat(document.getElementById("lote-parcelas").value)||1;
+  var liquido=totalBruto*(1-desconto/100);
+
+  document.getElementById("lote-cartoes").innerHTML=
+    '<div class="cartao"><span class="rot">Cabe&ccedil;as no lote</span><div class="v">'+loteAnimais.length+'</div></div>'+
+    '<div class="cartao"><span class="rot">Total em arrobas</span><div class="v">'+n(totalArrobas,2)+' @</div><small>peso de carca&ccedil;a &divide; 15</small></div>'+
+    '<div class="cartao"><span class="rot">Valor bruto do lote</span><div class="v">'+brl(totalBruto)+'</div></div>'+
+    '<div class="cartao"><span class="rot">Valor l&iacute;quido do lote</span><div class="v pos">'+brl(liquido)+'</div><small>'+(desconto>0?'ap&oacute;s '+n(desconto,1)+'% de desconto':'sem desconto')+'</small></div>'+
+    '<div class="cartao"><span class="rot">Valor por parcela</span><div class="v">'+brl(liquido/parcelas)+'</div></div>';
+
+  loteSalvar();
+}
+document.getElementById("lote-add").addEventListener("click",function(){
+  loteAnimais.push({brinco:"",categoria:"boi-gordo",peso:0,rc:50});
+  loteRender();
+});
+document.getElementById("lote-desconto").addEventListener("input",loteRender);
+document.getElementById("lote-parcelas").addEventListener("input",loteRender);
+
 /* ================= partida ================= */
 carregar();
 ["peso","cabecas","dias","precoArroba","kgArroba"].forEach(function(campo){
@@ -1352,6 +1546,9 @@ document.getElementById("d-epoca").value=estado.epoca;
 document.getElementById("d-pasto").value=String(estado.pasto);
 renderPrecos();
 render();
+loteCarregar();
+loteMontarPrecos();
+loteRender();
 contar("visita");
 </script>
 </body>
