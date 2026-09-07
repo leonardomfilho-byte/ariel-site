@@ -322,6 +322,11 @@ tbody tr.negativo td{color:var(--texto-3)}
 .galeria-fabrica{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:900px;margin:0 auto 28px}
 .foto-fabrica{margin:0;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);box-shadow:var(--sombra)}
 .foto-fabrica img{width:100%;display:block;aspect-ratio:16/8;object-fit:cover}
+.momento{margin:0 auto 28px;max-width:260px;background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);overflow:hidden}
+.momento img{width:100%;display:block}
+.momento figcaption{padding:10px 14px;font-size:12.5px;font-weight:600;color:var(--texto);text-align:center;border-top:1px solid var(--linha)}
+.video-fabrica{max-width:900px;margin:0 auto 8px;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);box-shadow:var(--sombra);background:#000}
+.video-fabrica video{width:100%;display:block}
 .galeria-rotulos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto}
 .rotulo{margin:0;background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);overflow:hidden}
 .rotulo img{width:100%;display:block}
@@ -692,6 +697,18 @@ tbody tr.negativo td{color:var(--texto-3)}
     </figure>
   </div>
   <p class="nota" style="text-align:center;max-width:900px;margin-left:auto;margin-right:auto">A f&aacute;brica, no Distrito Empresarial de Cana&atilde; dos Caraj&aacute;s.</p>
+
+  <figure class="momento">
+    <img src="primeiro-saco.jpg" alt="Leonardo Moura segurando o primeiro saco de Ariel BovLeite produzido" loading="lazy">
+    <figcaption>O primeiro saco de Bovleite, saindo da linha.</figcaption>
+  </figure>
+
+  <div class="video-fabrica">
+    <video controls preload="none" poster="inauguracao-poster.jpg">
+      <source src="inauguracao.mp4" type="video/mp4">
+    </video>
+  </div>
+  <p class="nota" style="text-align:center;max-width:900px;margin-left:auto;margin-right:auto">Cobertura da Prefeitura de Cana&atilde; dos Caraj&aacute;s no dia da instala&ccedil;&atilde;o da f&aacute;brica.</p>
 
   <div class="galeria-rotulos">
     <figure class="rotulo">
