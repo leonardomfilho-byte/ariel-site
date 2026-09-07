@@ -152,6 +152,11 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
 }
 .btn-zap:hover{filter:brightness(1.08);color:#FFFFFF!important}
 .btn-zap svg{width:15px;height:15px;fill:currentColor;flex:none}
+.sugestao{margin-top:22px;padding-top:18px;border-top:1px solid #2C2921;display:flex;flex-direction:column;gap:8px;max-width:360px}
+.sugestao label{font-size:12.5px;color:#9B9581;font-weight:500}
+.sugestao textarea{font:inherit;font-size:13.5px;padding:9px 11px;border-radius:8px;border:1px solid #3A362B;background:#FCFBF8;color:#1E1C16;resize:vertical;min-height:44px}
+.sugestao textarea:focus-visible{outline:2px solid var(--ouro);outline-offset:-1px}
+.sugestao .btn-zap{align-self:flex-start}
 
 /* ---------- hero ---------- */
 .hero{background:var(--carvao);color:#F5F1E4;border-bottom:3px solid var(--ouro)}
@@ -753,6 +758,12 @@ tbody tr.negativo td{color:var(--texto-3)}
       <h3>Falar com a gente</h3>
       <p>Canaã dos Carajás e regi&atilde;o. Entrega em rota, dois dias fixos por semana. Pedido m&iacute;nimo de 1.000 kg; acima de 1.200 kg o frete entra por nossa conta.</p>
       <p style="margin-top:16px"><a class="btn-zap" id="zap-rodape" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.5-.3zM12 2A10 10 0 0 0 3.5 17.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3a8.2 8.2 0 1 1 7 3.7z"/></svg>(94) 98414-2737</a></p>
+
+      <div class="sugestao">
+        <label for="sug-texto">Tem uma sugest&atilde;o pra gente?</label>
+        <textarea id="sug-texto" rows="2" placeholder="Escreva aqui — vai direto pro nosso WhatsApp"></textarea>
+        <a href="#" class="btn-zap" id="sug-enviar" target="_blank" rel="noopener">Enviar sugest&atilde;o</a>
+      </div>
     </div>
   </div>
   <div class="larg assinatura">ARIEL Nutri&ccedil;&atilde;o Animal &mdash; uma marca LPM Ind&uacute;stria e Com&eacute;rcio de Produtos Aliment&iacute;cios.</div>
@@ -1147,6 +1158,12 @@ document.addEventListener("click",function(e){
 document.getElementById("zap-topo").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
 document.getElementById("zap-rodape").href=linkZap("Olá! Vim pelo site da Ariel e queria falar sobre suplementação.");
 document.getElementById("zap-linha").href=linkZap("Olá! Vi no site que os proteinados Ariel estão em lançamento. Quero ser avisado quando saírem, e saber o preço.");
+
+document.getElementById("sug-enviar").addEventListener("click",function(e){
+  var texto=document.getElementById("sug-texto").value.trim();
+  if(!texto){ e.preventDefault(); return; }
+  this.href=linkZap("Sugestão pelo site da Ariel: "+texto);
+});
 
 function gerarDiagnostico(){
   var nome=document.getElementById("d-nome").value.trim();
