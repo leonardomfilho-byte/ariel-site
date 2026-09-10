@@ -353,6 +353,43 @@ tbody tr.negativo td{color:var(--texto-3)}
 .rodape b{color:#E8E2D0;font-weight:600}
 .rodape a{color:#E8E2D0}
 .assinatura{margin-top:26px;padding-top:16px;border-top:1px solid #2C2921;font-size:11.5px;color:#7A7565}
+
+/* ================= comparador de embalagens ================= */
+.cmp-dupla{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px}
+@media(min-width:820px){.cmp-dupla{grid-template-columns:1fr 1fr}}
+.cmp-cartao{border-top:4px solid var(--linha-forte)}
+.cmp-cartao.a{border-top-color:var(--ouro)}
+.cmp-cartao.b{border-top-color:var(--pasto)}
+.cmp-cartao .campos{margin-top:12px}
+.cmp-cartao input[type="text"]{font-weight:600;font-size:15px}
+.cmp-tres{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(min-width:560px){.cmp-tres{grid-template-columns:1fr 1fr 1fr}}
+.cmp-ctx{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(min-width:700px){.cmp-ctx{grid-template-columns:repeat(4,1fr)}}
+.cmp-placar{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
+@media(min-width:820px){.cmp-placar{grid-template-columns:1fr 1fr}}
+.cmp-res h4{margin:0 0 12px;font-family:Archivo,sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.cmp-res h4::before{content:"";width:11px;height:11px;border-radius:3px;flex:none}
+.cmp-res.a h4::before{background:var(--ouro)}
+.cmp-res.b h4::before{background:var(--pasto)}
+.cmp-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--linha)}
+.cmp-l:last-child{border-bottom:0}
+.cmp-l .k{font-size:13px;color:var(--texto-2)}
+.cmp-l .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;white-space:nowrap}
+.cmp-l.forte{padding:10px 0}
+.cmp-l.forte .k{color:var(--texto);font-weight:600;font-size:14px}
+.cmp-l.forte .v{font-family:Archivo,sans-serif;font-size:26px;font-weight:800;letter-spacing:-.03em}
+.cmp-nota{border-left:4px solid var(--barro);background:var(--barro-veu);padding:12px 14px;border-radius:0 8px 8px 0;margin-top:12px;font-size:13.5px;line-height:1.5}
+.cmp-nota b{color:var(--barro)}
+.cmp-nota.ok{border-left-color:var(--pasto);background:var(--pasto-veu)}
+.cmp-nota.ok b{color:var(--pasto)}
+.cmp-como{margin-top:20px}
+.cmp-como summary{cursor:pointer;font-weight:600;font-size:14px;padding:10px 0;color:var(--texto-2)}
+.cmp-como summary:hover{color:var(--texto)}
+.cmp-como[open] summary{color:var(--texto)}
+.cmp-como p{font-size:13.5px;color:var(--texto-2);margin:0 0 10px;line-height:1.55}
+.cmp-como p:last-child{margin-bottom:0}
+.cmp-como b{color:var(--texto)}
 </style>
 </head>
 <body>
@@ -363,6 +400,7 @@ tbody tr.negativo td{color:var(--texto-3)}
     <nav class="links">
       <a href="#diagnostico" class="oculta">Diagnóstico</a>
       <a href="#calculadora" class="oculta">Calculadora</a>
+      <a href="#comparar" class="oculta">Comparador</a>
       <a href="#linha" class="oculta">Produtos</a>
       <a href="#cartilha" class="oculta">Cartilha</a>
       <a class="btn-zap" id="zap-topo" href="#" target="_blank" rel="noopener">
@@ -597,6 +635,90 @@ tbody tr.negativo td{color:var(--texto-3)}
       </section>
     </div>
   </div>
+</section>
+
+<section class="faixa-clara larg" id="comparar" style="border-top:1px solid var(--linha)">
+  <div class="cabeca-sec">
+    <span class="rot">Comparador</span>
+    <h2>O mineral que você usa está caro?</h2>
+    <p>Preço da embalagem não responde. O que responde é quanto o cocho custa por boi por dia — e quanto de mineral chega de verdade no animal. Ponha as duas embalagens aqui, com os números do rótulo, e veja lado a lado.</p>
+  </div>
+
+  <div class="cartao-form">
+    <span class="rot">Meu rebanho e o sal</span>
+    <div class="cmp-ctx">
+      <div class="campo"><label for="cmp-peso">Peso médio do boi (kg)</label><input type="number" id="cmp-peso" value="300" min="50" max="900" step="10"></div>
+      <div class="campo"><label for="cmp-cab">Cabeças</label><input type="number" id="cmp-cab" value="100" min="1" max="50000" step="1"></div>
+      <div class="campo"><label for="cmp-ps">Embalagem de sal (R$)</label><input type="number" id="cmp-ps" value="45" min="0" step="1"></div>
+      <div class="campo"><label for="cmp-ks">Sal — quantos kg</label><input type="number" id="cmp-ks" value="25" min="1" step="1"></div>
+    </div>
+    <p class="nota">O sal só entra na conta se você misturar em algum dos dois produtos.</p>
+  </div>
+
+  <div class="cmp-dupla">
+    <div class="cartao-form cmp-cartao a">
+      <span class="rot">Produto 1</span>
+      <div class="campo"><label for="cmp-n1">Como você chama</label><input type="text" id="cmp-n1" value="O que eu uso hoje"></div>
+      <div class="cmp-tres campos">
+        <div class="campo"><label for="cmp-p1">Preço da embalagem (R$)</label><input type="number" id="cmp-p1" value="120" min="0" step="1"></div>
+        <div class="campo"><label for="cmp-k1">Embalagem — quantos kg</label><input type="number" id="cmp-k1" value="30" min="1" step="1"></div>
+        <div class="campo"><label for="cmp-f1">Fósforo no rótulo (g/kg)</label><input type="number" id="cmp-f1" value="40" min="0" step="1"></div>
+      </div>
+      <div class="campos" style="margin-top:12px">
+        <div class="campo"><label for="cmp-c1">Consumo no rótulo (g)</label><input type="number" id="cmp-c1" value="55" min="0" step="1"></div>
+        <div class="campo"><label for="cmp-u1">Esse consumo é</label>
+          <select id="cmp-u1"><option value="cab">por animal, por dia</option><option value="pv">por 100 kg de peso</option></select></div>
+      </div>
+      <div class="campo" style="margin-top:12px"><label for="cmp-s1">Embalagens de sal misturadas em cada uma</label><input type="number" id="cmp-s1" value="0" min="0" max="5" step="0.5"></div>
+    </div>
+
+    <div class="cartao-form cmp-cartao b">
+      <span class="rot">Produto 2</span>
+      <div class="campo"><label for="cmp-n2">Como você chama</label><input type="text" id="cmp-n2" value="O que me ofereceram"></div>
+      <div class="cmp-tres campos">
+        <div class="campo"><label for="cmp-p2">Preço da embalagem (R$)</label><input type="number" id="cmp-p2" value="150" min="0" step="1"></div>
+        <div class="campo"><label for="cmp-k2">Embalagem — quantos kg</label><input type="number" id="cmp-k2" value="25" min="1" step="1"></div>
+        <div class="campo"><label for="cmp-f2">Fósforo no rótulo (g/kg)</label><input type="number" id="cmp-f2" value="174" min="0" step="1"></div>
+      </div>
+      <div class="campos" style="margin-top:12px">
+        <div class="campo"><label for="cmp-c2">Consumo no rótulo (g)</label><input type="number" id="cmp-c2" value="25" min="0" step="1"></div>
+        <div class="campo"><label for="cmp-u2">Esse consumo é</label>
+          <select id="cmp-u2"><option value="cab">por animal, por dia</option><option value="pv" selected>por 100 kg de peso</option></select></div>
+      </div>
+      <div class="campo" style="margin-top:12px"><label for="cmp-s2">Embalagens de sal misturadas em cada uma</label><input type="number" id="cmp-s2" value="1" min="0" max="5" step="0.5"></div>
+    </div>
+  </div>
+
+  <div class="cmp-placar">
+    <div class="cartao cmp-res a">
+      <h4 id="cmp-t1">Produto 1</h4>
+      <div class="cmp-l forte"><span class="k">Custo por boi, por dia</span><span class="v" id="cmp-d1">—</span></div>
+      <div class="cmp-l"><span class="k">O boi come por dia</span><span class="v" id="cmp-q1">—</span></div>
+      <div class="cmp-l"><span class="k">Fósforo que chega no boi</span><span class="v" id="cmp-fo1">—</span></div>
+      <div class="cmp-l"><span class="k">Custo do rebanho por mês</span><span class="v" id="cmp-m1">—</span></div>
+      <div class="cmp-l"><span class="k">Preço de cada grama de fósforo</span><span class="v" id="cmp-g1">—</span></div>
+    </div>
+    <div class="cartao cmp-res b">
+      <h4 id="cmp-t2">Produto 2</h4>
+      <div class="cmp-l forte"><span class="k">Custo por boi, por dia</span><span class="v" id="cmp-d2">—</span></div>
+      <div class="cmp-l"><span class="k">O boi come por dia</span><span class="v" id="cmp-q2">—</span></div>
+      <div class="cmp-l"><span class="k">Fósforo que chega no boi</span><span class="v" id="cmp-fo2">—</span></div>
+      <div class="cmp-l"><span class="k">Custo do rebanho por mês</span><span class="v" id="cmp-m2">—</span></div>
+      <div class="cmp-l"><span class="k">Preço de cada grama de fósforo</span><span class="v" id="cmp-g2">—</span></div>
+    </div>
+  </div>
+
+  <div class="veredito-regua" id="cmp-veredito" style="margin-top:16px"></div>
+  <div id="cmp-avisos"></div>
+
+  <details class="cmp-como">
+    <summary>Onde achar esses números na embalagem</summary>
+    <p><b>Fósforo.</b> Está na tabela de "níveis de garantia", quase sempre em g/kg. Se o rótulo trouxer mínimo e máximo, use o mínimo — é o que o fabricante garante.</p>
+    <p><b>Consumo.</b> Está no "modo de usar" ou na "faixa recomendada de consumo". Repare bem se é <b>por animal</b> ou <b>por 100 kg de peso vivo</b>: não é a mesma coisa. No primeiro caso, o boi de 450 kg recebe a mesma quantidade que o de 300 — a dose não acompanha o crescimento. Se o rótulo der faixa (de 20 a 30 g, por exemplo), use o valor do meio.</p>
+    <p><b>Mistura com sal.</b> Alguns minerais vão puros ao cocho; outros pedem para misturar com sal comum, em geral uma embalagem para cada uma. Isso muda o preço e dilui o fósforo — a conta acima já considera.</p>
+    <p><b>Fósforo não é tudo.</b> É o mineral mais caro e o que mais falta no pasto da nossa região, por isso serve bem de régua. Mas proteína, enxofre, cobre, zinco e aditivos também pesam, e um produto pode ser melhor num item e pior em outro. Esta conta é um começo, não o parecer final — quem decide a dieta é o responsável técnico.</p>
+    <p style="color:var(--texto-3)">Esta ferramenta não recomenda produto nenhum. Ela faz, na sua frente, a mesma conta que você faria com papel e caneta, com os números que você mesmo tirou da embalagem.</p>
+  </details>
 </section>
 
 <section class="faixa-clara larg" id="lote" style="border-top:1px solid var(--linha)">
@@ -1654,6 +1776,107 @@ loteCarregar();
 loteMontarPrecos();
 loteRender();
 contar("visita");
+
+/* ================= comparador de embalagens ================= */
+/* Reaproveita brl() e n() já definidos acima. Tudo aqui é prefixado com
+   "cmp" para não esbarrar na calculadora nem no lote.                  */
+
+function cmpEl(id){ return document.getElementById("cmp-"+id); }
+function cmpNum(id){ var v=parseFloat(cmpEl(id).value); return isFinite(v)?v:0; }
+
+function cmpProduto(ix){
+  var preco=cmpNum("p"+ix), kg=cmpNum("k"+ix), fosf=cmpNum("f"+ix);
+  var cons=cmpNum("c"+ix), unid=cmpEl("u"+ix).value, sacosSal=cmpNum("s"+ix);
+  var precoSal=cmpNum("ps"), kgSal=cmpNum("ks"), peso=cmpNum("peso");
+
+  /* a mistura pronta é o que vai ao cocho: 1 embalagem + as de sal */
+  var kgMist=kg+sacosSal*kgSal;
+  var custoMist=preco+sacosSal*precoSal;
+  var custoKg=kgMist>0?custoMist/kgMist:0;
+  var fosfMist=kgMist>0?fosf*kg/kgMist:0;
+
+  /* o consumo do rótulo se refere à mistura pronta */
+  var gDia=unid==="pv"?cons*peso/100:cons;
+  var kgDia=gDia/1000;
+  var custoDia=kgDia*custoKg, fosfDia=kgDia*fosfMist;
+
+  return { nome:cmpEl("n"+ix).value||("Produto "+ix), gDia:gDia, custoDia:custoDia,
+           fosfDia:fosfDia, unid:unid, sal:sacosSal,
+           porGrama:fosfDia>0?custoDia/fosfDia:0 };
+}
+
+function cmpCalcular(){
+  var cab=cmpNum("cab");
+  var a=cmpProduto(1), b=cmpProduto(2);
+
+  cmpEl("t1").textContent=a.nome;
+  cmpEl("t2").textContent=b.nome;
+
+  [[a,1],[b,2]].forEach(function(par){
+    var p=par[0], ix=par[1];
+    cmpEl("d"+ix).textContent  = brl(p.custoDia);
+    cmpEl("q"+ix).textContent  = n(p.gDia,0)+" g";
+    cmpEl("fo"+ix).textContent = n(p.fosfDia,1)+" g";
+    cmpEl("m"+ix).textContent  = brl(p.custoDia*cab*30);
+    cmpEl("g"+ix).textContent  = p.porGrama>0?brl(p.porGrama):"—";
+  });
+
+  /* ---- veredito ---- */
+  var v=cmpEl("veredito"); v.innerHTML="";
+  var dif=b.custoDia-a.custoDia;
+  var barato=dif<0?b:a;
+  var h=document.createElement("h4"), p1=document.createElement("p");
+
+  if(Math.abs(dif)<0.005){
+    h.textContent="Os dois custam praticamente o mesmo por dia";
+    p1.innerHTML="A diferença no bolso é desprezível. Então a decisão passa a ser <b>o que cada um entrega</b>.";
+  } else {
+    h.textContent=barato.nome+" custa menos por dia";
+    p1.innerHTML="São <b>"+brl(Math.abs(dif))+" por boi por dia</b> de diferença — <b>"+
+      brl(Math.abs(dif)*cab*30)+" por mês</b> no seu rebanho de "+n(cab,0)+" cabeças.";
+  }
+  v.appendChild(h); v.appendChild(p1);
+
+  if(a.fosfDia>0&&b.fosfDia>0){
+    var maisP=a.fosfDia>=b.fosfDia?a:b, menosP=a.fosfDia>=b.fosfDia?b:a;
+    var vezes=menosP.fosfDia>0?maisP.fosfDia/menosP.fosfDia:0;
+    var p2=document.createElement("p");
+    if(vezes>=1.15){
+      p2.innerHTML="Mas repare: <b>"+maisP.nome+"</b> entrega "+
+        (vezes>=1.95?"<b>"+n(vezes,1)+" vezes mais fósforo</b>":"<b>"+n((vezes-1)*100,0)+"% mais fósforo</b>")+
+        " por dia. Olhando o preço de cada grama de fósforo, o mais barato de verdade é <b>"+
+        (a.porGrama<=b.porGrama?a.nome:b.nome)+"</b>.";
+    } else {
+      p2.innerHTML="Os dois entregam fósforo parecido por dia, então a comparação de preço acima vale direto.";
+    }
+    v.appendChild(p2);
+  }
+
+  /* ---- avisos ---- */
+  var cx=cmpEl("avisos"); cx.innerHTML="";
+  function aviso(cls,html){ var d=document.createElement("div"); d.className="cmp-nota"+(cls?" "+cls:""); d.innerHTML=html; cx.appendChild(d); }
+
+  [a,b].forEach(function(p){
+    if(p.unid==="cab")
+      aviso("", "<b>"+p.nome+": a dose não acompanha o boi.</b> O rótulo indica consumo por animal, "+
+        "então o boi de 450 kg recebe a mesma quantidade que o de 300. Conforme o rebanho cresce, "+
+        "cada animal recebe menos do que precisaria.");
+  });
+  [a,b].forEach(function(p){
+    if(p.sal>0)
+      aviso("ok", "<b>"+p.nome+" leva sal na mistura.</b> A conta já considera isso: preço e fósforo "+
+        "foram diluídos na mistura pronta, que é o que vai para o cocho.");
+  });
+  if(a.gDia>0&&b.gDia>0&&Math.max(a.gDia,b.gDia)/Math.min(a.gDia,b.gDia)>=1.5){
+    var mais=a.gDia>=b.gDia?a:b;
+    aviso("", "<b>Atenção ao consumo.</b> "+mais.nome+" pede bem mais produto por dia. Cocho consumido "+
+      "mais rápido significa reposição mais frequente — e a embalagem dura menos do que parece.");
+  }
+}
+
+["peso","cab","ps","ks","n1","p1","k1","f1","c1","u1","s1","n2","p2","k2","f2","c2","u2","s2"]
+  .forEach(function(id){ cmpEl(id).addEventListener("input",cmpCalcular); });
+cmpCalcular();
 </script>
 </body>
 </html>
