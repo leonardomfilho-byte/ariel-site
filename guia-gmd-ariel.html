@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Prático Ariel GMD — Estimativas de Ganho Médio Diário</title>
+<meta name="description" content="As 24 estimativas de Ganho Médio Diário por época do ano, condição de pastagem e produto da linha Ariel Corte, no Sudeste do Pará — a mesma fonte que alimenta a calculadora e o Ari.">
+<link rel="icon" href="logo-ariel.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ouro:#D89A0B; --ouro-forte:#B57E05; --ouro-veu:#FBEFD2;
+  --carvao:#17150F; --papel:#FCFBF8; --superficie:#FFFFFF; --superficie-2:#F4F2EC;
+  --linha:#E2DED3; --linha-forte:#CBC5B5;
+  --texto:#1E1C16; --texto-2:#5E5949; --texto-3:#8A8474;
+  --pasto:#2E6B3E; --pasto-veu:#E6F0E6; --barro:#A33A1E; --barro-veu:#F7E7E1;
+  --sombra:0 1px 2px rgba(23,21,15,.06), 0 8px 24px -16px rgba(23,21,15,.35);
+  --raio:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
+    --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
+    --linha:#332F26; --linha-forte:#45402F;
+    --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
+    --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--texto);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balance;margin:0}
+.larg{max-width:880px;margin:0 auto;padding:0 20px}
+.rot{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3)}
+.num{font-variant-numeric:tabular-nums}
+
+.topo{background:var(--carvao);padding:22px 0;border-bottom:3px solid var(--ouro)}
+.topo .larg{display:flex;align-items:center;gap:14px}
+.topo img{height:44px;width:auto;background:#F5F5F5;border-radius:8px;padding:4px 8px}
+.topo span{color:#C9C3B0;font-family:"IBM Plex Mono",monospace;font-size:12px}
+
+.cabecalho{padding:44px 0 8px}
+.cabecalho h1{font-size:clamp(28px,4.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.06}
+.cabecalho p{margin:14px 0 0;color:var(--texto-2);font-size:15.5px;max-width:66ch}
+.acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn-ouro{display:inline-block;background:var(--ouro);color:#17150F;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none}
+.btn-ouro:hover{background:var(--ouro-forte)}
+.btn-vazado{display:inline-block;border:1px solid var(--linha-forte);color:var(--texto-2);padding:12px 20px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none}
+.btn-vazado:hover{border-color:var(--ouro-forte);color:var(--ouro-forte)}
+
+.bloco{padding:34px 0;border-top:1px solid var(--linha)}
+.bloco h2{font-size:21px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.bloco > p.sub{margin:0 0 18px;color:var(--texto-2);font-size:14px;max-width:70ch}
+
+.grade2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.cartao{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:16px 18px;box-shadow:var(--sombra)}
+.cartao h3{font-size:14.5px;font-weight:700;margin-bottom:5px}
+.cartao p{margin:0;font-size:13.5px;color:var(--texto-2);line-height:1.5}
+
+.linha-produto{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--linha)}
+.linha-produto:last-child{border-bottom:0}
+.linha-produto .dose{flex:none;width:110px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ouro-forte);font-weight:600}
+.linha-produto .txt b{display:block;font-size:14.5px;margin-bottom:2px}
+.linha-produto .txt span{font-size:13.5px;color:var(--texto-2)}
+
+.rolagem{overflow-x:auto;border:1px solid var(--linha);border-radius:var(--raio);background:var(--superficie);box-shadow:var(--sombra);margin-bottom:10px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-variant-numeric:tabular-nums}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--texto-3);font-weight:500;text-align:right;padding:10px 14px;border-bottom:1px solid var(--linha-forte);background:var(--superficie-2);white-space:nowrap}
+thead th:first-child{text-align:left}
+tbody td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--linha);font-size:13.5px}
+tbody td:first-child{text-align:left;font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.negativo td{color:var(--barro)}
+.chapeu-epoca{display:flex;align-items:baseline;gap:10px;margin:26px 0 10px}
+.chapeu-epoca:first-child{margin-top:0}
+.chapeu-epoca h3{font-size:16px;font-weight:700}
+.chapeu-epoca span{font-size:12.5px;color:var(--texto-3)}
+
+.faixa{margin-top:14px;padding:13px 16px;border-radius:var(--raio);font-size:13.5px;background:var(--barro-veu);border:1px solid var(--linha);line-height:1.55}
+.faixa b{color:var(--barro)}
+
+.rodape{padding:30px 0 46px;border-top:1px solid var(--linha)}
+.rodape p{font-size:12.5px;color:var(--texto-3);line-height:1.65;margin:0 0 10px;max-width:74ch}
+.rodape a{color:var(--ouro-forte)}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="larg">
+    <img src="logo-ariel.png" alt="Ariel Nutrição Animal">
+    <span>Material técnico</span>
+  </div>
+</header>
+
+<div class="cabecalho larg">
+  <h1>Guia Prático Ariel GMD</h1>
+  <p>As 24 estimativas de Ganho Médio Diário que alimentam a calculadora do site e o Ari — por época do ano, condição de pastagem e produto da linha Ariel Corte, ajustadas ao clima do Sudeste do Pará.</p>
+  <div class="acoes">
+    <a class="btn-ouro" href="index.html#calculadora">Abrir a calculadora</a>
+    <a class="btn-vazado" href="guia-gmd-ariel.pdf" download>Baixar em PDF</a>
+  </div>
+</div>
+
+<section class="bloco larg">
+  <h2>Épocas do ano no Sudeste do Pará</h2>
+  <p class="sub">Região de Canaã dos Carajás — mais úmida que o Centro-Oeste, o que encurta a transição e adoça a seca.</p>
+  <div class="grade2">
+    <div class="cartao">
+      <h3>Águas — dezembro a maio</h3>
+      <p>Chuva regular, capim jovem e digestível. Melhor janela de ganho a baixo custo.</p>
+    </div>
+    <div class="cartao">
+      <h3>Transição águas-seca — maio a junho</h3>
+      <p>Mais curta que no Centro-Sul, porque o Pará é mais úmido. Capim ainda verde, PB começando a cair.</p>
+    </div>
+    <div class="cartao">
+      <h3>Seca — julho a novembro</h3>
+      <p>Menos severa que no Centro-Oeste, com chuvas isoladas. Ainda assim a PB cai abaixo de 7% e exige proteico.</p>
+    </div>
+    <div class="cartao">
+      <h3>Transição seca-águas — fim de novembro</h3>
+      <p>Rebrote rápido. Reduzir ureia nesse período para evitar intoxicação por excesso de nitrogênio.</p>
+    </div>
+  </div>
+</section>
+
+<section class="bloco larg">
+  <h2>Condição de pastagem</h2>
+  <p class="sub">Decide todos os números deste guia — antes de mexer no suplemento, é isso que precisa ser medido direito.</p>
+  <div class="grade2">
+    <div class="cartao"><h3>Ótima</h3><p>Capim jovem, alta densidade, PB no pico.</p></div>
+    <div class="cartao"><h3>Boa</h3><p>Ponto de entrada um pouco passado, ou PB e densidade intermediárias.</p></div>
+    <div class="cartao"><h3>Regular</h3><p>Pasto fibroso, baixa densidade, ou lotação acima do suportado.</p></div>
+  </div>
+</section>
+
+<section class="bloco larg">
+  <h2>Linha Ariel Corte</h2>
+  <p class="sub">Consumo por 100 kg de peso vivo — um boi de 300 kg come três vezes a dose abaixo.</p>
+  <div class="linha-produto">
+    <span class="dose">25 g</span>
+    <div class="txt"><b>Mineral</b><span>Macro e microminerais. Sustenta ganho só em pastagem boa.</span></div>
+  </div>
+  <div class="linha-produto">
+    <span class="dose">50 g</span>
+    <div class="txt"><b>Mineral Aditivado</b><span>Minerais mais ionóforo, que melhora a eficiência da fermentação ruminal.</span></div>
+  </div>
+  <div class="linha-produto">
+    <span class="dose">100–300 g</span>
+    <div class="txt"><b>Proteico</b><span>0,1 a 0,3% PV. Minerais, ureia, proteína verdadeira e ionóforo. Mínimo 20% de PB.</span></div>
+  </div>
+  <div class="linha-produto">
+    <span class="dose">500–800 g</span>
+    <div class="txt"><b>Proteico Energético</b><span>0,5 a 0,8% PV. Proteico mais farelo energético. Recria intensiva e primíparas.</span></div>
+  </div>
+  <div class="linha-produto">
+    <span class="dose">1.000 g</span>
+    <div class="txt"><b>Ração Ariel Corte</b><span>1,0% PV. Fonte principal da dieta, para semiconfinamento a pasto (TIP/RIP).</span></div>
+  </div>
+  <div class="linha-produto">
+    <span class="dose">alto consumo</span>
+    <div class="txt"><b>Ariel BovLeite</b><span>Mineral de alto consumo para vaca em lactação, sem ureia. Avaliado por litro produzido, não por ganho de peso.</span></div>
+  </div>
+</section>
+
+<section class="bloco larg">
+  <h2>GMD estimado, em kg por cabeça por dia</h2>
+  <p class="sub">Leia sempre pelo rótulo da coluna — ótima, boa ou regular — nunca pela posição. Confundir "boa" com "regular" muda o conselho inteiro.</p>
+
+  <div class="chapeu-epoca"><h3>Águas</h3><span>dezembro a maio</span></div>
+  <div class="rolagem">
+    <table>
+      <thead><tr><th>Suplemento</th><th>Ótima</th><th>Boa</th><th>Regular</th></tr></thead>
+      <tbody>
+        <tr><td>Mineral</td><td>0,800</td><td>0,600</td><td>0,400</td></tr>
+        <tr><td>Mineral Aditivado</td><td>0,880</td><td>0,680</td><td>0,460</td></tr>
+        <tr><td>Proteico 0,1%</td><td>0,900</td><td>0,735</td><td>0,520</td></tr>
+        <tr><td>Proteico 0,2%</td><td>0,900</td><td>0,735</td><td>0,520</td></tr>
+        <tr><td>Proteico 0,3%</td><td>1,040</td><td>0,870</td><td>0,670</td></tr>
+        <tr><td>Proteico Energético 0,5%</td><td>1,150</td><td>1,020</td><td>0,780</td></tr>
+        <tr><td>Proteico Energético 0,8%</td><td>1,280</td><td>1,180</td><td>0,950</td></tr>
+        <tr><td>Ração 1,0%</td><td>1,280</td><td>1,180</td><td>0,950</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chapeu-epoca"><h3>Transição</h3><span>maio a junho</span></div>
+  <div class="rolagem">
+    <table>
+      <thead><tr><th>Suplemento</th><th>Ótima</th><th>Boa</th><th>Regular</th></tr></thead>
+      <tbody>
+        <tr><td>Mineral</td><td>0,520</td><td>0,330</td><td>0,180</td></tr>
+        <tr><td>Mineral Aditivado</td><td>0,590</td><td>0,405</td><td>0,290</td></tr>
+        <tr><td>Proteico 0,1%</td><td>0,650</td><td>0,510</td><td>0,375</td></tr>
+        <tr><td>Proteico 0,2%</td><td>0,720</td><td>0,600</td><td>0,470</td></tr>
+        <tr><td>Proteico 0,3%</td><td>0,720</td><td>0,600</td><td>0,470</td></tr>
+        <tr><td>Proteico Energético 0,5%</td><td>0,920</td><td>0,830</td><td>0,680</td></tr>
+        <tr><td>Proteico Energético 0,8%</td><td>1,100</td><td>1,010</td><td>0,870</td></tr>
+        <tr><td>Ração 1,0%</td><td>1,210</td><td>1,130</td><td>0,950</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chapeu-epoca"><h3>Seca</h3><span>julho a novembro</span></div>
+  <div class="rolagem">
+    <table>
+      <thead><tr><th>Suplemento</th><th>Ótima</th><th>Boa</th><th>Regular</th></tr></thead>
+      <tbody>
+        <tr class="negativo"><td>Mineral</td><td>0,220</td><td>0,050</td><td>&minus;0,050</td></tr>
+        <tr><td>Mineral Aditivado</td><td>0,280</td><td>0,110</td><td>0,090</td></tr>
+        <tr><td>Proteico 0,1%</td><td>0,360</td><td>0,240</td><td>0,190</td></tr>
+        <tr><td>Proteico 0,2%</td><td>0,440</td><td>0,360</td><td>0,300</td></tr>
+        <tr><td>Proteico 0,3%</td><td>0,520</td><td>0,460</td><td>0,410</td></tr>
+        <tr><td>Proteico Energético 0,5%</td><td>0,660</td><td>0,620</td><td>0,560</td></tr>
+        <tr><td>Proteico Energético 0,8%</td><td>0,890</td><td>0,820</td><td>0,770</td></tr>
+        <tr><td>Ração 1,0%</td><td>1,100</td><td>0,950</td><td>0,880</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="faixa"><b>A única linha com ganho negativo</b> em todo o guia é o Mineral na seca com pasto regular: o animal perde 0,050 kg por dia. Não existe "arroba ganha" nesse caso — existe perda, e é o argumento mais forte para trocar de suplemento.</div>
+</section>
+
+<footer class="rodape larg">
+  <p>Estas são estimativas de referência do setor, adaptadas ao clima do Sudeste do Pará — <b>não são resultado de ensaio de campo da Ariel.</b> Servem para comparar cenários e dimensionar pedido; o número da sua fazenda sai da balança.</p>
+  <p>O consumo acompanha o peso do animal, então a conta usa o peso médio do período — o inicial mais metade do ganho. Uma arroba equivale a 30 kg de peso vivo, ou 50% de rendimento de carcaça.</p>
+  <p>Preço de suplemento e preço da arroba não entram neste guia — isso é do <a href="index.html#calculadora">seu cenário na calculadora</a> e do setor comercial da Ariel.</p>
+</footer>
+
+</body>
+</html>

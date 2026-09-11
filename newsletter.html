@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter Ariel — 10 de setembro de 2026</title>
+<link rel="icon" href="logo-ariel.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ouro:#D89A0B; --ouro-forte:#B57E05; --ouro-veu:#FBEFD2;
+  --carvao:#17150F; --papel:#FCFBF8; --superficie:#FFFFFF; --superficie-2:#F4F2EC;
+  --linha:#E2DED3; --linha-forte:#CBC5B5;
+  --texto:#1E1C16; --texto-2:#5E5949; --texto-3:#8A8474;
+  --pasto:#2E6B3E; --pasto-veu:#E6F0E6; --barro:#A33A1E; --barro-veu:#F7E7E1;
+  --sombra:0 1px 2px rgba(23,21,15,.06), 0 8px 24px -16px rgba(23,21,15,.35);
+  --raio:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
+    --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
+    --linha:#332F26; --linha-forte:#45402F;
+    --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
+    --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--texto);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balance;margin:0}
+.larg{max-width:760px;margin:0 auto;padding:0 20px}
+.rot{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3)}
+.num{font-variant-numeric:tabular-nums}
+
+.topo{background:var(--carvao);padding:28px 0;border-bottom:3px solid var(--ouro)}
+.topo .larg{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topo img{height:44px;width:auto;background:#F5F5F5;border-radius:8px;padding:4px 8px}
+.topo .edicao{color:#C9C3B0;font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:right;line-height:1.5}
+.topo .edicao b{color:var(--ouro);display:block;font-size:13px}
+
+.cabecalho{padding:40px 0 8px}
+.cabecalho h1{font-size:clamp(26px,4.4vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.08}
+.cabecalho p{margin:12px 0 0;color:var(--texto-2);font-size:15px;max-width:60ch}
+
+.bloco{padding:32px 0;border-top:1px solid var(--linha)}
+.bloco-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+.bloco-cab h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
+
+/* precos */
+.pracas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.praca{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px;box-shadow:var(--sombra)}
+.praca .cidade{font-size:12.5px;color:var(--texto-2);font-weight:600}
+.praca .valor{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px;color:var(--ouro-forte);margin-top:4px;letter-spacing:-.02em}
+.praca .valor small{font-size:11px;color:var(--texto-3);font-weight:500}
+.praca.destaque{border-color:var(--ouro-forte);background:var(--ouro-veu)}
+.tendencia{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-top:6px}
+.tendencia.alta{color:var(--pasto)}
+.tendencia.estavel{color:var(--texto-3)}
+
+/* noticias */
+.noticias{display:flex;flex-direction:column;gap:16px}
+.noticia{display:flex;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--linha)}
+.noticia:last-child{border-bottom:0;padding-bottom:0}
+.noticia .ilustracao{flex:none;width:132px;height:79px;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);background:var(--superficie-2)}
+.noticia .ilustracao img{width:100%;height:100%;object-fit:cover;display:block}
+.noticia .corpo{min-width:0}
+.noticia .fonte{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro-forte);font-weight:600}
+.noticia h3{font-size:16px;font-weight:700;margin-top:5px;letter-spacing:-.01em}
+.noticia p{margin:6px 0 0;color:var(--texto-2);font-size:14px}
+
+/* ariel em foco */
+.foco{background:var(--carvao);border-radius:14px;padding:28px 26px;color:#F5F1E4}
+.foco .rot{color:var(--ouro)}
+.foco h2{color:#FFFFFF;font-size:20px;margin-top:8px}
+.foco p{color:#C9C3B0;font-size:14.5px;margin:12px 0 0;max-width:62ch}
+.foco p b{color:#FFFFFF}
+.foco a.btn{display:inline-block;margin-top:16px;background:var(--ouro);color:#17150F;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13.5px;text-decoration:none}
+
+.rodape{padding:32px 0 44px;border-top:1px solid var(--linha)}
+.rodape p{font-size:12px;color:var(--texto-3);line-height:1.6;margin:0 0 10px}
+.rodape .fontes{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--texto-3)}
+.rodape .fontes a{color:var(--texto-3)}
+
+/* ---------- versão impressa ----------
+   Papel não tem fundo escuro nem sombra: cada um vira contorno preto
+   fino, e o dourado de destaque só sobrevive onde já é claro o
+   bastante pra imprimir sem gastar tinta à toa. As seções não cortam
+   no meio de uma página, e o botão vira o endereço por extenso, já
+   que ninguém clica em papel. */
+@media print{
+  body{font-size:12.5px;background:#FFFFFF;color:#000000}
+  .larg{max-width:100%}
+  a{color:#000000!important;text-decoration:none}
+
+  .topo{background:#FFFFFF;border-bottom:2px solid #000000;padding:10px 0}
+  .topo img{background:none;padding:0}
+  .topo .edicao{color:#000000}
+  .topo .edicao b{color:#000000}
+
+  .bloco{padding:16px 0;border-top:1px solid #000000;break-inside:avoid}
+  .cabecalho{padding:16px 0 4px}
+  .cabecalho p{color:#000000}
+
+  .praca{box-shadow:none;border:1px solid #000000;break-inside:avoid}
+  .praca.destaque{background:#FFFFFF;border-width:2px}
+  .praca .valor{color:#000000}
+  .tendencia.alta,.tendencia.estavel{color:#000000}
+
+  .noticia{break-inside:avoid}
+  .noticia .ilustracao{display:none}
+  .noticia .fonte{color:#000000}
+  .noticia p{color:#000000}
+
+  .foco{background:#FFFFFF;border:2px solid #000000;color:#000000;break-inside:avoid}
+  .foco .rot{color:#000000}
+  .foco h2{color:#000000}
+  .foco p{color:#000000}
+  .foco p b{color:#000000}
+  .foco a.btn{background:none;color:#000000;padding:0;border:0}
+  .foco a.btn::after{content:" → arielnutricaoanimal.ind.br/#calculadora"}
+
+  .rodape{border-top:1px solid #000000}
+  .rodape p, .rodape .fontes{color:#000000}
+}
+@page{size:A4;margin:16mm 14mm}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="larg">
+    <a href="index.html"><img src="logo-ariel.png" alt="Ariel Nutrição Animal"></a>
+    <div class="edicao"><b>Boletim do Produtor</b>Edição de 10 de setembro de 2026</div>
+  </div>
+</header>
+
+<div class="cabecalho larg">
+  <h1>O que interessa pra você essa semana</h1>
+  <p>Preço da arroba na sua região, o que a Embrapa publicou, e uma dica prática da Ariel. Direto ao ponto — sem enrolação, do jeito que o produtor decide.</p>
+</div>
+
+<section class="bloco larg">
+  <div class="bloco-cab">
+    <span class="rot">Preço da arroba</span>
+    <span class="rot">09–10/09, à vista</span>
+  </div>
+  <div class="pracas">
+    <div class="praca destaque">
+      <div class="cidade">Redenção / Marabá (PA)</div>
+      <div class="valor">R$ 336<small>/@</small></div>
+      <span class="tendencia alta">▲ recuperando desde 02/09</span>
+    </div>
+    <div class="praca">
+      <div class="cidade">Paragominas (PA)</div>
+      <div class="valor">R$ 345<small>,50/@</small></div>
+    </div>
+    <div class="praca">
+      <div class="cidade">Novilha, Marabá (PA)</div>
+      <div class="valor">R$ 321<small>,50/@</small></div>
+      <span class="tendencia estavel">● estável</span>
+    </div>
+    <div class="praca">
+      <div class="cidade">Vaca gorda, Marabá (PA)</div>
+      <div class="valor">R$ 318<small>,50/@</small></div>
+      <span class="tendencia estavel">● estável</span>
+    </div>
+  </div>
+  <p style="font-size:12.5px;color:var(--texto-3);margin-top:14px">Setembro é começo de entressafra — a oferta de boi terminado a pasto cai, e é isso que está segurando o preço firme mesmo com o abate morno.</p>
+</section>
+
+<section class="bloco larg">
+  <div class="bloco-cab">
+    <span class="rot">Clima</span>
+  </div>
+  <div class="noticias">
+    <div class="noticia">
+      <div class="ilustracao"><img src="img-clima.jpg" alt=""></div>
+      <div class="corpo">
+        <span class="fonte">INPE / INMET</span>
+        <h3>El Niño forte a caminho — pico entre outubro e dezembro</h3>
+        <p>Os modelos do INPE e do INMET apontam El Niño de intensidade forte a excepcional, com pico entre outubro e dezembro de 2026 e efeitos se estendendo até maio de 2027. No leste do Pará — onde fica Canaã dos Carajás — a expectativa é de menos chuva e temperatura acima da média nesse período. Meteorologistas alertam, porém, que a severidade final ainda é incerta: vale acompanhar as atualizações do INMET em vez de decidir hoje o suplemento do ano todo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloco larg">
+  <div class="bloco-cab">
+    <span class="rot">Da Embrapa e do campo</span>
+  </div>
+  <div class="noticias">
+    <div class="noticia">
+      <div class="ilustracao"><img src="img-forrageiras.jpg" alt=""></div>
+      <div class="corpo">
+        <span class="fonte">Embrapa · hoje</span>
+        <h3>Forrageiras são a base da pecuária moderna, comprova pesquisador</h3>
+        <p>Pesquisador da Embrapa Cerrados aponta que 80% das cultivares de forrageira usadas no Brasil são tecnologia antiga — muitas das décadas de 1970 e 1990 — porque o produtor prioriza preço na hora de escolher a semente, mesmo o capim sendo só 10% do custo de implantar o pasto. A Embrapa já tem cultivares mais modernas, em parceria com a Unipasto, pensadas pra pastagem que aguenta seca, praga e queda de qualidade na entressafra — o mesmo cenário que pesa na conta do suplemento.</p>
+      </div>
+    </div>
+    <div class="noticia">
+      <div class="ilustracao"><img src="img-carrapato.jpg" alt=""></div>
+      <div class="corpo">
+        <span class="fonte">Embrapa · esta semana</span>
+        <h3>Últimos dias para inscrição em capacitação sobre carrapato</h3>
+        <p>Curso EAD da Embrapa Pecuária Sul sobre prevenção e controle de carrapato em bovinos: inscrição até 13/09, R$ 80, 30 horas, três módulos — biologia do parasita, controle químico e montagem do plano de manejo da fazenda. É pensado pro Sul do Brasil, mas os fundamentos de resistência a carrapaticida e ciclo do parasita valem pra qualquer região, inclusive aqui no Pará.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloco larg">
+  <div class="foco">
+    <span class="rot">Ariel em foco</span>
+    <h2>Setembro começou a entressafra — o pasto já avisou?</h2>
+    <p>Com a oferta de boi caindo e o preço subindo, quem já ajustou o suplemento pra fase de seca sai na frente. Se o pasto está fibroso e o boi está devagar no cocho, é sinal de trocar de mineral pra proteico antes que o atraso vire arroba perdida.</p>
+    <p><b>Use a calculadora do site pra ver o número exato do seu lote</b> — quanto custa, em suplemento, cada arroba que falta.</p>
+    <a class="btn" href="https://arielnutricaoanimal.ind.br/#calculadora">Abrir a calculadora</a>
+  </div>
+</section>
+
+<section class="bloco larg" style="text-align:center">
+  <a class="btn-ouro" href="index.html#newsletter" style="display:inline-block;background:var(--ouro);color:#17150F;padding:12px 22px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none">Assinar a newsletter</a>
+  <a href="newsletter.pdf" download style="margin-left:16px;color:var(--ouro-forte);font-weight:600;font-size:14px;text-decoration:underline">Baixar esta edição em PDF</a>
+</section>
+
+<footer class="rodape larg">
+  <p>Preços de mercado citados são referência de praça (SindiCarne/Scot Consultoria/Datagro), não cotação da Ariel — sirva-se deles pra negociar, não como garantia. Notícias resumidas pela Ariel a partir da fonte original.</p>
+  <p class="fontes">Fontes desta edição: Embrapa (embrapa.br) · SindiCarne · Scot Consultoria · BeefPoint · Notícias Agrícolas · INPE/INMET</p>
+</footer>
+
+</body>
+</html>

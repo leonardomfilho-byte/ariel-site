@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Analytics (GA4) — propriedade própria da Ariel, separada de
+     qualquer outro projeto. Sem cookies de terceiro além do padrão do GA. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QPRZ3MDX8Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QPRZ3MDX8Z');
+</script>
+
 <title>Ariel Nutrição Animal — quanto custa a arroba que seu boi ganha</title>
 <meta name="description" content="Calculadora de custo por arroba da linha Ariel Corte: quanto custa, em suplemento, cada arroba que o boi ganha, por época do ano e condição de pastagem no Sudeste do Pará.">
 
@@ -867,6 +878,38 @@ tbody tr.negativo td{color:var(--texto-3)}
     <a class="btn-ouro" href="cartilha-seca-ariel.html">Ler a cartilha</a>
     <a href="cartilha-seca-ariel.pdf" download style="color:var(--ouro-forte);font-weight:600;font-size:14.5px;text-decoration:underline">Baixar em PDF</a>
   </div>
+
+  <div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--linha)">
+    <h3 style="font-size:20px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px">Guia Pr&aacute;tico Ariel GMD</h3>
+    <p style="margin:0 0 18px;color:var(--texto-2);font-size:14.5px;max-width:70ch">As 24 estimativas de ganho por &eacute;poca do ano e condi&ccedil;&atilde;o de pastagem &mdash; a mesma fonte que alimenta a calculadora e o Ari, agora pra ler direto.</p>
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <a class="btn-ouro" href="guia-gmd-ariel.html">Ler o guia</a>
+      <a href="guia-gmd-ariel.pdf" download style="color:var(--ouro-forte);font-weight:600;font-size:14.5px;text-decoration:underline">Baixar em PDF</a>
+    </div>
+  </div>
+</section>
+
+<section class="faixa-clara larg" id="newsletter" style="border-top:1px solid var(--linha)">
+  <div class="cabeca-sec">
+    <span class="rot">Boletim do Produtor</span>
+    <h2>Receba a newsletter da Ariel</h2>
+    <p>Pre&ccedil;o da arroba na sua regi&atilde;o, previs&atilde;o do tempo e o que a Embrapa publicou, direto no seu e-mail &mdash; sem custo, sem spam. <a href="newsletter.html" style="color:var(--ouro-forte);font-weight:600">Veja a &uacute;ltima edi&ccedil;&atilde;o</a>.</p>
+  </div>
+
+  <div class="cartao-form">
+    <form id="nl-form">
+      <div class="form-grid">
+        <div class="campo"><label for="nl-nome">Seu nome</label><input type="text" id="nl-nome" name="nome" autocomplete="name"></div>
+        <div class="campo"><label for="nl-email">E-mail</label><input type="email" id="nl-email" name="email" autocomplete="email"></div>
+        <div class="campo"><label for="nl-whats">WhatsApp (opcional)</label><input type="tel" id="nl-whats" name="tel" autocomplete="off" placeholder="(DDD) 9####-####"></div>
+      </div>
+      <div class="acoes-form">
+        <button class="btn-ouro" type="submit" id="btn-newsletter">Quero receber</button>
+        <span class="erro" id="nl-erro" role="alert"></span>
+      </div>
+      <p id="nl-sucesso" hidden style="color:var(--pasto);font-weight:600;font-size:14px;margin-top:14px">Prontinho &mdash; voc&ecirc; est&aacute; na lista.</p>
+    </form>
+  </div>
 </section>
 
 <footer class="rodape">
@@ -1285,6 +1328,55 @@ document.getElementById("sug-enviar").addEventListener("click",function(e){
   var texto=document.getElementById("sug-texto").value.trim();
   if(!texto){ e.preventDefault(); return; }
   this.href=linkZap("Sugestão pelo site da Ariel: "+texto);
+});
+
+/* ================= newsletter ================= */
+/* Envia pro Web3Forms, que existe pra site estático receber formulário
+   sem backend próprio. Diferente do Google Forms (que bloqueia envio
+   fora do navegador de verdade e não dá pra confirmar), aqui a resposta
+   é JSON de verdade: só mostra sucesso quando o serviço confirma. */
+var NL_ACCESS_KEY="6170fc56-292c-4f41-98ef-d4de9dea308f";
+
+document.getElementById("nl-form").addEventListener("submit",function(e){
+  e.preventDefault();
+  var btn=document.getElementById("btn-newsletter");
+  var nome=document.getElementById("nl-nome").value.trim();
+  var email=document.getElementById("nl-email").value.trim();
+  var whats=document.getElementById("nl-whats").value.trim();
+  var erro=document.getElementById("nl-erro");
+  erro.textContent="";
+
+  if(!nome){ erro.textContent="Falta seu nome."; return; }
+  if(!email||email.indexOf("@")<0||email.indexOf(".")<0){ erro.textContent="Digite um e-mail válido."; return; }
+
+  btn.disabled=true; btn.textContent="Enviando…";
+  fetch("https://api.web3forms.com/submit",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({
+      access_key: NL_ACCESS_KEY,
+      subject: "Nova inscrição — Newsletter Ariel",
+      from_name: "Site Ariel",
+      nome: nome,
+      email: email,
+      whatsapp: whats || "não informado"
+    })
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(!data.success) throw new Error(data.message||"falhou");
+      document.getElementById("nl-nome").value="";
+      document.getElementById("nl-email").value="";
+      document.getElementById("nl-whats").value="";
+      document.getElementById("nl-sucesso").hidden=false;
+      if(typeof gtag==="function") gtag("event","assinou_newsletter");
+    })
+    .catch(function(){
+      erro.textContent="Não consegui enviar agora. Tenta de novo em instantes.";
+    })
+    .finally(function(){
+      btn.disabled=false; btn.textContent="Quero receber";
+    });
 });
 
 function gerarDiagnostico(){
