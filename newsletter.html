@@ -70,6 +70,10 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
 .noticia .fonte{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro-forte);font-weight:600}
 .noticia h3{font-size:16px;font-weight:700;margin-top:5px;letter-spacing:-.01em}
 .noticia p{margin:6px 0 0;color:var(--texto-2);font-size:14px}
+.noticia .inscricao{margin:10px 0 0;font-size:13px;color:var(--texto-3)}
+.noticia .inscricao a{color:var(--ouro-forte);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--ouro-forte)}
+.noticia .inscricao a:hover{color:var(--texto);border-bottom-color:var(--texto)}
+.noticia .inscricao .prazo{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--texto-2)}
 
 /* ariel em foco */
 .foco{background:var(--carvao);border-radius:14px;padding:28px 26px;color:#F5F1E4}
@@ -113,6 +117,9 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
   .noticia .ilustracao{display:none}
   .noticia .fonte{color:#000000}
   .noticia p{color:#000000}
+  .noticia .inscricao, .noticia .inscricao .prazo{color:#000000}
+  .noticia .inscricao a{color:#000000;border:0}
+  .noticia .inscricao a::after{content:" → ava.sede.embrapa.br/enrol/index.php?id=170"}
 
   .foco{background:#FFFFFF;border:2px solid #000000;color:#000000;break-inside:avoid}
   .foco .rot{color:#000000}
@@ -206,6 +213,7 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
         <span class="fonte">Embrapa · esta semana</span>
         <h3>Últimos dias para inscrição em capacitação sobre carrapato</h3>
         <p>Curso EAD da Embrapa Pecuária Sul sobre prevenção e controle de carrapato em bovinos: inscrição até 13/09, R$ 80, 30 horas, três módulos — biologia do parasita, controle químico e montagem do plano de manejo da fazenda. É pensado pro Sul do Brasil, mas os fundamentos de resistência a carrapaticida e ciclo do parasita valem pra qualquer região, inclusive aqui no Pará.</p>
+        <p class="inscricao"><a href="https://ava.sede.embrapa.br/enrol/index.php?id=170" target="_blank" rel="noopener">Inscrever-se no curso</a> — <span class="prazo">até 13/09</span>, pela plataforma e-Campo da Embrapa. Dúvidas: cppsul.e-campo@embrapa.br</p>
       </div>
     </div>
   </div>
