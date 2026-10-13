@@ -3,241 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Newsletter Ariel — 10 de setembro de 2026</title>
-<link rel="icon" href="logo-ariel.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<title>Newsletter Ariel — 5 de outubro de 2026</title>
 <style>
-:root{
-  --ouro:#D89A0B; --ouro-forte:#B57E05; --ouro-veu:#FBEFD2;
-  --carvao:#17150F; --papel:#FCFBF8; --superficie:#FFFFFF; --superficie-2:#F4F2EC;
-  --linha:#E2DED3; --linha-forte:#CBC5B5;
-  --texto:#1E1C16; --texto-2:#5E5949; --texto-3:#8A8474;
-  --pasto:#2E6B3E; --pasto-veu:#E6F0E6; --barro:#A33A1E; --barro-veu:#F7E7E1;
-  --sombra:0 1px 2px rgba(23,21,15,.06), 0 8px 24px -16px rgba(23,21,15,.35);
-  --raio:10px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
-    --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
-    --linha:#332F26; --linha-forte:#45402F;
-    --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
-    --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
-    --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+  body { margin:0; padding:0; background:#EDEDED; }
+  table { border-collapse:collapse; }
+  img { border:0; display:block; }
+  a { color:#0D0D0D; }
+  @media only screen and (max-width:620px) {
+    .wrap { width:100% !important; }
+    .pad { padding-left:18px !important; padding-right:18px !important; }
+    .h1 { font-size:24px !important; line-height:30px !important; }
+    .stack { display:block !important; width:100% !important; padding:0 0 8px 0 !important; }
+    .num { font-size:30px !important; }
   }
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--papel);color:var(--texto);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.6}
-h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balance;margin:0}
-.larg{max-width:760px;margin:0 auto;padding:0 20px}
-.rot{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3)}
-.num{font-variant-numeric:tabular-nums}
-
-.topo{background:var(--carvao);padding:28px 0;border-bottom:3px solid var(--ouro)}
-.topo .larg{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.topo img{height:44px;width:auto;background:#F5F5F5;border-radius:8px;padding:4px 8px}
-.topo .edicao{color:#C9C3B0;font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:right;line-height:1.5}
-.topo .edicao b{color:var(--ouro);display:block;font-size:13px}
-
-.cabecalho{padding:40px 0 8px}
-.cabecalho h1{font-size:clamp(26px,4.4vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.08}
-.cabecalho p{margin:12px 0 0;color:var(--texto-2);font-size:15px;max-width:60ch}
-
-.bloco{padding:32px 0;border-top:1px solid var(--linha)}
-.bloco-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
-.bloco-cab h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
-
-/* precos */
-.pracas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.praca{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);padding:14px 16px;box-shadow:var(--sombra)}
-.praca .cidade{font-size:12.5px;color:var(--texto-2);font-weight:600}
-.praca .valor{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px;color:var(--ouro-forte);margin-top:4px;letter-spacing:-.02em}
-.praca .valor small{font-size:11px;color:var(--texto-3);font-weight:500}
-.praca.destaque{border-color:var(--ouro-forte);background:var(--ouro-veu)}
-.tendencia{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;margin-top:6px}
-.tendencia.alta{color:var(--pasto)}
-.tendencia.estavel{color:var(--texto-3)}
-
-/* noticias */
-.noticias{display:flex;flex-direction:column;gap:16px}
-.noticia{display:flex;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--linha)}
-.noticia:last-child{border-bottom:0;padding-bottom:0}
-.noticia .ilustracao{flex:none;width:132px;height:79px;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);background:var(--superficie-2)}
-.noticia .ilustracao img{width:100%;height:100%;object-fit:cover;display:block}
-.noticia .corpo{min-width:0}
-.noticia .fonte{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro-forte);font-weight:600}
-.noticia h3{font-size:16px;font-weight:700;margin-top:5px;letter-spacing:-.01em}
-.noticia p{margin:6px 0 0;color:var(--texto-2);font-size:14px;text-align:justify;hyphens:auto}
-.noticia .inscricao{margin:10px 0 0;font-size:13px;color:var(--texto-3)}
-.noticia .inscricao a{color:var(--ouro-forte);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--ouro-forte)}
-.noticia .inscricao a:hover{color:var(--texto);border-bottom-color:var(--texto)}
-.noticia .inscricao .prazo{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--texto-2)}
-
-/* ariel em foco */
-.foco{background:var(--carvao);border-radius:14px;padding:28px 26px;color:#F5F1E4}
-.foco .rot{color:var(--ouro)}
-.foco h2{color:#FFFFFF;font-size:20px;margin-top:8px}
-.foco p{color:#C9C3B0;font-size:14.5px;margin:12px 0 0}
-.foco p b{color:#FFFFFF}
-.foco a.btn{display:inline-block;margin-top:16px;background:var(--ouro);color:#17150F;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13.5px;text-decoration:none}
-
-.rodape{padding:32px 0 44px;border-top:1px solid var(--linha)}
-.rodape p{font-size:12px;color:var(--texto-3);line-height:1.6;margin:0 0 10px}
-.rodape .fontes{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--texto-3)}
-.rodape .fontes a{color:var(--texto-3)}
-
-/* ---------- versão impressa ----------
-   Papel não tem fundo escuro nem sombra: cada um vira contorno preto
-   fino, e o dourado de destaque só sobrevive onde já é claro o
-   bastante pra imprimir sem gastar tinta à toa. As seções não cortam
-   no meio de uma página, e o botão vira o endereço por extenso, já
-   que ninguém clica em papel. */
-@media print{
-  body{font-size:12.5px;background:#FFFFFF;color:#000000}
-  .larg{max-width:100%}
-  a{color:#000000!important;text-decoration:none}
-
-  .topo{background:#FFFFFF;border-bottom:2px solid #000000;padding:10px 0}
-  .topo img{background:none;padding:0}
-  .topo .edicao{color:#000000}
-  .topo .edicao b{color:#000000}
-
-  .bloco{padding:16px 0;border-top:1px solid #000000;break-inside:avoid}
-  .cabecalho{padding:16px 0 4px}
-  .cabecalho p{color:#000000}
-
-  .praca{box-shadow:none;border:1px solid #000000;break-inside:avoid}
-  .praca.destaque{background:#FFFFFF;border-width:2px}
-  .praca .valor{color:#000000}
-  .tendencia.alta,.tendencia.estavel{color:#000000}
-
-  .noticia{break-inside:avoid}
-  .noticia .ilustracao{display:none}
-  .noticia .fonte{color:#000000}
-  .noticia p{color:#000000}
-  .noticia .inscricao, .noticia .inscricao .prazo{color:#000000}
-  .noticia .inscricao a{color:#000000;border:0}
-  .noticia .inscricao a::after{content:" → ava.sede.embrapa.br/enrol/index.php?id=170"}
-
-  .foco{background:#FFFFFF;border:2px solid #000000;color:#000000;break-inside:avoid}
-  .foco .rot{color:#000000}
-  .foco h2{color:#000000}
-  .foco p{color:#000000}
-  .foco p b{color:#000000}
-  .foco a.btn{background:none;color:#000000;padding:0;border:0}
-  .foco a.btn::after{content:" → arielnutricaoanimal.ind.br/#calculadora"}
-
-  .rodape{border-top:1px solid #000000}
-  .rodape p, .rodape .fontes{color:#000000}
-}
-@page{size:A4;margin:16mm 14mm}
 </style>
 </head>
-<body>
+<body style="margin:0;padding:0;background:#EDEDED;">
 
-<header class="topo">
-  <div class="larg">
-    <a href="index.html"><img src="logo-ariel.png" alt="Ariel Nutrição Animal"></a>
-    <div class="edicao"><b>Boletim do Produtor</b>Edição de 10 de setembro de 2026</div>
-  </div>
-</header>
-
-<div class="cabecalho larg">
-  <h1>O que interessa pra você essa semana</h1>
-  <p>Preço da arroba na sua região, o que a Embrapa publicou, e uma dica prática da Ariel. Direto ao ponto — sem enrolação, do jeito que o produtor decide.</p>
+<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#EDEDED;">
+  Arroba no recorde, El Niño muito forte a caminho e o que fazer com o suplemento até a chuva firmar.
 </div>
 
-<section class="bloco larg">
-  <div class="bloco-cab">
-    <span class="rot">Preço da arroba</span>
-    <span class="rot">09–10/09, à vista</span>
-  </div>
-  <div class="pracas">
-    <div class="praca destaque">
-      <div class="cidade">Redenção / Marabá (PA)</div>
-      <div class="valor">R$ 336<small>/@</small></div>
-      <span class="tendencia alta">▲ recuperando desde 02/09</span>
-    </div>
-    <div class="praca">
-      <div class="cidade">Paragominas (PA)</div>
-      <div class="valor">R$ 345<small>,50/@</small></div>
-    </div>
-    <div class="praca">
-      <div class="cidade">Novilha, Marabá (PA)</div>
-      <div class="valor">R$ 321<small>,50/@</small></div>
-      <span class="tendencia estavel">● estável</span>
-    </div>
-    <div class="praca">
-      <div class="cidade">Vaca gorda, Marabá (PA)</div>
-      <div class="valor">R$ 318<small>,50/@</small></div>
-      <span class="tendencia estavel">● estável</span>
-    </div>
-  </div>
-  <p style="font-size:12.5px;color:var(--texto-3);margin-top:14px">Setembro é começo de entressafra — a oferta de boi terminado a pasto cai, e é isso que está segurando o preço firme mesmo com o abate morno.</p>
-</section>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EDEDED;">
+<tr><td align="center" style="padding:20px 10px;">
 
-<section class="bloco larg">
-  <div class="bloco-cab">
-    <span class="rot">Clima</span>
-  </div>
-  <div class="noticias">
-    <div class="noticia">
-      <div class="ilustracao"><img src="img-clima.jpg" alt=""></div>
-      <div class="corpo">
-        <span class="fonte">INPE / INMET</span>
-        <h3>El Niño forte a caminho — pico entre outubro e dezembro</h3>
-        <p>Os modelos do INPE e do INMET apontam El Niño de intensidade forte a excepcional, com pico entre outubro e dezembro de 2026 e efeitos se estendendo até maio de 2027. No leste do Pará — onde fica Canaã dos Carajás — a expectativa é de menos chuva e temperatura acima da média nesse período. Meteorologistas alertam, porém, que a severidade final ainda é incerta: vale acompanhar as atualizações do INMET em vez de decidir hoje o suplemento do ano todo.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" style="width:600px;background:#FFFFFF;font-family:Arial,Helvetica,sans-serif;">
 
-<section class="bloco larg">
-  <div class="bloco-cab">
-    <span class="rot">Da Embrapa e do campo</span>
-  </div>
-  <div class="noticias">
-    <div class="noticia">
-      <div class="ilustracao"><img src="img-forrageiras.jpg" alt=""></div>
-      <div class="corpo">
-        <span class="fonte">Embrapa · hoje</span>
-        <h3>Forrageiras são a base da pecuária moderna, comprova pesquisador</h3>
-        <p>Pesquisador da Embrapa Cerrados aponta que 80% das cultivares de forrageira usadas no Brasil são tecnologia antiga — muitas das décadas de 1970 e 1990 — porque o produtor prioriza preço na hora de escolher a semente, mesmo o capim sendo só 10% do custo de implantar o pasto. A Embrapa já tem cultivares mais modernas, em parceria com a Unipasto, pensadas pra pastagem que aguenta seca, praga e queda de qualidade na entressafra — o mesmo cenário que pesa na conta do suplemento.</p>
-      </div>
-    </div>
-    <div class="noticia">
-      <div class="ilustracao"><img src="img-carrapato.jpg" alt=""></div>
-      <div class="corpo">
-        <span class="fonte">Embrapa · esta semana</span>
-        <h3>Últimos dias para inscrição em capacitação sobre carrapato</h3>
-        <p>Curso EAD da Embrapa Pecuária Sul sobre prevenção e controle de carrapato em bovinos: inscrição até 13/09, R$ 80, 30 horas, três módulos — biologia do parasita, controle químico e montagem do plano de manejo da fazenda. É pensado pro Sul do Brasil, mas os fundamentos de resistência a carrapaticida e ciclo do parasita valem pra qualquer região, inclusive aqui no Pará.</p>
-        <p class="inscricao"><a href="https://ava.sede.embrapa.br/enrol/index.php?id=170" target="_blank" rel="noopener">Inscrever-se no curso</a> — <span class="prazo">até 13/09</span>, pela plataforma e-Campo da Embrapa. Dúvidas: cppsul.e-campo@embrapa.br</p>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- ===== CABEÇALHO ===== -->
+  <tr>
+    <td class="pad" style="background:#0D0D0D;padding:22px 32px;">
+      <a href="https://arielnutricaoanimal.ind.br/index.html" style="text-decoration:none;">
+        <img src="https://arielnutricaoanimal.ind.br/logo-ariel.png" alt="ARIEL NUTRIÇÃO ANIMAL" height="52"
+             style="height:52px;width:auto;color:#F5C800;font-size:22px;font-weight:bold;letter-spacing:3px;">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td class="pad" style="background:#F5C800;padding:9px 32px;font-size:12px;font-weight:bold;color:#0D0D0D;letter-spacing:1px;">
+      BOLETIM DO PRODUTOR &nbsp;·&nbsp; EDIÇÃO DE 5 DE OUTUBRO DE 2026
+    </td>
+  </tr>
 
-<section class="bloco larg">
-  <div class="foco">
-    <span class="rot">Ariel em foco</span>
-    <h2>Setembro começou a entressafra — o pasto já avisou?</h2>
-    <p>Com a oferta de boi caindo e o preço subindo, quem já ajustou o suplemento pra fase de seca sai na frente. Se o pasto está fibroso e o boi está devagar no cocho, é sinal de trocar de mineral pra proteico antes que o atraso vire arroba perdida.</p>
-    <p><b>Use a calculadora do site pra ver o número exato do seu lote</b> — quanto custa, em suplemento, cada arroba que falta.</p>
-    <a class="btn" href="https://arielnutricaoanimal.ind.br/#calculadora">Abrir a calculadora</a>
-  </div>
-</section>
+  <!-- ===== ABERTURA ===== -->
+  <tr>
+    <td class="pad" style="padding:30px 32px 6px 32px;">
+      <h1 class="h1" style="margin:0 0 12px 0;font-size:27px;line-height:33px;color:#0D0D0D;">
+        Arroba no recorde e El Niño forte a caminho: o que fazer agora
+      </h1>
+      <p style="margin:0;font-size:15px;line-height:23px;color:#3A3A3A;">
+        Preço da arroba na sua região, o que esperar do clima e uma dica prática da Ariel
+        para a virada da seca. Direto ao ponto, do jeito que o produtor decide.
+      </p>
+    </td>
+  </tr>
 
-<section class="bloco larg" style="text-align:center">
-  <a class="btn-ouro" href="index.html#newsletter" style="display:inline-block;background:var(--ouro);color:#17150F;padding:12px 22px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none">Assinar a newsletter</a>
-  <a href="newsletter.pdf" download style="margin-left:16px;color:var(--ouro-forte);font-weight:600;font-size:14px;text-decoration:underline">Baixar esta edição em PDF</a>
-</section>
+  <!-- ===== 1. MERCADO ===== -->
+  <tr>
+    <td class="pad" style="padding:26px 32px 0 32px;">
+      <div style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#9a7b00;">MERCADO</div>
+      <h2 style="margin:4px 0 14px 0;font-size:20px;color:#0D0D0D;">O que a arroba está pagando</h2>
 
-<footer class="rodape larg">
-  <p>Preços de mercado citados são referência de praça (SindiCarne/Scot Consultoria/Datagro), não cotação da Ariel — sirva-se deles pra negociar, não como garantia. Notícias resumidas pela Ariel a partir da fonte original.</p>
-  <p class="fontes">Fontes desta edição: Embrapa (embrapa.br) · SindiCarne · Scot Consultoria · BeefPoint · Notícias Agrícolas · INPE/INMET</p>
-</footer>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="stack" width="33%" valign="top" style="padding:0 6px 8px 0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;">
+              <tr><td style="padding:14px 12px;text-align:center;">
+                <div class="num" style="font-size:26px;font-weight:bold;color:#F5C800;">R$ 352</div>
+                <div style="font-size:11px;color:#FFFFFF;margin-top:4px;line-height:15px;">por @ — Redenção e Marabá (boi China, a prazo, 02/10)</div>
+              </td></tr>
+            </table>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding:0 3px 8px 3px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;">
+              <tr><td style="padding:14px 12px;text-align:center;">
+                <div class="num" style="font-size:26px;font-weight:bold;color:#F5C800;">R$ 369,90</div>
+                <div style="font-size:11px;color:#FFFFFF;margin-top:4px;line-height:15px;">por @ — indicador Cepea em 03/10, recorde nominal</div>
+              </td></tr>
+            </table>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding:0 0 8px 6px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;">
+              <tr><td style="padding:14px 12px;text-align:center;">
+                <div class="num" style="font-size:26px;font-weight:bold;color:#F5C800;">R$ 388</div>
+                <div style="font-size:11px;color:#FFFFFF;margin-top:4px;line-height:15px;">por @ — contrato de outubro na B3 (ajuste)</div>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
 
+      <p style="margin:12px 0 10px 0;font-size:15px;line-height:23px;color:#3A3A3A;">
+        O mercado físico bateu a máxima nominal do Cepea no começo de outubro, e o futuro aponta
+        para perto de R$ 400 até o fim do ano. Na reposição, o bezerro de 12 meses (205 kg)
+        no Pará está em torno de <b>R$ 2.934 por cabeça</b>.
+      </p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-left:4px solid #F5C800;background:#FFF8D6;">
+        <tr><td style="padding:14px 16px;font-size:14px;line-height:22px;color:#0D0D0D;">
+          <b>A conta que importa:</b> com a @ a R$ 352, cada <b>100 g a mais de ganho por dia</b>,
+          durante 90 dias, rende <b>9 kg de peso vivo</b> por animal. Com rendimento de carcaça de 50%
+          e @ de 15 kg, dá <b>0,3 arroba</b>, ou cerca de <b>R$ 105 por cabeça</b>.
+          Num lote de 100 animais, são cerca de <b>R$ 10.500</b> a mais no bolso.
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== 2. CLIMA ===== -->
+  <tr>
+    <td class="pad" style="padding:30px 32px 0 32px;">
+      <div style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#9a7b00;">CLIMA · INMET / INPE</div>
+      <h2 style="margin:4px 0 12px 0;font-size:20px;color:#0D0D0D;">El Niño muito forte: a chuva pode atrasar</h2>
+      <p style="margin:0 0 10px 0;font-size:15px;line-height:23px;color:#3A3A3A;">
+        O boletim oficial do Painel El Niño, publicado em 1º de outubro pelo Inmet, Inpe e outras instituições
+        federais, dá <b>95% de chance</b> de o El Niño ficar <b>muito forte</b> entre outubro e dezembro, com
+        continuidade pelo menos até o início de 2027. Para o Norte do país, incluindo o Pará, a previsão é de
+        <b>chuva abaixo da média</b> e <b>temperatura acima da média</b>, e o Inmet considera esperado que o
+        começo da estação chuvosa atrase.
+      </p>
+      <p style="margin:0;font-size:13px;line-height:20px;color:#777777;">
+        A severidade final ainda pode mudar. Vale acompanhar as atualizações do Inmet em vez de decidir hoje
+        o suplemento do ano inteiro.
+      </p>
+    </td>
+  </tr>
+
+  <!-- ===== 3. DICA DE MANEJO ===== -->
+  <tr>
+    <td class="pad" style="padding:30px 32px 0 32px;">
+      <div style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#9a7b00;">ARIEL EM FOCO</div>
+      <h2 style="margin:4px 0 12px 0;font-size:20px;color:#0D0D0D;">Fim da seca com El Niño: não conte com a chuva</h2>
+      <p style="margin:0 0 12px 0;font-size:15px;line-height:23px;color:#3A3A3A;">
+        Aqui no Sudeste do Pará a virada para as águas costuma vir no fim de novembro. Neste ano ela pode
+        demorar. Quatro cuidados para não perder ganho:
+      </p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="34" valign="top" style="padding:0 0 12px 0;"><div style="width:26px;height:26px;background:#0D0D0D;color:#F5C800;font-weight:bold;text-align:center;line-height:26px;font-size:14px;">1</div></td>
+          <td valign="top" style="padding:0 0 12px 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+            <b style="color:#0D0D0D;">Planeje o suplemento para uma seca mais longa.</b> Faça o pedido contando com
+            mais semanas de consumo e não deixe o cocho vazio esperando a chuva.
+          </td>
+        </tr>
+        <tr>
+          <td width="34" valign="top" style="padding:0 0 12px 0;"><div style="width:26px;height:26px;background:#0D0D0D;color:#F5C800;font-weight:bold;text-align:center;line-height:26px;font-size:14px;">2</div></td>
+          <td valign="top" style="padding:0 0 12px 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+            <b style="color:#0D0D0D;">Não tire o proteico de uma vez.</b> Uma chuva isolada não muda o pasto.
+            Espere a chuva firmar e o capim rebrotar de verdade.
+          </td>
+        </tr>
+        <tr>
+          <td width="34" valign="top" style="padding:0 0 12px 0;"><div style="width:26px;height:26px;background:#0D0D0D;color:#F5C800;font-weight:bold;text-align:center;line-height:26px;font-size:14px;">3</div></td>
+          <td valign="top" style="padding:0 0 12px 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+            <b style="color:#0D0D0D;">Só reduza a ureia com rebrote real.</b> Capim novo traz muita proteína, e sobra de
+            nitrogênio no rúmen pode intoxicar o animal. A troca é gradual, não de um dia para o outro.
+          </td>
+        </tr>
+        <tr>
+          <td width="34" valign="top" style="padding:0 0 4px 0;"><div style="width:26px;height:26px;background:#0D0D0D;color:#F5C800;font-weight:bold;text-align:center;line-height:26px;font-size:14px;">4</div></td>
+          <td valign="top" style="padding:0 0 4px 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+            <b style="color:#0D0D0D;">Olhe o pasto, o cocho e a água.</b> Compare o consumo real com o recomendado
+            (gramas por 100 kg de peso vivo), ajuste a lotação ao pasto que sobrou e garanta água boa:
+            com calor acima da média o gado bebe mais.
+          </td>
+        </tr>
+      </table>
+      <p style="margin:12px 0 0 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+        <b>Use a calculadora do site para ver o número exato do seu lote:</b> quanto custa, em suplemento,
+        cada arroba que falta.
+      </p>
+    </td>
+  </tr>
+
+  <!-- ===== 4. COMO COMPRAR ===== -->
+  <tr>
+    <td class="pad" style="padding:30px 32px 0 32px;">
+      <div style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#9a7b00;">COMO COMPRAR</div>
+      <h2 style="margin:4px 0 12px 0;font-size:20px;color:#0D0D0D;">Condições da linha Ariel</h2>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:2px 0;font-size:14px;line-height:21px;color:#3A3A3A;">&#9679;&nbsp; Pedido mínimo de 1.000 kg (ideal: 1.200 kg)</td></tr>
+        <tr><td style="padding:2px 0;font-size:14px;line-height:21px;color:#3A3A3A;">&#9679;&nbsp; <b>Frete incluso</b> em pedidos acima de 1,2 tonelada</td></tr>
+        <tr><td style="padding:2px 0;font-size:14px;line-height:21px;color:#3A3A3A;">&#9679;&nbsp; Entrega em rota, dois dias fixos por semana</td></tr>
+        <tr><td style="padding:2px 0;font-size:14px;line-height:21px;color:#3A3A3A;">&#9679;&nbsp; Retirada na fábrica com preço reduzido</td></tr>
+        <tr><td style="padding:2px 0;font-size:14px;line-height:21px;color:#3A3A3A;">&#9679;&nbsp; Desconto apenas para volume ou pagamento à vista</td></tr>
+      </table>
+      <p style="margin:10px 0 0 0;font-size:14px;line-height:22px;color:#3A3A3A;">
+        Para saber preço e qual linha serve para o seu lote, mande o peso médio, a categoria e uma foto do pasto
+        para o Leonardo.
+      </p>
+    </td>
+  </tr>
+
+  <!-- ===== 5. CAMPO ===== -->
+  <!-- Quando tiver um caso real de cliente, troque o texto abaixo por:
+       fazenda, categoria, época, suplemento usado, GMD antes e depois (com autorização do produtor). -->
+  <tr>
+    <td class="pad" style="padding:30px 32px 0 32px;">
+      <div style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#9a7b00;">RESULTADO DE CAMPO</div>
+      <h2 style="margin:4px 0 12px 0;font-size:20px;color:#0D0D0D;">Sua fazenda pode estar aqui na próxima edição</h2>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F6F6;">
+        <tr><td style="padding:16px 18px;font-size:14px;line-height:22px;color:#3A3A3A;">
+          Estamos reunindo casos reais de produtores da região: lote, época, suplemento usado e o ganho
+          que apareceu na balança. Se você pesa o seu gado e quer mostrar o resultado, mande os números
+          do lote para o Leonardo. Com a sua autorização, ele vira referência para outros produtores daqui.
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== CTA ===== -->
+  <tr>
+    <td class="pad" align="center" style="padding:34px 32px 10px 32px;">
+      <p style="margin:0 0 14px 0;font-size:16px;line-height:24px;color:#0D0D0D;font-weight:bold;">
+        Quer saber quanto o seu lote pode ganhar a mais?
+      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr><td align="center" style="background:#0D0D0D;">
+          <a href="https://wa.me/5594984142737?text=Ol%C3%A1%20Leonardo%2C%20vi%20o%20Boletim%20do%20Produtor%20e%20quero%20um%20diagn%C3%B3stico%20do%20meu%20lote."
+             style="display:inline-block;padding:15px 34px;font-size:16px;font-weight:bold;color:#F5C800;text-decoration:none;">
+            Falar com o Leonardo no WhatsApp
+          </a>
+        </td></tr>
+        <tr><td height="10"></td></tr>
+        <tr><td align="center" style="background:#F5C800;">
+          <a href="https://arielnutricaoanimal.ind.br/#calculadora"
+             style="display:inline-block;padding:13px 34px;font-size:15px;font-weight:bold;color:#0D0D0D;text-decoration:none;">
+            Abrir a calculadora
+          </a>
+        </td></tr>
+      </table>
+      <p style="margin:12px 0 0 0;font-size:14px;color:#3A3A3A;">(94) 98414-2737</p>
+      <p style="margin:14px 0 0 0;font-size:13px;color:#3A3A3A;">
+        <a href="https://arielnutricaoanimal.ind.br/index.html#newsletter" style="color:#0D0D0D;">Assinar a newsletter</a>
+        &nbsp;·&nbsp;
+        <a href="https://arielnutricaoanimal.ind.br/newsletter.pdf" style="color:#0D0D0D;">Baixar esta edição em PDF</a>
+      </p>
+    </td>
+  </tr>
+
+  <!-- ===== RODAPÉ ===== -->
+  <tr>
+    <td class="pad" style="padding:24px 32px 26px 32px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:3px solid #F5C800;">
+        <tr><td style="padding-top:16px;font-size:11px;line-height:17px;color:#777777;text-align:center;">
+          Preços de mercado citados são referência de praça, não cotação da Ariel. O exemplo de cálculo é ilustrativo.<br>
+          Fontes desta edição: Scot Consultoria (02/10) · Cepea e Datagro/B3 via Farmnews (02–03/10) · Painel El Niño, boletim nº 4 (Inmet, Inpe e outras instituições, 01/10).<br><br>
+          <b style="color:#0D0D0D;">Ariel Nutrição Animal</b> &nbsp;·&nbsp; Canaã dos Carajás — PA<br>
+          LPM Indústria e Comércio de Produtos Alimentícios &nbsp;·&nbsp; CNPJ 30.889.880/0001-60 &nbsp;·&nbsp; Estabelecimento registrado no MAPA sob o nº PA 000961-0 &nbsp;·&nbsp; Produtos isentos de registro<br><br>
+          Para não receber mais, responda esta mensagem com a palavra SAIR.
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+</table>
+
+</td></tr>
+</table>
 </body>
 </html>
