@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QPRZ3MDX8Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QPRZ3MDX8Z');
+</script>
+<title>Leitor de Rótulo Ariel — Seu suplemento entrega o que a norma pede?</title>
+<meta name="description" content="Digite os níveis de garantia do rótulo do suplemento e veja, conta por conta, se ele cumpre os mínimos do MAPA para a categoria em que foi vendido.">
+<link rel="icon" href="logo-ariel.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ouro:#D89A0B; --ouro-forte:#B57E05; --ouro-veu:#FBEFD2;
+  --carvao:#17150F; --papel:#FCFBF8; --superficie:#FFFFFF; --superficie-2:#F4F2EC;
+  --linha:#E2DED3; --linha-forte:#CBC5B5;
+  --texto:#1E1C16; --texto-2:#5E5949; --texto-3:#8A8474;
+  --pasto:#2E6B3E; --pasto-veu:#E6F0E6; --barro:#A33A1E; --barro-veu:#F7E7E1;
+  --zap:#1FA855;
+  --sombra:0 1px 2px rgba(23,21,15,.06), 0 8px 24px -16px rgba(23,21,15,.35);
+  --raio:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ouro:#F0B32B; --ouro-forte:#FFC94D; --ouro-veu:#3A2E11;
+    --carvao:#0E0D09; --papel:#14130F; --superficie:#1C1A15; --superficie-2:#24211A;
+    --linha:#332F26; --linha-forte:#45402F;
+    --texto:#F3F0E6; --texto-2:#B4AE9C; --texto-3:#847E6D;
+    --pasto:#79C08B; --pasto-veu:#1B2E1F; --barro:#E4805F; --barro-veu:#33190F;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--texto);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balance;margin:0}
+.larg{max-width:880px;margin:0 auto;padding:0 20px}
+.rot{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-3)}
+.num{font-variant-numeric:tabular-nums}
+
+.topo{background:var(--carvao);padding:22px 0;border-bottom:3px solid var(--ouro)}
+.topo .larg{display:flex;align-items:center;gap:14px}
+.topo a{display:flex}
+.topo img{height:44px;width:auto;background:#F5F5F5;border-radius:8px;padding:4px 8px}
+.topo span{color:#C9C3B0;font-family:"IBM Plex Mono",monospace;font-size:12px}
+
+.cabecalho{padding:44px 0 8px}
+.cabecalho h1{font-size:clamp(28px,4.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.06}
+.cabecalho p{margin:14px 0 0;color:var(--texto-2);font-size:15.5px;max-width:66ch}
+
+.btn-ouro{display:inline-block;background:var(--ouro);color:#17150F;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn-ouro:hover{background:var(--ouro-forte)}
+.btn-vazado{display:inline-block;background:transparent;border:1px solid var(--linha-forte);color:var(--texto-2);padding:12px 20px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer;font-family:inherit}
+.btn-vazado:hover{border-color:var(--ouro-forte);color:var(--ouro-forte)}
+
+.bloco{padding:34px 0;border-top:1px solid var(--linha)}
+.bloco h2{font-size:21px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.bloco > p.sub{margin:0 0 18px;color:var(--texto-2);font-size:14px;max-width:70ch}
+
+.form{background:var(--superficie);border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);padding:20px}
+.grupo{margin-bottom:22px}
+.grupo:last-of-type{margin-bottom:0}
+.grupo > .rot{display:block;margin-bottom:10px}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+label{display:block;font-size:13.5px;font-weight:600;margin-bottom:5px}
+label small{display:block;font-weight:400;color:var(--texto-3);font-size:12px;line-height:1.35}
+input,select{width:100%;font:inherit;font-size:15px;color:var(--texto);background:var(--papel);border:1px solid var(--linha-forte);border-radius:8px;padding:10px 12px}
+input:focus,select:focus{outline:2px solid var(--ouro);outline-offset:1px;border-color:var(--ouro)}
+.consumo{display:flex;gap:8px}
+.consumo input{flex:1 1 40%;min-width:0}
+.consumo select{flex:1 1 60%;min-width:0}
+.oculto{display:none}
+.botoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;align-items:center}
+
+.aviso-exemplo{margin-top:14px;padding:11px 14px;border-radius:8px;font-size:13.5px;background:var(--ouro-veu);border:1px solid var(--linha)}
+
+#resultado{margin-top:22px}
+.veredito{padding:16px 18px;border-radius:var(--raio);border:1px solid var(--linha);margin-bottom:14px}
+.veredito h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.veredito p{margin:0;font-size:14px;color:var(--texto-2)}
+.veredito.ok{background:var(--pasto-veu)}
+.veredito.ok h3{color:var(--pasto)}
+.veredito.falha{background:var(--barro-veu)}
+.veredito.falha h3{color:var(--barro)}
+.veredito.incompleto{background:var(--superficie-2)}
+
+.criterio{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:14px 16px;border:1px solid var(--linha);border-radius:var(--raio);background:var(--superficie);margin-bottom:10px}
+.selo{grid-row:span 3;align-self:start;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.selo.ok{background:var(--pasto-veu);color:var(--pasto)}
+.selo.falha{background:var(--barro-veu);color:var(--barro)}
+.selo.falta{background:var(--superficie-2);color:var(--texto-3)}
+.criterio b{font-size:14.5px}
+.criterio .conta{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--texto-2);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.criterio .porque{font-size:13px;color:var(--texto-3)}
+
+.rolagem{overflow-x:auto;border:1px solid var(--linha);border-radius:var(--raio);background:var(--superficie);box-shadow:var(--sombra)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-variant-numeric:tabular-nums}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--texto-3);font-weight:500;text-align:left;padding:10px 14px;border-bottom:1px solid var(--linha-forte);background:var(--superficie-2)}
+tbody td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--linha);font-size:13.5px;vertical-align:top}
+tbody td:first-child{font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+
+.chamada{margin-top:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:16px 18px;border:1px solid var(--linha);border-radius:var(--raio);background:var(--superficie-2)}
+.chamada p{margin:0;flex:1 1 280px;font-size:14px}
+.btn-zap{display:inline-block;background:var(--zap);color:#fff;padding:11px 18px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none}
+
+.rodape{padding:30px 0 46px;border-top:1px solid var(--linha)}
+.rodape p{font-size:12.5px;color:var(--texto-3);line-height:1.65;margin:0 0 10px;max-width:74ch}
+.rodape a{color:var(--ouro-forte)}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="larg">
+    <a href="index.html"><img src="logo-ariel.png" alt="Ariel Nutrição Animal"></a>
+    <span>Ferramenta gratuita</span>
+  </div>
+</header>
+
+<div class="cabecalho larg">
+  <span class="rot">Leitor de rótulo</span>
+  <h1>Seu suplemento entrega o que a norma pede?</h1>
+  <p>Copie para cá os níveis de garantia e o consumo recomendado que estão no rótulo do saco. A página faz as contas e mostra, item por item, se o produto cumpre os mínimos do Ministério da Agricultura para a categoria em que foi vendido.</p>
+</div>
+
+<section class="bloco larg">
+  <form class="form" id="form" novalidate>
+    <div class="grupo">
+      <span class="rot">1 · O que diz a frente do saco</span>
+      <div class="campos">
+        <div>
+          <label for="categoria">Categoria declarada<small>Como o produto se apresenta no rótulo</small></label>
+          <select id="categoria">
+            <option value="mineral">Suplemento mineral</option>
+            <option value="proteico">Suplemento mineral proteico</option>
+            <option value="energetico">Suplemento mineral proteico energético</option>
+          </select>
+        </div>
+        <div>
+          <label for="consumo">Consumo recomendado<small>Do modo de usar, no verso do saco</small></label>
+          <div class="consumo">
+            <input id="consumo" inputmode="decimal" autocomplete="off" placeholder="ex.: 0,1">
+            <select id="unidade" aria-label="Unidade do consumo">
+              <option value="pv">% do peso vivo</option>
+              <option value="g100">g por 100 kg de PV/dia</option>
+              <option value="gcab">g por cabeça/dia</option>
+            </select>
+          </div>
+        </div>
+        <div id="caixa-peso" class="oculto">
+          <label for="peso">Peso médio do lote (kg)<small>Para converter g/cabeça em g por 100 kg</small></label>
+          <input id="peso" inputmode="decimal" autocomplete="off" placeholder="ex.: 400">
+        </div>
+      </div>
+    </div>
+
+    <div class="grupo">
+      <span class="rot">2 · Níveis de garantia (quadro do rótulo)</span>
+      <div class="campos">
+        <div>
+          <label for="pb">Proteína bruta, mínimo (%)<small>Pode vir em g/kg: divida por 10</small></label>
+          <input id="pb" inputmode="decimal" autocomplete="off" placeholder="ex.: 40">
+        </div>
+        <div>
+          <label for="nnp">Equivalente proteico de NNP, máximo (%)<small>A parte da proteína que vem da ureia</small></label>
+          <input id="nnp" inputmode="decimal" autocomplete="off" placeholder="ex.: 30">
+        </div>
+        <div>
+          <label for="ndt">NDT, mínimo (%)<small>Nutrientes digestíveis totais</small></label>
+          <input id="ndt" inputmode="decimal" autocomplete="off" placeholder="ex.: 45">
+        </div>
+        <div>
+          <label for="fosforo">Fósforo, mínimo (g/kg)<small>Se vier em %, multiplique por 10</small></label>
+          <input id="fosforo" inputmode="decimal" autocomplete="off" placeholder="ex.: 40">
+        </div>
+        <div>
+          <label for="sodio">Sódio, mínimo (g/kg)<small>A página converte em sal (NaCl)</small></label>
+          <input id="sodio" inputmode="decimal" autocomplete="off" placeholder="ex.: 90">
+        </div>
+      </div>
+    </div>
+
+    <div class="botoes">
+      <button class="btn-ouro" type="submit">Conferir o rótulo</button>
+      <button class="btn-vazado" type="button" id="exemplo">Preencher com um exemplo</button>
+      <button class="btn-vazado" type="button" id="limpar">Limpar</button>
+    </div>
+    <div class="aviso-exemplo oculto" id="aviso-exemplo"><b>Exemplo com números inventados.</b> Não é o rótulo de nenhum produto real, da Ariel ou de outra marca. Serve só para mostrar como a conferência funciona.</div>
+  </form>
+
+  <div id="resultado" aria-live="polite"></div>
+</section>
+
+<section class="bloco larg">
+  <h2>Com o que a página compara</h2>
+  <p class="sub">Limites da Instrução Normativa MAPA nº 12/2004 para suplementos de bovinos em pastejo. Tudo é calculado sobre o consumo recomendado no próprio rótulo, convertido para gramas por 100 kg de peso vivo por dia.</p>
+  <div class="rolagem">
+    <table>
+      <thead><tr><th>Critério</th><th>Limite</th><th>Vale para</th></tr></thead>
+      <tbody id="tabela-regras"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="rodape larg">
+  <p><b>Esta página confere contas, não confere o saco.</b> Ela parte do que está impresso no rótulo; se o produto não tiver o que o rótulo declara, só a análise de laboratório mostra. Para dúvidas sobre um produto específico, procure o responsável técnico do fabricante.</p>
+  <p>O sódio vira sal multiplicando por 2,542 (o NaCl tem 39,3% de sódio). Consumo em % do peso vivo vira g por 100 kg multiplicando por 1.000: 0,1% PV = 100 g por 100 kg de PV por dia.</p>
+  <p>Ariel Nutrição Animal · LPM Indústria e Comércio de Produtos Alimentícios · Canaã dos Carajás – PA. Estabelecimento registrado no MAPA sob o número PA 000961-0. Produtos isentos de registro. <a href="index.html">Voltar ao site</a></p>
+</footer>
+
+<script>
+/* Limites da IN MAPA 12/2004 usados na conferência.
+   Para corrigir um limite, mude só este quadro: a tabela da página e as contas leem daqui. */
+var REGRAS = {
+  pbPercentual:   { minimo: 20,  categorias: ["proteico", "energetico"] },  /* % PB no produto */
+  pbConsumo:      { minimo: 30,  categorias: ["proteico", "energetico"] },  /* g PB / 100 kg PV / dia */
+  nnpSobrePb:     { maximo: 85,  categorias: ["proteico", "energetico"] },  /* % da PB vinda de NNP */
+  ndtConsumo:     { minimo: 100, categorias: ["energetico"] },              /* g NDT / 100 kg PV / dia */
+  fosforoConsumo: { minimo: 0.6, categorias: ["mineral", "proteico", "energetico"] }, /* g P / 100 kg PV / dia */
+  salPercentual:  { maximo: 60,  categorias: ["mineral", "proteico", "energetico"] }  /* % NaCl no produto */
+};
+
+var NOME_CATEGORIA = {
+  mineral: "suplemento mineral",
+  proteico: "suplemento mineral proteico",
+  energetico: "suplemento mineral proteico energético"
+};
+var NA_PARA_NACL = 2.542;
+
+function $(id){ return document.getElementById(id); }
+function ler(id){
+  var t = $(id).value.trim().replace(/\s/g, "");
+  if (!t) return null;
+  /* 1.000 é mil, 0,5 é meio: ponto só é decimal quando não parece separador de milhar */
+  if (t.indexOf(",") >= 0 || /^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, "").replace(",", ".");
+  var n = parseFloat(t);
+  return isFinite(n) && n >= 0 ? n : NaN;
+}
+function fmt(n, casas){
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  if (casas === undefined) casas = n >= 100 ? 0 : (n >= 10 ? 1 : 2);
+  return n.toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: casas });
+}
+function vale(regra, cat){ return REGRAS[regra].categorias.indexOf(cat) >= 0; }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+
+/* consumo em g por 100 kg de PV por dia, com a conta que levou até ele */
+function consumoPor100kg(){
+  var v = ler("consumo"), u = $("unidade").value;
+  if (v === null) return { falta: "o consumo recomendado" };
+  if (isNaN(v) || v === 0) return { erro: "O consumo recomendado precisa ser um número maior que zero." };
+  if (u === "pv") return { g: v * 1000, conta: fmt(v, 3) + "% PV × 1.000 = " + fmt(v * 1000) + " g/100 kg PV" };
+  if (u === "g100") return { g: v, conta: fmt(v) + " g/100 kg PV" };
+  var p = ler("peso");
+  if (p === null) return { falta: "o peso médio do lote" };
+  if (isNaN(p) || p === 0) return { erro: "O peso médio precisa ser um número maior que zero." };
+  return { g: v / p * 100, conta: fmt(v) + " g/cab ÷ " + fmt(p) + " kg × 100 = " + fmt(v / p * 100) + " g/100 kg PV" };
+}
+
+function conferir(){
+  var cat = $("categoria").value;
+  var c = consumoPor100kg();
+  var campos = { pb: ler("pb"), nnp: ler("nnp"), ndt: ler("ndt"), fosforo: ler("fosforo"), sodio: ler("sodio") };
+  for (var k in campos) if (isNaN(campos[k])) return mostrarErro("Tem um valor que não é número. Use só algarismos e vírgula, como 0,1 ou 40.");
+  if (c.erro) return mostrarErro(c.erro);
+
+  var itens = [];
+  function item(regra, titulo, valor, unidade, conta, faltaTxt, porque){
+    var r = REGRAS[regra];
+    if (!vale(regra, cat)) return;
+    var lim = r.minimo !== undefined ? r.minimo : r.maximo;
+    var sinal = r.minimo !== undefined ? "mínimo" : "máximo";
+    if (valor === null) { itens.push({ st: "falta", titulo: titulo, conta: "Falta " + faltaTxt + ".", porque: porque }); return; }
+    var ok = r.minimo !== undefined ? valor >= r.minimo : valor <= r.maximo;
+    itens.push({ st: ok ? "ok" : "falha", titulo: titulo, conta: conta + " → " + sinal + " " + fmt(lim) + " " + unidade, porque: porque });
+  }
+
+  var g = c.g;
+  item("pbPercentual", "Proteína bruta no produto", campos.pb, "%",
+    fmt(campos.pb || 0) + "% de PB", "a proteína bruta",
+    "Abaixo disso o produto não pode se chamar proteico.");
+  item("pbConsumo", "Proteína que chega ao animal", (campos.pb === null || c.falta) ? null : g * campos.pb / 100, "g/100 kg PV",
+    c.falta ? "" : fmt(g) + " g × " + fmt(campos.pb) + "% = " + fmt(g * campos.pb / 100) + " g de PB/100 kg PV", c.falta || "a proteína bruta",
+    "Não basta o saco ter proteína: na dose do rótulo, o boi precisa comer pelo menos isso por dia.");
+  item("nnpSobrePb", "Quanto da proteína vem da ureia", (campos.pb === null || campos.nnp === null || campos.pb === 0) ? null : campos.nnp / campos.pb * 100, "% da PB",
+    fmt(campos.nnp || 0) + "% ÷ " + fmt(campos.pb || 0) + "% = " + fmt(campos.pb ? campos.nnp / campos.pb * 100 : 0) + "% da PB", campos.pb === null ? "a proteína bruta" : "o equivalente proteico de NNP",
+    "Proteína quase toda de ureia é proteína barata — e arriscada se o consumo sair do controle.");
+  item("ndtConsumo", "Energia que chega ao animal", (campos.ndt === null || c.falta) ? null : g * campos.ndt / 100, "g/100 kg PV",
+    c.falta ? "" : fmt(g) + " g × " + fmt(campos.ndt) + "% = " + fmt(g * campos.ndt / 100) + " g de NDT/100 kg PV", c.falta || "o NDT",
+    "É o que separa o proteico energético do proteico comum. Dose baixa raramente chega lá.");
+  item("fosforoConsumo", "Fósforo que chega ao animal", (campos.fosforo === null || c.falta) ? null : g / 1000 * campos.fosforo, "g/100 kg PV",
+    c.falta ? "" : fmt(g) + " g × " + fmt(campos.fosforo) + " g/kg ÷ 1.000 = " + fmt(g / 1000 * campos.fosforo, 2) + " g de P/100 kg PV", c.falta || "o fósforo",
+    "Fósforo é o mineral que mais falta no pasto do Pará e o mais caro do saco.");
+  item("salPercentual", "Sal no produto", campos.sodio === null ? null : campos.sodio * NA_PARA_NACL / 10, "% de NaCl",
+    fmt(campos.sodio || 0) + " g/kg de Na × 2,542 ÷ 10 = " + fmt((campos.sodio || 0) * NA_PARA_NACL / 10) + "% de sal", "o sódio",
+    "Sal é o ingrediente mais barato do saco. Acima disso, você está comprando sal a preço de suplemento.");
+
+  mostrar(cat, itens, c);
+  if (typeof gtag === "function") gtag("event", "conferiu_rotulo", { categoria: cat });
+}
+
+function mostrar(cat, itens, c){
+  var falhas = itens.filter(function(i){ return i.st === "falha"; }).length;
+  var faltas = itens.filter(function(i){ return i.st === "falta"; }).length;
+  var classe, titulo, texto;
+  if (falhas) {
+    classe = "falha";
+    titulo = falhas === 1 ? "1 item fora do que a norma pede" : falhas + " itens fora do que a norma pede";
+    texto = "Pelo próprio rótulo, este produto não cumpre os limites de " + NOME_CATEGORIA[cat] + ". Veja abaixo onde está a diferença.";
+  } else if (faltas) {
+    classe = "incompleto";
+    titulo = "Faltam dados para fechar a conferência";
+    texto = "O que foi preenchido está dentro da norma. Complete os itens marcados para conferir o restante.";
+  } else {
+    classe = "ok";
+    titulo = "O rótulo cumpre os mínimos da categoria";
+    texto = "Na dose recomendada, o que está declarado atende os limites de " + NOME_CATEGORIA[cat] + ".";
+  }
+  var h = '<div class="veredito ' + classe + '"><h3>' + esc(titulo) + '</h3><p>' + esc(texto) + '</p></div>';
+  if (c.conta) h += '<p class="rot" style="margin:0 0 10px">Consumo considerado: ' + esc(c.conta) + '</p>';
+  itens.forEach(function(i){
+    var selo = { ok: "Atende", falha: "Não atende", falta: "Falta dado" }[i.st];
+    h += '<div class="criterio"><span class="selo ' + i.st + '">' + selo + '</span>' +
+         '<b>' + esc(i.titulo) + '</b><span class="conta">' + esc(i.conta) + '</span><span class="porque">' + esc(i.porque) + '</span></div>';
+  });
+  h += '<div class="chamada"><p>Quer saber qual suplemento faz sentido para o seu lote nesta época? A Ariel faz o diagnóstico com você, com estimativa de ganho e de arroba antes da compra.</p>' +
+       '<a class="btn-zap" href="https://wa.me/5594984142737?text=' + encodeURIComponent("Olá Leonardo, usei o leitor de rótulo do site e quero um diagnóstico do meu lote.") + '" target="_blank" rel="noopener">Falar no WhatsApp</a></div>';
+  $("resultado").innerHTML = h;
+  $("resultado").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function mostrarErro(msg){
+  $("resultado").innerHTML = '<div class="veredito falha"><h3>Confira os números</h3><p>' + esc(msg) + '</p></div>';
+}
+
+function montarTabela(){
+  var linhas = [
+    ["pbPercentual", "Proteína bruta no produto", "% de PB"],
+    ["pbConsumo", "Proteína ingerida na dose do rótulo", "g de PB por 100 kg de PV por dia"],
+    ["nnpSobrePb", "Proteína vinda de NNP (ureia)", "% da proteína bruta"],
+    ["ndtConsumo", "Energia ingerida na dose do rótulo", "g de NDT por 100 kg de PV por dia"],
+    ["fosforoConsumo", "Fósforo ingerido na dose do rótulo", "g de P por 100 kg de PV por dia"],
+    ["salPercentual", "Sal (NaCl) no produto", "% do produto"]
+  ];
+  var curto = { mineral: "Mineral", proteico: "Proteico", energetico: "Proteico energético" };
+  $("tabela-regras").innerHTML = linhas.map(function(l){
+    var r = REGRAS[l[0]];
+    var lim = (r.minimo !== undefined ? "mínimo " + fmt(r.minimo) : "máximo " + fmt(r.maximo)) + " " + l[2];
+    return "<tr><td>" + l[1] + "</td><td>" + lim + "</td><td>" + r.categorias.map(function(c){ return curto[c]; }).join(", ") + "</td></tr>";
+  }).join("");
+}
+
+function atualizarPeso(){ $("caixa-peso").classList.toggle("oculto", $("unidade").value !== "gcab"); }
+
+$("unidade").addEventListener("change", atualizarPeso);
+$("form").addEventListener("submit", function(e){ e.preventDefault(); conferir(); });
+$("exemplo").addEventListener("click", function(){
+  /* Números inventados: um "proteico energético" de dose baixa, que tem proteína mas não chega na energia. */
+  $("categoria").value = "energetico";
+  $("consumo").value = "0,1"; $("unidade").value = "pv"; atualizarPeso();
+  $("pb").value = "40"; $("nnp").value = "30"; $("ndt").value = "45"; $("fosforo").value = "40"; $("sodio").value = "90";
+  $("aviso-exemplo").classList.remove("oculto");
+  conferir();
+});
+$("limpar").addEventListener("click", function(){
+  $("form").reset(); atualizarPeso();
+  $("aviso-exemplo").classList.add("oculto");
+  $("resultado").innerHTML = "";
+});
+["pb","nnp","ndt","fosforo","sodio","consumo","peso","categoria"].forEach(function(id){
+  $(id).addEventListener("input", function(){ $("aviso-exemplo").classList.add("oculto"); });
+});
+montarTabela();
+</script>
+</body>
+</html>
