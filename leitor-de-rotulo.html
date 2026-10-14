@@ -69,9 +69,14 @@ h1,h2,h3{font-family:Archivo,"Arial Black",system-ui,sans-serif;text-wrap:balanc
 .grupo:last-of-type{margin-bottom:0}
 .grupo > .rot{display:block;margin-bottom:10px}
 .campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+/* Rótulo de duas linhas empurrava a caixa dele para baixo das vizinhas.
+   Cada célula vira coluna e a caixa desce até a base: todas alinham.
+   O :not(.oculto) impede que o flex reapareça a caixa do peso escondida. */
+.campos > div:not(.oculto){display:flex;flex-direction:column}
+.campos > div > input,.campos > div > select,.campos > div > .consumo{margin-top:auto}
 label{display:block;font-size:13.5px;font-weight:600;margin-bottom:5px}
 label small{display:block;font-weight:400;color:var(--texto-3);font-size:12px;line-height:1.35}
-input,select{width:100%;font:inherit;font-size:15px;color:var(--texto);background:var(--papel);border:1px solid var(--linha-forte);border-radius:8px;padding:10px 12px}
+input,select{width:100%;height:46px;font:inherit;font-size:15px;color:var(--texto);background:var(--papel);border:1px solid var(--linha-forte);border-radius:8px;padding:10px 12px}
 input:focus,select:focus{outline:2px solid var(--ouro);outline-offset:1px;border-color:var(--ouro)}
 .consumo{display:flex;gap:8px}
 .consumo input{flex:1 1 40%;min-width:0}
